@@ -1,6 +1,6 @@
 [package]
 name = "galeforce"
-version = "0.9.27-13.0.1"
+version = "0.10.29"
 authors = ["Dyad/"]
 edition = "2018"
 
@@ -16,13 +16,18 @@ crate-type = ["cdylib"]
 
 [dependencies]
 skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
-skyline_smash = { path = "D:/Documents/GitHub/skyline-smash-blu", features = ["weak_l2cvalue"] }
+skyline_smash = { git = "https://github.com/Dyad2/skyline-smash", features = ["weak_l2cvalue"] }
 smashline = { path = "D:/Documents/GitHub/smashline"}
 smash_script = { path = "D:/Documents/GitHub/smash-script"}
+custom_var = { path = "./custom-var" }
+galeforce_utils = { path = "./galeforce_utils"}
 
 [profile.dev]
 panic = "abort"
+debug = true
 
 [profile.release]
+opt-level = 'z'
 panic = "abort"
-lto = true
+lto = false
+codegen-units = 1

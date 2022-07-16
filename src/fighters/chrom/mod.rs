@@ -1,3 +1,4 @@
+use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -5,48 +6,45 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
 
-use crate::fighters::common::FIGHTER_GLOBALS;
 use crate::fighters::common::galeforce::*;
-use crate::utils::*;
+use galeforce_utils::{vars::*, utils::*};
+use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_CHROM )]
 fn chrom_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let boma = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
-        let status_kind = StatusModule::status_kind(boma);
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+        let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
         //GA - Rightful King
         // type: cancel
-        //  Hits side b 3 (any angle) and cancel it with a wavedash. Disables side b for s short time.        
-        if !is_operation_cpu(boma) {
+        //  Hits side b 3 (any angle) and cancel it with a wavedash. Disables side b for s short time.
+        if !is_operation_cpu(fighter.module_accessor) {
             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3 {
-                if AttackModule::is_infliction(boma, *COLLISION_KIND_MASK_HIT) {
-                    FIGHTER_GLOBALS[entry_id as usize].ga_on = true;
+                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 }
             }
             else {
-                FIGHTER_GLOBALS[entry_id as usize].ga_on = false;
+                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
-            if FIGHTER_GLOBALS[entry_id as usize].ga_on && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_GUARD) {
-                StopModule::cancel_hit_stop(boma);
-                StatusModule::change_status_force(boma, *FIGHTER_STATUS_KIND_WAIT, true);
-                if ControlModule::get_stick_y(boma) > 0.0 {
-                    ControlModule::set_main_stick_y(boma, 0.0);
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                StopModule::cancel_hit_stop(fighter.module_accessor);
+                StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, true);
+                if ControlModule::get_stick_y(fighter.module_accessor) > 0.0 {
+                    ControlModule::set_main_stick_y(fighter.module_accessor, 0.0);
                 }
-                galeforce_apply_effect(boma, 0.75);
-                StatusModule::set_situation_kind(boma, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
-                MotionModule::change_motion_kind(boma, smash::phx::Hash40{hash: hash40("escape_air_slide")});
-                FIGHTER_GLOBALS[entry_id as usize].ga_on = false;
-                FIGHTER_GLOBALS[entry_id as usize].chrom_dance_disable_time = 420;
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
+                StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
+                MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
+                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 420);
             }
-            if FIGHTER_GLOBALS[entry_id as usize].chrom_dance_disable_time >= 0 {
-                chrom_disable_dance_effect(boma);
-                FIGHTER_GLOBALS[entry_id as usize].chrom_dance_disable_time -= 1;
+            if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) >= 0 {
+                chrom_disable_dance_effect(fighter);
+                VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
             }
         }
     }
@@ -56,29 +54,27 @@ fn chrom_frame(fighter: &mut L2CFighterCommon) {
 #[acmd_script( agent = "chrom", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "chrom", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
@@ -86,12 +82,11 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "chrom", script = "game_attack11", category = ACMD_GAME, low_priority)]
 unsafe fn attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 5.0);
         if macros::is_excute(fighter)
         {
-            FighterAreaModuleImpl::enable_fix_jostle_area(boma, 5., 5.);
+            FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 5., 5.);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 6.5, 62, 60, 0, 40, 3.7, 0.0, 10.0, 7.0, Some(0.0), Some(10.0), Some(5.5),  1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 1, 0, Hash40::new("sword1"), 6.5, 62, 60, 0, 40, 3.5, 0.0, 0.0, 1.4, Some(0.0), Some(0.0), Some(0.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
             macros::ATTACK(fighter, 2, 0, Hash40::new("sword1"), 6.5, 62, 60, 0, 40, 3.5, 0.0, 0.0, 8.1, Some(0.0), Some(0.0), Some(0.0), 1.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CHROM_HIT, *ATTACK_REGION_SWORD);
@@ -99,13 +94,13 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
     frame(lua_state, 7.0);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 28.0);
         if macros::is_excute(fighter)
         {
-            if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                CancelModule::enable_cancel(boma);
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
 }
@@ -114,12 +109,11 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "chrom", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     
     frame(lua_state, 7.0);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     frame(lua_state, 8.0);
         if macros::is_excute(fighter)
@@ -131,56 +125,76 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     wait(lua_state, 7.0);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 41.0);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
+//specials
+#[acmd_script( agent = "chrom", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME, low_priority)]
+unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 1.0);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.15);
+        }
+    frame(lua_state, 8.0);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SHIELD);
+            MotionModule::set_rate(fighter.module_accessor, 1.33);
+        }
+    frame(lua_state, 30.0);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROY_STATUS_SPECIAL_LW_FLAG_SHIELD);
+            MotionModule::set_rate(fighter.module_accessor, 1.15);
+        }
+}
 
 //others
 #[acmd_script( agent = "chrom", script = "game_appealhil", category = ACMD_GAME, low_priority)]
 unsafe fn falchionusel(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 40.0);
         if macros::is_excute(fighter)
         {
-            DamageModule::heal(boma, -2.0, 0);
+            DamageModule::heal(fighter.module_accessor, -2.0, 0);
         }
 }
 
 #[acmd_script( agent = "chrom", script = "game_appealhir", category = ACMD_GAME, low_priority)]
 unsafe fn falchionuser(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 40.0);
         if macros::is_excute(fighter)
         {
-            DamageModule::heal(boma, -2.0, 0);
+            DamageModule::heal(fighter.module_accessor, -2.0, 0);
         }
 }
 
 #[acmd_script( agent = "chrom", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     
     frame(lua_state, 14.0);
         if macros::is_excute(fighter)
         {
-            //WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY)
+            //WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY)
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.0);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 
@@ -188,12 +202,11 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "chrom", script = "effect_attackairn", category = ACMD_EFFECT, low_priority)]
 unsafe fn effectairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.0);
         if macros::is_excute(fighter)
         {
-            macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 9, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
+            macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_chrom_sword1"), Hash40::new("tex_chrom_sword2"), 9, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("chrom_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
             macros::EFFECT_FOLLOW(fighter, Hash40::new("chrom_sword_light"), Hash40::new("sword1"), 0, 0, 11, 0, 0, 0, 0.4, true);
         }
     wait(lua_state, 3.0);
@@ -212,7 +225,6 @@ unsafe fn effectairn(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "chrom", script = "sound_attackairn", category = ACMD_SOUND, low_priority)]
 unsafe fn soundairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 5.0);
         if macros::is_excute(fighter)
@@ -239,6 +251,7 @@ pub fn install() {
         turndash,
         attack11,
         attackairn,
+        speciallw,
         falchionusel,
         falchionuser,
         effectairn,

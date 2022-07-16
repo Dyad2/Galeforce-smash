@@ -1,60 +1,74 @@
+use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
 use smash::app::sv_animcmd::*;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
 
-use crate::FIGHTER_CUTIN_MANAGER_ADDR;
-use crate::fighters::common::FIGHTER_GLOBALS;
+
+
 use crate::fighters::common::galeforce::*;
-use crate::utils::*;
+use galeforce_utils::vars::*;
+use custom_var::*;
 
-#[fighter_frame( agent = FIGHTER_KIND_SHIZUE )]
-fn capitalism_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let lua_state = fighter.lua_state_agent;
-        let boma = sv_system::battle_object_module_accessor(lua_state);
-        let curr_motion_kind = MotionModule::motion_kind(boma);
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+// #[fighter_frame( agent = FIGHTER_KIND_SHIZUE )]
+// fn capitalism_frame(fighter: &mut L2CFighterCommon) {
+//     unsafe {
+//         let lua_state = fighter.lua_state_agent;
+//         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
 
-        //GA - Isabellistic Trap
-        //type: restriction lift
-        //launch mine while in forward or back throw
-        if !is_operation_cpu(boma) {
-            if [hash40("throw_f"), hash40("throw_b")].contains(&curr_motion_kind) {
-                if MotionModule::frame(boma) >= 10.0 && MotionModule::frame(boma) < 21.0 && FIGHTER_GLOBALS[entry_id as usize].once {
-                    if ArticleModule::is_exist(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                        ArticleModule::shoot(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
-                        FIGHTER_GLOBALS[entry_id as usize].ga_on = true;
-                        FIGHTER_GLOBALS[entry_id as usize].once = false;
-                    }
-                }
-            }
-            else {
-                FIGHTER_GLOBALS[entry_id as usize].once = true;
-            }
-            if FIGHTER_GLOBALS[entry_id as usize].ga_on {
-                galeforce_apply_effect(boma, 0.5);
-                FIGHTER_GLOBALS[entry_id as usize].ga_on = false;
-            }
-        }
-    }
-}
+//         //GA - Isabellistic Trap
+//         //type: restriction lift
+//         //launch mine while in forward or back throw
+//         if !is_operation_cpu(fighter.module_accessor) {
+//             // if [hash40("throw_f"), hash40("throw_b")].contains(&curr_motion_kind) {
+//             //     if MotionModule::frame(fighter.module_accessor) >= 10.0 && MotionModule::frame(fighter.module_accessor) < 21.0 && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE) {
+//             //         if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+//             //             ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
+//             //             VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_GALEFORCE_ATTACK_ON);
+//             //             WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE);
+//             //         }
+//             //     }
+//             // }
+//             // else {
+//             //     VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_DO_ONCE);
+//             // }
+//             // if WorkModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+//             //     galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
+//             //     WorkModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//             // }
+//             if [hash40("throw_f"), hash40("throw_b")].contains(&curr_motion_kind) {
+//                 if MotionModule::frame(fighter.module_accessor) >= 10.0 && MotionModule::frame(fighter.module_accessor) < 21.0 {
+//                     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+//                         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
+//                         WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE);
+//                         if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE) {
+//                         }
+//                     }
+//                 }
+//             }
+//             else {
+//                 VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_DO_ONCE);
+//             }
+//             if WorkModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+//                 WorkModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//             }
+//         }
+//     }
+// }
 
 //weapons
 #[acmd_script( agent = "shizue_pot", script = "game_throwed", category = ACMD_GAME, low_priority)]
 unsafe fn potthrowed(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(weapon)
         {
             macros::ATTACK(weapon, 0, 0, Hash40::new("have"), 10.0, 70, 60, 0, 65, 4.2, 0.0, 2.5, 0.0, None, None, None, 0.6, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
-            AttackModule::enable_safe_pos(boma);
+            AttackModule::enable_safe_pos(weapon.module_accessor);
         }
     wait(lua_state, 6.);
         if macros::is_excute(weapon)
@@ -66,12 +80,11 @@ unsafe fn potthrowed(weapon: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue_bullet", script = "game_shootf", category = ACMD_GAME, low_priority)]
 unsafe fn bulletshootf(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(weapon)
         {
             macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 7.0, 361, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -3.5, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
-            AttackModule::enable_safe_pos(boma);
+            AttackModule::enable_safe_pos(weapon.module_accessor);
         }
     frame(lua_state, 4.);
         if macros::is_excute(weapon)
@@ -83,12 +96,11 @@ unsafe fn bulletshootf(weapon: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue_bullet", script = "game_shootb", category = ACMD_GAME, low_priority)]
 unsafe fn bulletshootb(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(weapon)
         {
             macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 9.0, 361, 100, 0, 50, 5.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, -4.5, 0.0, 0, true, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
-            AttackModule::enable_safe_pos(boma);
+            AttackModule::enable_safe_pos(weapon.module_accessor);
         }
     frame(lua_state, 4.);
         if macros::is_excute(weapon)
@@ -100,7 +112,6 @@ unsafe fn bulletshootb(weapon: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue_clayrocket", script = "game_fly", category = ACMD_GAME, low_priority)]
 unsafe fn clayrocketfly(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 5.);
         if macros::is_excute(weapon)
@@ -118,29 +129,27 @@ unsafe fn clayrocketfly(weapon: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "shizue", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
@@ -148,12 +157,11 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue", script = "game_attackairhi", category = ACMD_GAME, low_priority)]
 unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 85, 100, 0, 40, 7.0, 0.0, 20.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_OBJECT);
         }
     wait(lua_state, 2.);
@@ -164,12 +172,12 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 32.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 39.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
@@ -177,12 +185,11 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue", script = "game_speciallwset", category = ACMD_GAME, low_priority)]
 unsafe fn speciallwset(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 25.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_SHIZUE_STATUS_WORK_ID_SPECIAL_LW_FLAG_SET);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SHIZUE_STATUS_WORK_ID_SPECIAL_LW_FLAG_SET);
         }
 }
 
@@ -190,7 +197,6 @@ unsafe fn speciallwset(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue", script = "game_throwf", category = ACMD_GAME, low_priority)]
 unsafe fn throwf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
@@ -201,30 +207,30 @@ unsafe fn throwf(fighter: &mut L2CAgentBase) {
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
         {
-            if ArticleModule::is_exist(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                ArticleModule::shoot(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
-                let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-                FIGHTER_GLOBALS[entry_id as usize].ga_on = true;
+            //GA - Isabellistic Trap
+            //type: restriction lift
+            //launch mine while in forward or back throw
+            if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
             }
         }
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            let fighter_cutin_manager = *(FIGHTER_CUTIN_MANAGER_ADDR as *mut *mut smash::app::FighterCutInManager);
-            FighterCutInManager::set_throw_finish_zoom_rate(fighter_cutin_manager, 1.5);
+            FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
             macros::CHECK_FINISH_CAMERA(fighter, 14, 8);
         }
     frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
-            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
         }
 }
 
 #[acmd_script( agent = "shizue", script = "game_throwb", category = ACMD_GAME, low_priority)]
 unsafe fn throwb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
@@ -236,28 +242,29 @@ unsafe fn throwb(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::CHECK_FINISH_CAMERA(fighter, -7, 2);
-            if ArticleModule::is_exist(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_SPECIAL) {
-                ArticleModule::shoot(boma, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
-                let entry_id = WorkModule::get_int(boma, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-                FIGHTER_GLOBALS[entry_id as usize].ga_on = true;
+            //GA - Isabellistic Trap
+            //type: restriction lift
+            //launch mine while in forward or back throw
+            if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(*ARTICLE_OPE_TARGET_ALL), false);
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
             }
         }
     frame(lua_state, 13.);
         if macros::is_excute(fighter)
         {
-            let fighter_cutin_manager = *(FIGHTER_CUTIN_MANAGER_ADDR as *mut *mut smash::app::FighterCutInManager);
-            FighterCutInManager::set_throw_finish_zoom_rate(fighter_cutin_manager, 1.5);
+            FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.5);
         }
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
             {
-                macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+                macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
             }
     frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             macros::REVERSE_LR(fighter);
-            MotionModule::set_rate(boma, 1.2);
+            MotionModule::set_rate(fighter.module_accessor, 1.2);
         }
 }
 
@@ -265,25 +272,24 @@ unsafe fn throwb(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "shizue", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 
 pub fn install() {
-    smashline::install_agent_frames!(
-        capitalism_frame
-    );
+    //smashline::install_agent_frames!(
+    //    capitalism_frame
+    //);
     smashline::install_acmd_scripts!(
         dash,
         turndash,

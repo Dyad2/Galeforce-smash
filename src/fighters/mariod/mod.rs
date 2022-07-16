@@ -1,3 +1,4 @@
+use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -5,60 +6,55 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
-use smash::phx::Vector3f;
 use smash::lib::LuaConst;
 
-use crate::fighters::common::FIGHTER_GLOBALS;
 use crate::fighters::common::galeforce::*;
-use crate::utils::*;
-use crate::var::*;
+use galeforce_utils::{vars::*, utils::*};
+use custom_var::*;
 
 pub static mut MARIOD_NAIR_SOUND: [LuaConst; 9] = [ATTACK_SOUND_LEVEL_S; 9];
 
 #[fighter_frame( agent = FIGHTER_KIND_MARIOD )]
 fn dr_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let lua_state = fighter.lua_state_agent;
-        let boma = sv_system::battle_object_module_accessor(lua_state);
-        let curr_motion_kind = MotionModule::motion_kind(boma);
+        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
 
-        let speed_x = KineticModule::get_sum_speed_x(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-        let speed_y = KineticModule::get_sum_speed_y(boma, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
+        let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
 
-        //println!("speed_x: {}", speed_x);
-        //println!("speed_y: {}", speed_y);
-
-        if speed_x.abs() > speed_y.abs() {
-           FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage = 4.0 + (3.3 * speed_x.abs());
+        let damage_calc = if speed_x.abs() > speed_y.abs() {
+           4.0 + (3.3 * speed_x.abs())
         }
         else {
-           FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage = 4.0 + (3.3 * speed_y.abs());
-        }
+           4.0 + (3.3 * speed_y.abs())
+        };
 
-        if FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage > 10. && !(WorkModule::get_int(boma, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER) >= 0) {
-           FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage = 10.;
+        VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, damage_calc);
+
+        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) > 10. && !(VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0) {
+            VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, 10.0);
         }
-        if FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage > 12. && WorkModule::get_int(boma, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER) >= 0 {
-           FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage = 12.;
+        if  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) > 12. && VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
+           VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, 12.0);
         }
-        if FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage < 7. {
+        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) < 7. {
            MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_S;
         }
-        if FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage >= 7. && FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage < 10. {
+        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) >= 7. &&  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) < 10. {
            MARIOD_NAIR_SOUND[entry_id as usize]= ATTACK_SOUND_LEVEL_M;
         }
-        if FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage >= 10. {
+        if  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) >= 10. {
            MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_L;
         }
 
         if curr_motion_kind == hash40("attack_air_n") {
-            if MotionModule::frame(boma) >= 3. && MotionModule::frame(boma) < 27. {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("kneer"), FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage, 361, 100, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
-                macros::ATTACK(fighter, 1, 0, Hash40::new("kneel"), FIGHTER_GLOBALS[entry_id as usize].mariod_nair_damage, 361, 100, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
+            if MotionModule::frame(fighter.module_accessor) >= 3. && MotionModule::frame(fighter.module_accessor) < 27. {
+                let battle_object = fighter.battle_object;
+                macros::ATTACK(fighter, 0, 0, Hash40::new("kneer"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
+                macros::ATTACK(fighter, 1, 0, Hash40::new("kneel"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
             }
         }
 
@@ -66,17 +62,17 @@ fn dr_frame(fighter: &mut L2CFighterCommon) {
         // hit an opponent with a pill at close range to gain a speed buff. the buff is lost after a short duration or after being grabbed.
         //  the rest of the GA code is in opff, it's opponent-side
         //   cpu is allowed
-        mariod_buff_effect(boma);
-        if FIGHTER_GLOBALS[entry_id as usize].ga_on && WorkModule::get_int(boma, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER) <= 0 {
-            galeforce_apply_effect(boma, 0.66);
-            WorkModule::set_int(boma, 1800, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER);
-            FIGHTER_GLOBALS[entry_id as usize].ga_on = false;
+        mariod_buff_effect(fighter);
+        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) <= 0 {
+            galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);
+            VarModule::set_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER, 1500);
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
-        if WorkModule::get_int(boma, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER) >= 0 {
-            WorkModule::set_int(boma,  WorkModule::get_int(boma, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER) -1, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER);
+        if VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
+            VarModule::sub_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER, 1);
         }
-        if is_status_grabbed(boma) {
-            WorkModule::set_int(boma, -1, FIGHTER_MARIOD_INSTANCE_WORK_ID_INT_GA_MEDECINE_TIMER);
+        if is_status_grabbed(&mut *fighter.module_accessor) {
+            VarModule::set_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER, -1);
         }
     }
 }
@@ -85,29 +81,27 @@ fn dr_frame(fighter: &mut L2CFighterCommon) {
 #[acmd_script( agent = "mariod", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "mariod", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
@@ -115,7 +109,6 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "mariod", script = "game_attack12", category = ACMD_GAME, low_priority)]
 unsafe fn attack12(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -127,29 +120,28 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
         }
 }
 
 #[acmd_script( agent = "mariod", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
 unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(boma, 0.6);
+            MotionModule::set_rate(fighter.module_accessor, 0.6);
         }
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(boma, 1.0);
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             macros::HIT_NODE(fighter, Hash40::new("arml"), *HIT_STATUS_XLU);
             macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_XLU);
             macros::ATTACK(fighter, 0, 0, Hash40::new("head"), 6.3, 96, 130, 0, 28, 3.5, -0.5, -0.8, 0.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -168,8 +160,8 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     wait(lua_state, 7.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
-            MotionModule::set_rate(boma, 1.4);
+            AttackModule::clear_all(fighter.module_accessor);
+            MotionModule::set_rate(fighter.module_accessor, 1.4);
         }
 }
 
@@ -177,39 +169,37 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "mariod", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     frame(lua_state, 28.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 34.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
 #[acmd_script( agent = "mariod", script = "game_attackairlw", category = ACMD_GAME, low_priority)]
 unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            JostleModule::set_status(boma, false);
+            JostleModule::set_status(fighter.module_accessor, false);
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -230,13 +220,13 @@ unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
-            JostleModule::set_status(boma, true);
+            AttackModule::clear_all(fighter.module_accessor);
+            JostleModule::set_status(fighter.module_accessor, true);
         }
     frame(lua_state, 35.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
@@ -244,7 +234,6 @@ unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "mariod", script = "game_speciallw", category = ACMD_GAME, low_priority)]
 unsafe fn speciallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         frame(lua_state, 5.);
             if macros::is_excute(fighter)
@@ -254,7 +243,7 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
         frame(lua_state, 8.);
             if macros::is_excute(fighter)
             {
-                WorkModule::on_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
             }
         wait(lua_state, 2.);
             if macros::is_excute(fighter)
@@ -274,14 +263,14 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
                 wait(lua_state, 1.);
                     if macros::is_excute(fighter)
                     {
-                        AttackModule::clear_all(boma);
+                        AttackModule::clear_all(fighter.module_accessor);
                     }
                 wait(lua_state, 3.);
             }
             if macros::is_excute(fighter)
             {
-                WorkModule::on_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-                WorkModule::off_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
+                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
             }
         frame(lua_state, 40.);
             if macros::is_excute(fighter)
@@ -292,14 +281,13 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
         wait(lua_state, 2.);
             if macros::is_excute(fighter)
             {
-                AttackModule::clear_all(boma);
+                AttackModule::clear_all(fighter.module_accessor);
             }
 }
 
 #[acmd_script( agent = "mariod", script = "game_specialairlw", category = ACMD_GAME, low_priority)]
 unsafe fn specialairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
@@ -309,7 +297,7 @@ unsafe fn specialairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -329,15 +317,15 @@ unsafe fn specialairlw(fighter: &mut L2CAgentBase) {
             wait(lua_state, 1.);
                 if macros::is_excute(fighter)
                 {
-                    AttackModule::clear_all(boma);
+                    AttackModule::clear_all(fighter.module_accessor);
                 }
             wait(lua_state, 3.);
         }
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
-            WorkModule::off_flag(boma, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
-            WorkModule::on_flag(boma, *FIGHTER_MARIOD_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BUOYANCY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_LIMIT_X_DEC);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_MARIOD_STATUS_SPECIAL_LW_FLAG_RISE);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_MARIOD_INSTANCE_WORK_ID_FLAG_SPECIAL_LW_BUOYANCY);
         }
     frame(lua_state, 40.);
         if macros::is_excute(fighter)
@@ -348,7 +336,7 @@ unsafe fn specialairlw(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
@@ -356,18 +344,17 @@ unsafe fn specialairlw(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "mariod", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 

@@ -1,11 +1,10 @@
+use std::arch::asm;
 use smash::phx::Hash40;
-use smash::hash40;
+//use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::app::sv_animcmd::*;
-use smash::app::sv_animcmd;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
 
@@ -13,29 +12,27 @@ use smash_script::*;
 #[acmd_script( agent = "duckhunt", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "duckhunt", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
@@ -43,7 +40,6 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_attack11", category = ACMD_GAME, low_priority)]
 unsafe fn attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
@@ -55,15 +51,14 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+            AttackModule::clear_all(fighter.module_accessor);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
         }
 }
 
 #[acmd_script( agent = "duckhunt", script = "game_attack12", category = ACMD_GAME, low_priority)]
 unsafe fn attack12(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
@@ -74,26 +69,25 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+            AttackModule::clear_all(fighter.module_accessor);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
         }
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_100);
         }
 }
 
 #[acmd_script( agent = "duckhunt", script = "game_attack100end", category = ACMD_GAME, low_priority)]
 unsafe fn attack100end(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            FighterAreaModuleImpl::enable_fix_jostle_area(boma, 4.5, 5.);
+            FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 4.5, 5.);
         }
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
@@ -103,7 +97,7 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
@@ -123,8 +117,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             wait_loop_clear(0)
 //             FT_MOTION_RATE(FSM=1)
@@ -139,8 +133,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 4)
 //             if macros::is_excute(fighter){
@@ -153,8 +147,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 6)
 //             if macros::is_excute(fighter){
@@ -167,8 +161,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 8)
 //             if macros::is_excute(fighter){
@@ -181,8 +175,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 10)
 //             if macros::is_excute(fighter){
@@ -195,8 +189,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 12)
 //             if macros::is_excute(fighter){
@@ -209,8 +203,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 14)
 //             if macros::is_excute(fighter){
@@ -223,8 +217,8 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 //             }
 //             wait(lua_state, 1)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
-//             WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
+//             AttackModule::clear_all(fighter.module_accessor);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_100_CONTINUE_CHECK)
 //             }
 //             frame(0, 16)
 //     });
@@ -233,7 +227,6 @@ unsafe fn attack100end(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
 unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
@@ -249,13 +242,13 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         wait(lua_state, 5.);
             if macros::is_excute(fighter)
             {
-                AttackModule::clear_all(boma);
+                AttackModule::clear_all(fighter.module_accessor);
             }
         frame(lua_state, 24.);
             if macros::is_excute(fighter)
             {
-                if AttackModule::is_infliction_status(boma, *COLLISION_KIND_MASK_HIT) {
-                    CancelModule::enable_cancel(boma);
+                if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
 }
@@ -264,12 +257,11 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
@@ -286,7 +278,7 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 35.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 36.);
         if macros::is_excute(fighter)
@@ -296,12 +288,12 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 38.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 44.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
@@ -309,12 +301,11 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_specialhi", category = ACMD_GAME, low_priority)]
 unsafe fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_DUCKHUNT_INSTANCE_WORK_ID_FLAG_REQUEST_SPECIAL_HI_CANCEL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DUCKHUNT_INSTANCE_WORK_ID_FLAG_REQUEST_SPECIAL_HI_CANCEL);
         }
 }
 
@@ -322,12 +313,11 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_specialairhi", category = ACMD_GAME, low_priority)]
 unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_DUCKHUNT_INSTANCE_WORK_ID_FLAG_REQUEST_SPECIAL_HI_CANCEL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DUCKHUNT_INSTANCE_WORK_ID_FLAG_REQUEST_SPECIAL_HI_CANCEL);
         }
 }
 
@@ -336,18 +326,17 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "duckhunt", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 
