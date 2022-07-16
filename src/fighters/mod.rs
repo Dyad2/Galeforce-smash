@@ -1,6 +1,6 @@
-mod buddy;
 mod bayonetta;
-mod bayonetta_bulletarts;
+mod brave;
+mod buddy;
 
 mod captain;
 mod chrom;
@@ -27,8 +27,6 @@ mod gaogaen;
 mod gamewatch;
 mod gekkouga;
 
-mod hero;
-
 mod ike;
 mod inkling;
 
@@ -54,6 +52,10 @@ mod marth;
 mod master;
 mod metaknight;
 mod mewtwo;
+mod miifighter;
+mod miigunner;
+mod miiswordman;
+mod murabito;
 
 mod nana;
 mod ness;
@@ -107,8 +109,8 @@ mod younglink;
 mod zelda;
 
 pub fn install(){
-    bayonetta::install();   //okay
-    bayonetta_bulletarts::install(); //no hitboxes
+    bayonetta::install();   //okay, bullet arts have no hitboxes
+    brave::install();        //testing
     buddy::install();       //testing
     captain::install();     //testing
     chrom::install();       //okay
@@ -130,7 +132,6 @@ pub fn install(){
     gaogaen::install();     //testing
     gamewatch::install();
     gekkouga::install();
-    hero::install();        //testing
     ike::install();         //testing
     inkling::install();     //ink arts don't work as intended. wrong angle and doesn't require ink
     jack::install();        //testing
@@ -152,6 +153,10 @@ pub fn install(){
     master::install();      //okay
     metaknight::install();  //testing
     mewtwo::install();      //testing
+    miifighter::install();  //testing
+    miigunner::install();  //testing
+    miiswordman::install();  //testing
+    murabito::install();    //testing
     nana::install();
     ness::install();        //testing
     packun::install();

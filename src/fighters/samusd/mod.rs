@@ -1,32 +1,19 @@
+use std::arch::asm;
 use smash::phx::{Hash40, Vector2f, Vector3f};
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::app::sv_animcmd::*;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
 
-use crate::FIGHTER_CUTIN_MANAGER_ADDR;
-
-// #[fighter_frame( agent = FIGHTER_KIND_GEKKOUGA )]
-// fn alien_frame(fighter: &mut L2CFighterCommon) {
-//     unsafe {
-//         let lua_state = fighter.lua_state_agent;
-//         let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
-//         let curr_motion_kind = MotionModule::motion_kind(boma);
-//         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-
-//         if curr_motion_kind
-//     }
-// }
+use crate::custom_vars::*;
+use galeforce_utils::vars::*;
 
 //weapon
 #[acmd_script( agent = "samus_cshot", script = "game_shoot", category = ACMD_GAME, low_priority)]
 unsafe fn cshotshoot(weapon: &mut L2CAgentBase) {
-    let lua_state = weapon.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(weapon)
         {
@@ -40,29 +27,27 @@ unsafe fn cshotshoot(weapon: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
@@ -70,7 +55,6 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_attack11", category = ACMD_GAME, low_priority)]
 unsafe fn jab1(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 3.);
         if macros::is_excute(fighter)
@@ -78,26 +62,25 @@ unsafe fn jab1(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 361, 5, 0, 25, 2.0, 0.0, 10.0, 6.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.0, 361, 5, 0, 25, 2.3, 0.0, 10.0, 8.8, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 3.0, 361, 5, 0, 25, 2.5, 0.0, 10.0, 12.0, None, None, None, 0.8, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            AttackModule::set_add_reaction_frame(boma, 0, 4.0, false);
-            AttackModule::set_add_reaction_frame(boma, 1, 4.0, false);
-            AttackModule::set_add_reaction_frame(boma, 2, 4.0, false);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 4.0, false);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 4.0, false);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 4.0, false);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
 unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -108,7 +91,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
         {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 11.0, 30, 85, 0, 45, 5.5, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 11.0, 32, 85, 0, 45, 5.5, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 9.0, 361, 85, 0, 45, 7.0, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 2, 0, Hash40::new("armr"), 9.0, 361, 85, 0, 45, 3.5, 0.0, 0.0, 0.0, Some(-6.0), Some(-2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         }
@@ -117,14 +100,13 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         {
             macros::HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_XLU);
             macros::HIT_NODE(fighter, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks3hi", category = ACMD_GAME, low_priority)]
 unsafe fn attacks3hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -135,7 +117,7 @@ unsafe fn attacks3hi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
         {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 11.0, 30, 85, 0, 45, 5.5, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 11.0, 32, 85, 0, 45, 5.5, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 9.0, 361, 85, 0, 45, 7.0, 7.5, -0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 2, 0, Hash40::new("armr"), 9.0, 361, 85, 0, 45, 3.5, 0.0, 0.0, 0.0, Some(-6.0), Some(-2.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
         }
@@ -144,14 +126,13 @@ unsafe fn attacks3hi(fighter: &mut L2CAgentBase) {
         {
             macros::HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_XLU);
             macros::HIT_NODE(fighter, Hash40::new("shoulderr"), *HIT_STATUS_XLU);
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks3", category = ACMD_GAME, low_priority)]
 unsafe fn attacks3s(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -164,14 +145,13 @@ unsafe fn attacks3s(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
     }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks3lw", category = ACMD_GAME, low_priority)]
 unsafe fn attacks3lw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -184,19 +164,18 @@ unsafe fn attacks3lw(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
     }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attackhi4", category = ACMD_GAME, low_priority)]
 unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD)
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD)
         }
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
@@ -204,12 +183,12 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 3.0, 100, 100, 80, 0, 4.5, -3.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 3.0, 368, 30, 60, 0, 5.0, 6.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.5, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             let targetlocation = Vector2f{ x: 3.0, y : 22.0};
-            AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &targetlocation, 4, false);
+            AttackModule::set_vec_target_pos(fighter.module_accessor, 1, Hash40::new("top"), &targetlocation, 4, false);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -217,12 +196,12 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 3.0, 130, 100, 80, 0, 4.5, -3.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.6, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 3.0, 368, 30, 60, 0, 5.0, 6.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.6, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             let targetlocation = Vector2f{ x: -1.0, y : 23.0};
-            AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &targetlocation, 9, false);
+            AttackModule::set_vec_target_pos(fighter.module_accessor, 1, Hash40::new("top"), &targetlocation, 9, false);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -230,12 +209,12 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 3.0, 130, 100, 80, 0, 4.5, -3.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 3.0, 368, 30, 60, 0, 5.0, 6.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             let targetlocation = Vector2f{ x: -6.0, y : 22.0};
-            AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &targetlocation, 9, false);
+            AttackModule::set_vec_target_pos(fighter.module_accessor, 1, Hash40::new("top"), &targetlocation, 9, false);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -243,12 +222,12 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 3.0, 120, 100, 80, 0, 4.5, -3.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 3.0, 368, 30, 60, 0, 5.0, 6.5, 0.0, 0.0,  None,  None,  None, 0.7, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_BOMB);
             let targetlocation = Vector2f{ x: -10.0, y : 22.0};
-            AttackModule::set_vec_target_pos(boma, 1, Hash40::new("top"), &targetlocation, 9, false);
+            AttackModule::set_vec_target_pos(fighter.module_accessor, 1, Hash40::new("top"), &targetlocation, 9, false);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -259,19 +238,18 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks4s", category = ACMD_GAME, low_priority)]
 unsafe fn attacks4s(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
         }
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
@@ -283,14 +261,13 @@ unsafe fn attacks4s(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks4hi", category = ACMD_GAME, low_priority)]
 unsafe fn attacks4hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
@@ -302,14 +279,13 @@ unsafe fn attacks4hi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attacks4lw", category = ACMD_GAME, low_priority)]
 unsafe fn attacks4lw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
@@ -321,19 +297,18 @@ unsafe fn attacks4lw(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attackdash", category = ACMD_GAME, low_priority)]
 unsafe fn attackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
         {
-            ArticleModule::generate_article(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_BUNSHIN, false, 0);
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_BUNSHIN, false, -1);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 55, 90, 0, 80, 5.3, 0.0, 9.0, 5.0, Some(0.0), Some(9.0), Some(5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 4.);
@@ -344,12 +319,12 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
     wait(lua_state, 7.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 37.);
         if macros::is_excute(fighter)
         {
-            CancelModule::enable_cancel(boma);
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
 }
 
@@ -357,12 +332,11 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_attackairhi", category = ACMD_GAME, low_priority)]
 unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
@@ -373,7 +347,7 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     wait(lua_state, 1.);
         if macros::is_excute(fighter)
@@ -384,7 +358,7 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
@@ -395,60 +369,58 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
-            MotionModule::set_rate(boma, 0.8);
+            AttackModule::clear_all(fighter.module_accessor);
+            MotionModule::set_rate(fighter.module_accessor, 0.8);
         }
     frame(lua_state, 34.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-            MotionModule::set_rate(boma, 1.33);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            MotionModule::set_rate(fighter.module_accessor, 1.33);
         }
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(boma, 1.66);
+            MotionModule::set_rate(fighter.module_accessor, 1.66);
             macros::ATTACK(fighter, 0, 0, Hash40::new("bust"), 1.2, 367, 100, 80, 0, 10.0, 0.0, -3.0, 0.0, None, None, None, 0.75, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SAMUSD_SCREW, *ATTACK_REGION_ENERGY);
         }
     frame(lua_state, 63.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 67.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(boma, 1.0);
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             macros::ATTACK(fighter, 0, 0, Hash40::new("bust"), 4.5, 361, 103, 0, 35, 11.0, 0.0, -3.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SAMUSD_SCREW, *ATTACK_REGION_ENERGY);
         }
     frame(lua_state, 71.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 81.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
 #[acmd_script( agent = "samusd", script = "game_landingairn", category = ACMD_GAME, low_priority)]
 unsafe fn landingairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
 
         if macros::is_excute(fighter)
@@ -458,7 +430,7 @@ unsafe fn landingairn(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
@@ -466,17 +438,16 @@ unsafe fn landingairn(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_specialhi", category = ACMD_GAME, low_priority)]
 unsafe fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
         }
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_ACC_X);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_ACC_X);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 11.0, 60, 62, 0, 80, 10.0, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 3.);
@@ -488,7 +459,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 53, 58, 0, 80, 9.0, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 4.);
@@ -499,7 +470,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
@@ -507,17 +478,16 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_specialairhi", category = ACMD_GAME, low_priority)]
 unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
         }
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            WorkModule::off_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_ACC_X);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_ACC_X);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 60, 62, 0, 80, 10.0, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_SAMUSD_SCREW, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 3.);
@@ -529,7 +499,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_HI_FLAG_DISABLE_LR);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 8.0, 53, 58, 0, 80, 9.0, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SAMUSD_SCREW, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 4.);
@@ -540,7 +510,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            AttackModule::clear_all(boma);
+            AttackModule::clear_all(fighter.module_accessor);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
@@ -549,7 +519,6 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_throwhi", category = ACMD_GAME, low_priority)]
 unsafe fn throwhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
         if macros::is_excute(fighter)
         {
@@ -560,17 +529,16 @@ unsafe fn throwhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 5.0, 80, 100, 0, 10, 6.5, 0.0, 23.0, 0.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
-            AttackModule::set_catch_only_all(boma, true, false);
+            AttackModule::set_catch_only_all(fighter.module_accessor, true, false);
             macros::CHECK_FINISH_CAMERA(fighter, 1.0, 32.0);
-            let fighter_cutin_manager = *(FIGHTER_CUTIN_MANAGER_ADDR as *mut *mut smash::app::FighterCutInManager);
-            FighterCutInManager::set_throw_finish_zoom_rate(fighter_cutin_manager, 1.2);
-            FighterCutInManager::set_throw_finish_offset(fighter_cutin_manager, Vector3f{x: 0.0, y:5.0, z: 0.0});
+            FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.2);
+            FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x: 0.0, y:5.0, z: 0.0});
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(boma, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
-            AttackModule::clear_all(boma);
+            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+            AttackModule::clear_all(fighter.module_accessor);
         }
 }
 
@@ -578,18 +546,17 @@ unsafe fn throwhi(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 
@@ -597,7 +564,6 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", scripts = ["effect_attackhi3", "effect_attacks3hi"], category = ACMD_EFFECT, low_priority)]
 unsafe fn effectattackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
@@ -617,7 +583,6 @@ unsafe fn effectattackhi3(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "effect_attackairn", category = ACMD_EFFECT, low_priority)]
 unsafe fn effectattackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
@@ -669,7 +634,6 @@ unsafe fn effectattackairn(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", scripts = ["sound_attackhi3", "sound_attacks3hi"], category = ACMD_SOUND, low_priority)]
 unsafe fn soundattackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
@@ -686,7 +650,6 @@ unsafe fn soundattackhi3(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "samusd", script = "sound_attackairn", category = ACMD_SOUND, low_priority)]
 unsafe fn soundattackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
@@ -701,26 +664,25 @@ unsafe fn soundattackairn(fighter: &mut L2CAgentBase) {
 }
 
 //expression
-#[acmd_script( agent = "samusd", scripts = ["effect_attackhi3", "effect_attacks3hi"], category = ACMD_EXPRESSION, low_priority)]
+#[acmd_script( agent = "samusd", scripts = ["expression_attackhi3", "expression_attacks3hi"], category = ACMD_EXPRESSION, low_priority)]
 unsafe fn expressionattackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
     
         if macros::is_excute(fighter)
         {
-            VisibilityModule::set_int64(boma, hash40("body") as i64, hash40("body_hide_gun") as i64);
-            ArticleModule::remove_exist(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, smash::app::ArticleOperationTarget(0));
-            ArticleModule::generate_article(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, true, 0);
-            ArticleModule::change_motion(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, Hash40::new("s4s"), false, 0.0);
+            VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_hide_gun") as i64);
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, smash::app::ArticleOperationTarget(0));
+            ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, true, -1);
+            ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, Hash40::new("s4s"), false, 0.0);
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
         }
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            if WorkModule::is_flag(boma, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK) {
-                ArticleModule::generate_article(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, true, 0);
-                ArticleModule::change_motion(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, Hash40::new("s4s"), false, 0.0);
-                ArticleModule::set_frame(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, 1.0);
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_SMASH_SMASH_HOLD_TO_ATTACK) {
+                ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, true, -1);
+                ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, Hash40::new("s4s"), false, 0.0);
+                ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, 1.0);
                 smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
             }
         }
@@ -728,13 +690,13 @@ unsafe fn expressionattackhi3(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::RUMBLE_HIT(fighter, Hash40::new("rbkind_attackll"), 0);
-            ControlModule::set_rumble(boma, Hash40::new("rbkind_nohit_explosion"), 0, false, 0);
+            ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_nohit_explosion"), 0, false, 0);
         }
     frame(lua_state, 35.);
         if macros::is_excute(fighter)
         {
-            ArticleModule::remove_exist(boma, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, smash::app::ArticleOperationTarget(0));
-            VisibilityModule::set_int64(boma, hash40("body") as i64, hash40("body_normal") as i64);
+            ArticleModule::remove_exist(fighter.module_accessor, *FIGHTER_SAMUSD_GENERATE_ARTICLE_GUN, smash::app::ArticleOperationTarget(0));
+            VisibilityModule::set_int64(fighter.module_accessor, hash40("body") as i64, hash40("body_normal") as i64);
         }
 }
 

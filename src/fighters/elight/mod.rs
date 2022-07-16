@@ -1,9 +1,9 @@
-use smash::phx::Hash40;
+use std::arch::asm;
+//use smash::phx::Hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::app::sv_animcmd::*;
-use smash::app::sv_system;
 use smashline::*;
 use smash_script::*;
 
@@ -11,47 +11,44 @@ use smash_script::*;
 #[acmd_script( agent = "elight", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "elight", script = "game_turndash", category = ACMD_GAME, low_priority)]
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
         }
     frame(lua_state, 16.);
         if macros::is_excute(fighter)
         {
-            WorkModule::enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
         }
 }
 
 #[acmd_script( agent = "elight", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let boma = sv_system::battle_object_module_accessor(lua_state);
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
-            WorkModule::on_flag(boma, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }
 }
 
@@ -70,7 +67,7 @@ pub fn install() {
 //         frame(lua_state, 1)
 //             macros::FT_MOTION_RATE(fighter, 0.5)
 //             IS_EXIST_ARTICLE(17456)
-//             if (WorkModule::on_flag(boma, 0x353770)
+//             if (WorkModule::on_flag(fighter.module_accessor, 0x353770)
 //             {
 //                 if macros::is_excute(fighter)
 //                 {
@@ -80,7 +77,7 @@ pub fn install() {
 //             MotionModule::is_changing()
 //             if(0x353770(false, true)){
 //             if macros::is_excute(fighter){
-//             WorkModule::on_flag(boma, *60348)
+//             WorkModule::on_flag(fighter.module_accessor, *60348)
 //             }
 //             }
 //         frame(5)
@@ -94,10 +91,10 @@ pub fn install() {
 //             }
 //         frame(lua_state, 10)
 //             if macros::is_excute(fighter){
-//             AttackModule::clear_all(boma);
+//             AttackModule::clear_all(fighter.module_accessor);
 //             }
 //         frame(lua_state, 13)
-//             if(WorkModule::on_flag(boma, 0x353770)
+//             if(WorkModule::on_flag(fighter.module_accessor, 0x353770)
 //             {
 //                 if macros::is_excute(fighter)
 //                 {
@@ -107,7 +104,7 @@ pub fn install() {
 //             MotionModule::is_changing()
 //             if(0x353770(false, true)){
 //             if macros::is_excute(fighter){
-//             WorkModule::on_flag(boma, *60348)
+//             WorkModule::on_flag(fighter.module_accessor, *60348)
 //             }
 //             macros::FT_MOTION_RATE(fighter, 0.5)
 //             frame(lua_state, 24)

@@ -1,29 +1,38 @@
+use smash::app::{BattleObjectModuleAccessor, sv_battle_object};
+use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
-use smash::app::{BattleObjectModuleAccessor, utility::get_kind, BattleObject, sv_battle_object};
 use smash::*;
 
-use crate::FIGHTER_MANAGER_ADDR;
+use crate::vars::*;
 
-//Training modpack utils
-pub fn get_category(module_accessor: &mut app::BattleObjectModuleAccessor) -> i32 {
-    (module_accessor.info >> 28) as u8 as i32
+//THIS IS HDR CODE ASK BLUJAY OR SOMEONE IDK THIS IS FOR TESTING ONLY
+pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
+    unsafe {
+        let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
+        std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CFighterCommon))
+    }
 }
 
-pub fn is_fighter(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
+//Training modpack utils
+pub unsafe fn get_category(module_accessor: *mut app::BattleObjectModuleAccessor) -> i32 {
+    ((*module_accessor).battle_object_id >> 28) as u8 as i32
+
+}
+
+pub unsafe fn is_fighter(module_accessor: *mut app::BattleObjectModuleAccessor) -> bool {
     get_category(module_accessor) == BATTLE_OBJECT_CATEGORY_FIGHTER
 }
 
-pub fn is_operation_cpu(module_accessor: &mut app::BattleObjectModuleAccessor) -> bool {
+pub fn is_operation_cpu(module_accessor: *mut app::BattleObjectModuleAccessor) -> bool {
     unsafe {
-        if !is_fighter(module_accessor) {
+        if get_category(module_accessor) != *BATTLE_OBJECT_CATEGORY_FIGHTER {
             return false;
         }
 
         let entry_id_int = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as i32;
         let entry_id = app::FighterEntryID(entry_id_int);
-        let mgr = *(FIGHTER_MANAGER_ADDR as *mut *mut app::FighterManager);
-        let fighter_information = FighterManager::get_fighter_information(mgr, entry_id) as *mut app::FighterInformation;
+        let fighter_information = FighterManager::get_fighter_information(singletons::FighterManager(), entry_id);
 
         FighterInformation::is_operation_cpu(fighter_information)
     }
@@ -41,10 +50,10 @@ pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAcce
     return boma;
 }
 
-pub unsafe fn get_player_number(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> usize {
-    let player_number = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
-    return player_number;
-}
+// pub unsafe fn get_player_number(module_accessor: *mut smash::app::BattleObjectModuleAccessor) -> usize {
+//     let player_number = WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) as usize;
+//     return player_number;
+// }
 
 //author: dyad
 pub unsafe fn is_special_reset(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> bool {
@@ -88,7 +97,6 @@ pub unsafe fn is_status_damage(module_accessor: &mut smash::app::BattleObjectMod
 }
 
 pub unsafe fn get_stick_dir(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> i32 {
-    let status_kind = StatusModule::status_kind(module_accessor);
     let stick_x = ControlModule::get_stick_x(module_accessor) * PostureModule::lr(module_accessor);
     let stick_y = ControlModule::get_stick_y(module_accessor);
 
@@ -141,3 +149,68 @@ pub unsafe fn is_status_grabbed(module_accessor: &mut smash::app::BattleObjectMo
         return false;
     }
 }
+
+
+// 0x184c223f47,
+// 0x193bdcb0cc,
+// 0x1985267897,
+// 0x19f2214801,
+// hash40("collision_attr_aura"),
+// hash40("collision_attr_bind_extra"),
+// hash40("collision_attr_blaster_throw_down"),
+// hash40("collision_attr_blaster_throw_up"),
+// hash40("collision_attr_bury"),
+// hash40("collision_attr_bury_r"),
+// hash40("collision_attr_coin"),
+// hash40("collision_attr_curse_poison"),
+// hash40("collision_attr_cutup"),
+// hash40("collision_attr_cutup_metal"),
+// hash40("collision_attr_deathball"),
+// hash40("collision_attr_dedede_hammer"),
+// hash40("collision_attr_elec"),
+// hash40("collision_attr_elec_whip"),
+// hash40("collision_attr_fire"),
+// hash40("collision_attr_flower"),
+// hash40("collision_attr_ice"),
+// hash40("collision_attr_ink_hit"),
+// hash40("collision_attr_jack_bullet"),
+// hash40("collision_attr_jack_final"),
+// hash40("collision_attr_lay"),
+// hash40("collision_attr_magic"),
+// hash40("collision_attr_mario_local_coin"),
+// hash40("collision_attr_marth_shield_breaker"),
+// hash40("collision_attr_noamal"),
+// hash40("collision_attr_none"),
+// hash40("collision_attr_normal"),
+// hash40("collision_attr_normal_bullet"),
+// hash40("collision_attr_palutena_bullet"),
+// hash40("collision_attr_paralyze"),
+// hash40("collision_attr_pierce"),
+// hash40("collision_attr_purple"),
+// hash40("collision_attr_rush"),
+// hash40("collision_attr_saving"),
+// hash40("collision_attr_saving_ken"),
+// hash40("collision_attr_search"),
+// hash40("collision_attr_sleep"),
+// hash40("collision_attr_sleep_ex"),
+// hash40("collision_attr_slip"),
+// hash40("collision_attr_stab"),
+// hash40("collision_attr_sting"),
+// hash40("collision_attr_sting_bowarrow"),
+// hash40("collision_attr_sting_flash"),
+// hash40("collision_attr_stop"),
+// hash40("collision_attr_taiyo_hit"),
+// hash40("collision_attr_turn"),
+// hash40("collision_attr_water"),
+// hash40("collision_attr_whip")
+
+//tap jump checks
+//if ControlModule::is_enable_flick_jump(fighter.module_accessor) && ControlModule::get_stick_y(fighter.module_accessor) > 0.7 && ControlModule::get_flick_y(fighter.module_accessor) < 3
+
+//related to damage turn?
+//FIGHTER_STATUS_WORK_ID_FLOAT_RESERVE_DAMAGE_LR
+
+//yoshi jump armor is a flag woo
+//FIGHTER_YOSHI_INSTANCE_WORK_ID_FLAG_JUMP_AERIAL_ARMOR
+
+//let hitstun = (WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_WORK_INT_FRAME) - WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_DAMAGE_WORK_INT_HIT_STOP_FRAME)) as f32;
