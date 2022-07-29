@@ -48,6 +48,12 @@ fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
             StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, true);
         }
         
+        //"thou shalt not crossup with thy shit burst"
+        if status_kind == *FIGHTER_STATUS_KIND_ATTACK_DASH && AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            let fighter_kinetic_energy_motion = mem::transmute::<u64, &mut smash::app::FighterKineticEnergyMotion>(KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION));
+            FighterKineticEnergyMotion::set_speed_mul(fighter_kinetic_energy_motion, 0.25);
+        }
+
         //let fighter_kinetic_energy_motion = mem::transmute::<u64, &mut smash::app::FighterKineticEnergyMotion>(KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION));
         //removing roll movement
         // if curr_motion_kind == hash40("escape_f") || curr_motion_kind == hash40("escape_b") {

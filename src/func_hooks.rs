@@ -57,18 +57,17 @@ pub unsafe fn init_settings_replace(
     VarModule::reset(object, mask);
 
     // teleports fighters on landing
-    // Because the aerial ECB shift code currently runs in opff, it runs a frame "late"
-    // which causes characters to appear stuck halfway into the ground on the first frame they land
-    // so we need to re-shift your character back up to the proper height on that single frame
+    // The ECB shift code runs in opff, so it runs a frame late,
+    // which causes characters to be stuck halfway into the ground on the frame they land
+    // so they need to moved back up on that frame
     if is_fighter(boma) {
-        if !((&[
-            *FIGHTER_STATUS_KIND_CAPTURE_PULLED,
+        if ![*FIGHTER_STATUS_KIND_CAPTURE_PULLED,
             *FIGHTER_STATUS_KIND_CAPTURE_WAIT,
             *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE,
             *FIGHTER_STATUS_KIND_CAPTURE_CUT,
-            *FIGHTER_STATUS_KIND_THROWN
-        ]).contains(&StatusModule::prev_status_kind(boma, 1))
-        && !(&[
+            *FIGHTER_STATUS_KIND_THROWN,
+        ].contains(&StatusModule::prev_status_kind(boma, 1))
+        && ![
             *FIGHTER_STATUS_KIND_CAPTURE_PULLED,
             *FIGHTER_STATUS_KIND_CAPTURE_WAIT,
             *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE,
@@ -85,11 +84,13 @@ pub unsafe fn init_settings_replace(
             *FIGHTER_STATUS_KIND_TREAD_DAMAGE_AIR,
             *FIGHTER_STATUS_KIND_BURY,
             *FIGHTER_STATUS_KIND_BURY_WAIT
-        ]).contains(&StatusModule::prev_status_kind(boma, 0))
-        && !(WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR | *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)))
+        ].contains(&StatusModule::prev_status_kind(boma, 0)/*&status_kind*/)
+        && !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR)
+        && !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)
         && VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y) != 0.0 {
             if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
                 if StatusModule::prev_situation_kind(boma) != *SITUATION_KIND_GROUND {
+                    println!("teleport this bitch");
                     let fighter_pos = smash::phx::Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma) + VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y), z: PostureModule::pos_z(boma)};
                     PostureModule::set_pos(boma, &fighter_pos);
                 }

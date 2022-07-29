@@ -23,25 +23,25 @@ use galeforce_utils::vars::*;
 //     });
 // }
 
-// #[acmd_func(
-//     battle_object_category = BATTLE_OBJECT_CATEGORY_WEAPON, battle_object_kind = WEAPON_KIND_LUIGI_FIREBALL, animation = "regular", animcmd = "game_regular")]
-// pub fn fireballregular(fighter : &mut L2CFighterBase) {
-//     acmd!({
-//         frame(lua_state, 1)
-//             if macros::is_excute(fighter)
-//             {
-//                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 6.0, 361, 25, 0, 7, 2.7, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -3, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE)
-//                 AttackModule::set__stiff_mul(1.6) //+3 frames
-//                 AttackModule::enable_safe_pos()
-//             }
-//         frame(lua_state, 30)
-//             if macros::is_excute(fighter)
-//             {
-//                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 4.5, 361, 25, 0, 7, 2.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2.5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE)
-//                 AttackModule::set__stiff_mul(1.7) //+3 frames
-//             }
-//     });
-// }
+//weapons
+#[acmd_script( agent = "luigi_fireball", script = "game_regular", category = ACMD_GAME, low_priority)]
+unsafe fn fireballregular(weapon: &mut L2CAgentBase) {
+    let lua_state = weapon.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(weapon)
+        {
+            macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 361, 25, 0, 7, 2.7, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -3, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            AttackModule::set_add_reaction_frame_revised(weapon.module_accessor, 0, 3.0, false);
+            AttackModule::enable_safe_pos(weapon.module_accessor);
+        }
+    frame(lua_state, 30.);
+        if macros::is_excute(weapon)
+        {
+            macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 4.5, 361, 25, 0, 7, 2.0, 0.0, 0.0, 0.0, None, None, None, 0.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_SPEED, false, -2.5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            AttackModule::set_add_reaction_frame_revised(weapon.module_accessor, 0, 3.0, false);
+        }
+}
 
 //global edits
 #[acmd_script( agent = "luigi", script = "game_dash", category = ACMD_GAME, low_priority)]
@@ -355,6 +355,41 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "luigi", script = "game_specialswall", category = ACMD_GAME, low_priority)]
+unsafe fn specialswall(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("head"), 7.5, 361, 33, 0, 50, 16.0, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, -2.5, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_NONE);
+            macros::EFFECT(fighter, Hash40::new("sys_bomb_a"), Hash40::new("head"), 0, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, true);
+        }
+    frame(lua_state, 8.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+            MotionModule::set_rate(fighter.module_accessor, 2.0);
+        }
+}
+
+#[acmd_script( agent = "luigi", script = "game_specialswallend", category = ACMD_GAME, low_priority)]
+unsafe fn specialswallend(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 2.0);
+        }
+    frame(lua_state, 41.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_WALL_FLAG_DETACH);
+            JostleModule::set_status(fighter.module_accessor, true);
+        }
+}
+
 #[acmd_script( agent = "luigi", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME, low_priority)]
 unsafe fn speciallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -565,10 +600,10 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 
 pub fn install() {
     smashline::install_acmd_scripts!(
+        fireballregular,
         dash,
         turndash,
         //plungeraircatch,
-        //fireballregular,
         attack11,
         attacks3hi,
         attacks3s,
@@ -580,6 +615,8 @@ pub fn install() {
         attackhi4,
         specialhi,
         specialairhi,
+        specialswall,
+        specialswallend,
         speciallw,
         throwf,
         throwfl,

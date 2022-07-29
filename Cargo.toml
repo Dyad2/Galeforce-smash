@@ -1,6 +1,6 @@
 [package]
 name = "galeforce"
-version = "0.10.29"
+version = "0.10.30"
 authors = ["Dyad/"]
 edition = "2018"
 
