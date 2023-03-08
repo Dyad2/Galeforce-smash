@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -90,7 +89,7 @@ fn incin_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -101,7 +100,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -419,6 +418,39 @@ unsafe fn specialairn(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "gaogaen", scripts = ["game_speciallwstart", "game_specialairlwstart"], category = ACMD_GAME, low_priority)]
+unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 0.33);
+        }
+    frame(lua_state, 8.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_STATUS_SPECIAL_LW_FLAG_STANCE_START);
+            macros::FT_MOTION_RATE(fighter, 1.0);
+        }
+    frame(lua_state, 28.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GAOGAEN_STATUS_SPECIAL_LW_FLAG_STANCE_END);
+            macros::FT_MOTION_RATE(fighter, 0.5);
+        }
+    frame(lua_state, 32.);
+        if macros::is_excute(fighter)
+        {
+            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+        }
+    frame(lua_state, 46.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 1.0);
+        }
+}
+
 //grabs
 #[acmd_script( agent = "gaogaen", script = "game_catchattack", category = ACMD_GAME, low_priority)]
 unsafe fn catchattack(fighter: &mut L2CAgentBase) {
@@ -446,7 +478,7 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            //WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
@@ -468,7 +500,8 @@ pub fn install() {
         specialn,
         specialairn,
         specialhistart,
-        specialhifall, //test this
+        specialhifall, //TODO test this
+        speciallw,
         catchattack,
         escapeairslide
     );

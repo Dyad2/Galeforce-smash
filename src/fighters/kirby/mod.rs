@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -11,22 +10,21 @@ use smashline::*;
 use smash_script::*;
 use std::mem;
 
-use galeforce_utils::vars::*;
-//use custom_var::*;
+use galeforce_utils::{
+    vars::*,
+    table_const::*,
+};
 
+//kirby cannot use varmodule for this yet because it gets cleared as the game ends.
 static mut LAST_HAT : [i32; 9] = [1; 9];
-static mut ONE_HAT : [bool; 9] = [false; 9];
 
 #[fighter_frame( agent = FIGHTER_KIND_KIRBY )]
 fn kirby_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        //let lua_state = fighter.lua_state_agent;
         let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
 
         //fighterspecializer stuff
-        //let bo = smash::app::sv_system::battle_object(lua_state);
-        //let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
         let instance_boma = mem::transmute::<&mut smash::app::BattleObjectModuleAccessor, &mut smash::app::FighterModuleAccessor>(&mut *fighter.module_accessor);
 
         //faster hammer
@@ -37,16 +35,12 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
         //kirby hat in victory screen!
         if FighterManager::is_ready_go(singletons::FighterManager()) {
             LAST_HAT[entry_id as usize] = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
+            //VarModule::set_int(fighter.battle_object, kirby::instance::int::LAST_HAT, WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA));
         }
-        if [hash40("lose"), hash40("win_1"), hash40("win_1_wait"), hash40("win_2"), hash40("win_2_wait"), hash40("win_3"), hash40("win_3_wait")].contains(&curr_motion_kind) {
+        if [hash40("win_1"), hash40("win_2"), hash40("win_3")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_f32() == 1.0 {
+            //let last_hat = VarModule::get_int(fighter.battle_object, kirby::instance::int::LAST_HAT);
             WorkModule::set_int(fighter.module_accessor, LAST_HAT[entry_id as usize], *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
-            if ONE_HAT[entry_id as usize] {
-                ONE_HAT[entry_id as usize] = false;
-                FighterSpecializer_Kirby::copy_setup(instance_boma, 0, smash::app::FighterKind(LAST_HAT[entry_id as usize]), false, false);
-            }
-        }
-        else {
-            ONE_HAT[entry_id as usize] = true;
+            FighterSpecializer_Kirby::copy_setup(instance_boma, 0, smash::app::FighterKind(LAST_HAT[entry_id as usize]), false, false);
         }
     }
 }
@@ -78,7 +72,7 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -89,7 +83,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

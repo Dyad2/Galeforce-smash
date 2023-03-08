@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::app::lua_bind::*;
@@ -10,10 +9,9 @@ use smash::lua2cpp::L2CFighterCommon;
 use smashline::*;
 use smash_script::*;
 
-use crate::func_hooks::get_battle_object_from_id;
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::vars::*;
-//use galeforce_utils::utils::*;
+use galeforce_utils::vars::*; 
+use galeforce_utils::utils::get_battle_object_from_id;
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_DOLLY)]
@@ -43,7 +41,7 @@ fn dolly_frame(fighter: &mut L2CFighterCommon) {
         //GA - Terry Go!
         //type: buff
         //grants access to super specials. yep that's it :)
-        //more code in opff, opponent-side
+        //more code in notify_log_event hook
         if DamageModule::damage(fighter.module_accessor, 0) >= 100.0 && VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && !VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM) {
             VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM);
             galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
@@ -59,7 +57,7 @@ fn dolly_frame(fighter: &mut L2CFighterCommon) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_DOLLY_INSTANCE_WORK_ID_FLAG_ENABLE_SUPER_SPECIAL);
         }
         //cleanup
-        if DamageModule::damage(fighter.module_accessor, 0) < 100.0 {
+        if DamageModule::damage(fighter.module_accessor, 0) < 100.0 || [hash40("super_special"), hash40("super_special2_blow")].contains(&curr_motion_kind) {
             VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM);
         }
     }
@@ -70,7 +68,7 @@ fn dolly_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -81,7 +79,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -100,7 +98,6 @@ unsafe fn normalw(weapon: &mut L2CAgentBase) {
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
     let owner_object_id = owner_boma.battle_object_id;
     let owner_object = get_battle_object_from_id(owner_object_id);
-    //let fighter = get_fighter_common_from_accessor(owner_boma);
 
         if macros::is_excute(weapon)
         {

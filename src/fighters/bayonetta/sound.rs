@@ -1,15 +1,4 @@
-use std::arch::asm;
-use smash::phx::{Hash40, Vector3f};
-use smash::lib::lua_const::*;
-use smash::lua2cpp::L2CAgentBase;
-use smash::app::{
-    lua_bind::*,
-    sv_animcmd::*,
-    sv_animcmd,
-    sv_system,
-};
-use smashline::*;
-use smash_script::*;
+use super::*;
 
 //that one is weeeeeird
 // #[acmd_script( agent = "bayonetta", script = "sound_attack100end_default", category = ACMD_SOUND, low_priority)]

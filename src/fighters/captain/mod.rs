@@ -1,5 +1,4 @@
-use std::arch::asm;
-use smash::phx::{Vector3f, Hash40};
+use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
@@ -18,7 +17,7 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
 
-        if [hash40("special_air_lw"), hash40("special_lw")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_f32() <= 4.0 {
+        if [hash40("special_air_lw"), hash40("special_lw")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_i32() <= 4 {
             if ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor) < 0.0 && !VarModule::is_flag(fighter.battle_object, commons::instance::flag::DO_ONCE) {
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
                 PostureModule::reverse_lr(fighter.module_accessor);
@@ -38,7 +37,7 @@ fn captain_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -49,7 +48,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -170,13 +169,14 @@ unsafe fn specialsend(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.0);
         if macros::is_excute(fighter)
         {
-            macros::FT_MOTION_RATE(fighter, 0.8);
+            macros::FT_MOTION_RATE(fighter, 0.5);
             JostleModule::set_status(fighter.module_accessor, false);
             smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_DAMAGE_POWER, 10);
         }
     frame(lua_state, 6.0);
         if macros::is_excute(fighter)
         {
+            macros::FT_MOTION_RATE(fighter, 0.8);
             macros::ATTACK(fighter, 0, 0, Hash40::new("handl"), 10.0, 85, 30, 0, 82, 6.0, 0.0, -2.0, -1.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 10.0, 85, 30, 0, 82, 5.5, 0.0, 9.0, 5.5, Some(0.0), Some(9.0), Some(12.5), 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
             AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 3.0, false);
@@ -185,15 +185,15 @@ unsafe fn specialsend(fighter: &mut L2CAgentBase) {
     wait(lua_state, 1.0);
         if macros::is_excute(fighter)
         {
-            macros::FT_MOTION_RATE(fighter, 1.0);
             AttackModule::clear(fighter.module_accessor, 1, false);
             smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
             macros::ATTACK(fighter, 0, 0, Hash40::new("handl"), 10.0, 85, 30, 0, 82, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_fire"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_PUNCH);
             AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 3.0, false);
         }
-    wait(lua_state, 1.0);
+    wait(lua_state, 2.0);
         if macros::is_excute(fighter)
         {
+            macros::FT_MOTION_RATE(fighter, 0.75);
             AttackModule::clear_all(fighter.module_accessor);
             JostleModule::set_status(fighter.module_accessor, true);
         }
@@ -293,13 +293,13 @@ unsafe fn specialairn(fighter: &mut L2CAgentBase) {
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.0);
+    frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
-    frame(lua_state, 24.0);
+    frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);

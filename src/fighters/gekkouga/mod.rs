@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 //use smash::hash40;
 use smash::lib::lua_const::*;
@@ -8,10 +7,9 @@ use smashline::*;
 use smash_script::*;
 use std::mem;
 
-use crate::func_hooks::get_battle_object_from_id;
 use crate::fighters::common::galeforce::*;
 use galeforce_utils::vars::*;
-//use galeforce_utils::utils::*;
+use galeforce_utils::utils::get_battle_object_from_id;
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_GEKKOUGA )]
@@ -59,7 +57,7 @@ fn greninja_not_amphinobi_frame(fighter: &mut L2CFighterCommon) {
                 if [*FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_SHOT, *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_MAX_SHOT].contains(&status_kind) {
                     if MotionModule::frame(fighter.module_accessor) >= 16.0 {
                         VarModule::set_float(fighter.battle_object, gekkouga::instance::float::SHURICHARGE, VarModule::get_float(fighter.battle_object, gekkouga::instance::float::SHURICHARGE) / 1.66);
-                        StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_HOLD, true);
+                        StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_KIND_SPECIAL_N_HOLD, true);
                         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_N_WORK_FLAG_RELEASE_HOLD_BUTTON);
                         ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_GEKKOUGA_GENERATE_ARTICLE_SHURIKEN, false, -1);
                         WorkModule::set_float(fighter.module_accessor, VarModule::get_float(fighter.battle_object, gekkouga::instance::float::SHURICHARGE), *FIGHTER_GEKKOUGA_INSTANCE_WORK_ID_FLOAT_SPECIAL_N_CHARGE_RATE);
@@ -108,7 +106,7 @@ unsafe fn water_specialhilr(weapon: &mut L2CAgentBase) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -119,7 +117,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -521,6 +519,33 @@ unsafe fn specialairsattackf(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "gekkouga", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME, low_priority)]
+unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.3);
+        }
+    frame(lua_state, 8.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.4);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_LW_FLAG_SHIELD);
+            macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_XLU);
+            macros::HIT_NODE(fighter, Hash40::new("kneel"), *HIT_STATUS_XLU);
+        }
+    frame(lua_state, 35.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_NORMAL);
+            macros::HIT_NODE(fighter, Hash40::new("kneel"), *HIT_STATUS_NORMAL);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_GEKKOUGA_STATUS_SPECIAL_LW_FLAG_SHIELD);
+        }
+}
+
 //grabs and throws
 #[acmd_script( agent = "gekkouga", script = "game_catchattack", category = ACMD_GAME, low_priority)]
 unsafe fn catchattack(fighter: &mut L2CAgentBase) {
@@ -580,6 +605,7 @@ pub fn install() {
         specialairsattackf,
         specialsattackb,
         specialairsattackb,
+        speciallw,
         catchattack,
         escapeairslide
     );

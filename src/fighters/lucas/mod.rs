@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -13,7 +12,7 @@ use smash_script::*;
 // unsafe fn lucas_specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
 //     //KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-//     if fighter.global_table[0x16].get_i32() == *SITUATION_KIND_GROUND {
+//     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
 //         MotionModule::change_motion(fighter.module_accessor, Hash40::new("special_s"), 0.0, 1.0, false, 0.0, false, false);
 //     }
 //     else {
@@ -24,7 +23,7 @@ use smash_script::*;
 
 // unsafe extern "C" fn lucas_specials_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     if StatusModule::is_situation_changed(fighter.module_accessor) {
-//         if fighter.global_table[0x16].get_i32() == *SITUATION_KIND_GROUND {
+//         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
 //             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("special_s"), -1.0, 1.0, 0.0, false, false);
 //         }
 //         else {
@@ -33,7 +32,7 @@ use smash_script::*;
 //     }
 //     if MotionModule::is_end(fighter.module_accessor) {
 //         //KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-//         if fighter.global_table[0x16].get_i32() == *SITUATION_KIND_GROUND {
+//         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
 //             fighter.change_status(FIGHTER_STATUS_KIND_WAIT.into(), false.into());
 //         }
 //         else {
@@ -48,7 +47,7 @@ use smash_script::*;
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -59,7 +58,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

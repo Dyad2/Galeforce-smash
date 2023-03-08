@@ -4,6 +4,7 @@ use super::*;
 fn masked_marth_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+        let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
         if curr_motion_kind == hash40("special_hi") {
             VarModule::on_flag(fighter.battle_object, marcina::instance::flag::LUCINA_SPECIAL_HI_LANDING);
@@ -37,6 +38,36 @@ fn masked_marth_frame(fighter: &mut L2CFighterCommon) {
         }
         if is_status_damage(&mut *fighter.module_accessor) {
             macros::AFTER_IMAGE_OFF(fighter, 1);
+        }
+
+        //GA - Exalt's Exertion - Father's teachings
+        // type: cancel
+        //  Hits side b 3 (any angle) and cancel it with a wavedash. Disables side b for s short time.
+        if !is_operation_cpu(fighter.module_accessor) {
+            if status_kind == *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S3 {
+                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                    VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                }
+            }
+            else {
+                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                StopModule::cancel_hit_stop(fighter.module_accessor);
+                if ControlModule::get_stick_y(fighter.module_accessor) > 0.0 {
+                    ControlModule::set_main_stick_y(fighter.module_accessor, 0.0);
+                }
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
+                StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
+                //MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
+                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 420);
+            }
+            if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) >= 0 {
+                chrom_disable_dance_effect(fighter);
+                VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
+            }
         }
     }
 }

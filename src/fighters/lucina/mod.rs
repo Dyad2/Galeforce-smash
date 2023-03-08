@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -7,6 +6,7 @@ use smash::app::{lua_bind::*, sv_animcmd::*};
 use smashline::*;
 use smash_script::*;
 
+use crate::fighters::common::galeforce::*;
 use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
 

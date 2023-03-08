@@ -1,23 +1,36 @@
-use smash::app::{BattleObjectModuleAccessor, sv_battle_object};
-use smash::lua2cpp::L2CFighterCommon;
+use smash::app::{sv_battle_object, BattleObject};
+//use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::*;
 
 use crate::vars::*;
 
-//THIS IS HDR CODE ASK BLUJAY OR SOMEONE IDK THIS IS FOR TESTING ONLY
-pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
-    unsafe {
-        let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
-        std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CFighterCommon))
+//HDR code
+extern "C"{
+    // hdr stuff
+    // gets whether we are in training mode
+    #[link_name = "\u{1}_ZN3app9smashball16is_training_modeEv"]
+    pub fn is_training_mode() -> bool;
+}
+
+// pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
+//     unsafe {
+//         let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
+//         std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CFighterCommon))
+//     }
+// }
+
+pub unsafe fn is_hitlag(module_accessor: *mut smash::app::BattleObjectModuleAccessor) -> bool {
+    if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_ATTACK_SUSPEND_FRAME) > 0 {
+        return true;
     }
+    return false;
 }
 
 //Training modpack utils
 pub unsafe fn get_category(module_accessor: *mut app::BattleObjectModuleAccessor) -> i32 {
     ((*module_accessor).battle_object_id >> 28) as u8 as i32
-
 }
 
 pub unsafe fn is_fighter(module_accessor: *mut app::BattleObjectModuleAccessor) -> bool {
@@ -44,9 +57,13 @@ pub unsafe fn get_attacker_number(module_accessor: &mut smash::app::BattleObject
 	return attacker_number;
 }
 
-//author: ayerbe
 pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAccessor {
     let boma = &mut *sv_battle_object::module_accessor(smash::app::Fighter::get_id_from_entry_id(entry_id));
+    return boma;
+}
+
+pub unsafe fn get_boma_from_id(id: u32) -> *mut smash::app::BattleObjectModuleAccessor {
+    let boma = &mut *sv_battle_object::module_accessor(id);
     return boma;
 }
 
@@ -56,6 +73,15 @@ pub unsafe fn get_boma(entry_id: i32) -> *mut smash::app::BattleObjectModuleAcce
 // }
 
 //author: dyad
+pub unsafe fn check_jump_input(module_accessor: *mut smash::app::BattleObjectModuleAccessor) -> bool {
+    let cat1 = ControlModule::get_command_flag_cat(module_accessor, 0);
+
+    if (ControlModule::is_enable_flick_jump(module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
+        return true;
+    }
+    return false;
+}
+
 pub unsafe fn is_special_reset(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> bool {
     let status_kind = StatusModule::status_kind(module_accessor);
     let situation_kind = StatusModule::situation_kind(module_accessor);
@@ -138,18 +164,20 @@ pub unsafe fn get_stick_dir(module_accessor: &mut smash::app::BattleObjectModule
 pub unsafe fn is_status_grabbed(module_accessor: &mut smash::app::BattleObjectModuleAccessor) -> bool {
     let status_kind = StatusModule::status_kind(module_accessor);
 
-    if [*FIGHTER_STATUS_KIND_CAPTURE_CUT, *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE, *FIGHTER_STATUS_KIND_THROWN, *FIGHTER_STATUS_KIND_SWING_GAOGAEN_FAILURE,
+    if [*FIGHTER_STATUS_KIND_CAPTURE_CUT, *FIGHTER_STATUS_KIND_CAPTURE_DAMAGE, *FIGHTER_STATUS_KIND_CAPTURE_WAIT ,*FIGHTER_STATUS_KIND_THROWN, *FIGHTER_STATUS_KIND_SWING_GAOGAEN_FAILURE,
         *FIGHTER_STATUS_KIND_SWING_GAOGAEN_LARIAT, *FIGHTER_STATUS_KIND_SWING_GAOGAEN_RETURN, *FIGHTER_STATUS_KIND_SWING_GAOGAEN_SHOULDER, *FIGHTER_STATUS_KIND_SWING_GAOGAEN_THROWN,
         *FIGHTER_STATUS_KIND_SWALLOWED_THROWN, *FIGHTER_STATUS_KIND_SWALLOWED_THROWN_STAR, *FIGHTER_STATUS_KIND_SHOULDERED_DONKEY_THROWN, *FIGHTER_STATUS_KIND_MIIFIGHTER_SUPLEX_THROWN,
         *FIGHTER_STATUS_KIND_MEWTWO_THROWN, *FIGHTER_STATUS_KIND_MIIFIGHTER_COUNTER_THROWN, *FIGHTER_STATUS_KIND_CLUNG_THROWN_BLANK_DIDDY, *FIGHTER_STATUS_KIND_CLUNG_THROWN_DIDDY,
         *FIGHTER_STATUS_KIND_CLUNG_CAPTAIN, *FIGHTER_STATUS_KIND_CLUNG_DAMAGE_DIDDY, *FIGHTER_STATUS_KIND_CLUNG_DIDDY, *FIGHTER_STATUS_KIND_CLUNG_GANON].contains(&status_kind) {
-            return true;
+        return true;
     }
     else {
         return false;
     }
 }
 
+#[skyline::from_offset(0x3ac540)]
+pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
 
 // 0x184c223f47,
 // 0x193bdcb0cc,

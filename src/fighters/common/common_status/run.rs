@@ -1,7 +1,4 @@
 use super::*;
-use smash::lua2cpp::{L2CFighterCommon, *};
-use galeforce_utils::table_const::*;
-use smashline::*;
 
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon14status_Run_SubEv")]
 unsafe fn status_run_sub(fighter: &mut L2CFighterCommon) {
@@ -79,12 +76,16 @@ unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
         StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_APPEAL, false);
     }
     
+    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+        fighter.change_status(FIGHTER_STATUS_KIND_GUARD_ON.into(), false.into());
+    }
+    
     if ControlModule::get_stick_y(fighter.module_accessor) < -0.66 {
         if GroundModule::is_passable_ground(fighter.module_accessor) {
-            StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_PASS, false);
+            fighter.change_status(FIGHTER_STATUS_KIND_PASS.into(), false.into());
         }
         else {
-            StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_SQUAT, false);
+            fighter.change_status(FIGHTER_STATUS_KIND_SQUAT.into(), false.into());
         }
     }
 

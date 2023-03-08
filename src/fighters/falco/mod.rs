@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -38,11 +37,11 @@ fn falco_frame(fighter: &mut L2CFighterCommon) {
                 zelda_buff_effect(fighter);
                 if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
                 && (ControlModule::get_stick_x(fighter.module_accessor).abs() >= 0.1 || ControlModule::get_stick_y(fighter.module_accessor).abs() >= 0.1)
-                && !StopModule::is_stop(fighter.module_accessor) && !AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL)
+                && !is_hitlag(fighter.module_accessor) && !AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_ALL)
                 && situation_kind == *SITUATION_KIND_AIR 
                 && !CancelModule::is_enable_cancel(fighter.module_accessor) 
                 && status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                     MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
                     VarModule::on_flag(fighter.battle_object, falco::instance::flag::AIRDASH);
                     VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
@@ -63,10 +62,11 @@ fn falco_frame(fighter: &mut L2CFighterCommon) {
             }
         }
 
-
         //Fast fall at any point during down special
-        if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW && fighter.global_table[MOTION_FRAME].get_f32() >= 4. && (ControlModule::get_command_flag_cat(fighter.module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {
-            WorkModule::set_flag(fighter.module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+        if !is_operation_cpu(fighter.module_accessor) {
+            if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_LW && fighter.global_table[MOTION_FRAME].get_i32() >= 4 && (ControlModule::get_command_flag_cat(fighter.module_accessor, 1) & *FIGHTER_PAD_CMD_CAT2_FLAG_FALL_JUMP) != 0 {
+                WorkModule::set_flag(fighter.module_accessor, true, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_DIVE);
+            }
         }
     }
 }
@@ -76,7 +76,7 @@ fn falco_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -87,7 +87,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

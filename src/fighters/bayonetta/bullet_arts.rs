@@ -1,18 +1,4 @@
-use std::arch::asm;
-use smash::phx::Hash40;
-use smash::hash40;
-use smash::lib::lua_const::*;
-use smash::app::lua_bind::*;
-use smash::app::sv_battle_object;
-use smash::lua2cpp::L2CAgentBase;
-use smash::{phx::Vector3f, lua2cpp::L2CFighterCommon};
-use smash::app::sv_animcmd::*;
-use smash::app::sv_animcmd;
-use smashline::*;
-use smash_script::*;
-
-use galeforce_utils::vars::*;
-use custom_var::*;
+use super::*;
 
 //attacks
 #[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkon_attack11", category = ACMD_GAME, low_priority)]

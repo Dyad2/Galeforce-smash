@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -6,10 +5,8 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::{phx::Vector3f, lua2cpp::L2CFighterCommon};
 use smash::app::sv_animcmd::*;
-use smash::app::sv_animcmd;
 use smashline::*;
 use smash_script::*;
-use std::mem;
 
 use galeforce_utils::vars::*;
 use custom_var::*;
@@ -26,19 +23,24 @@ fn rosetta_frame(fighter: &mut L2CFighterCommon) {
             if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
                 VarModule::on_flag(fighter.battle_object, rosetta::instance::flag::TICO_RECALL);
                 if situation_kind == SITUATION_KIND_GROUND {
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+                    fighter.sub_transition_group_check_ground_jump_mini_attack();
+                    fighter.sub_transition_group_check_ground_jump();
                 }
                 else if situation_kind == SITUATION_KIND_AIR {
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, false);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
+                    fighter.sub_transition_group_check_air_jump_aerial();
                 }
             }
             if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
                 VarModule::on_flag(fighter.battle_object, rosetta::instance::flag::TICO_RECALL);
                 if situation_kind == SITUATION_KIND_GROUND {
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, false);
+                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, false);
                 }
                 else if situation_kind == SITUATION_KIND_AIR {
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
+                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 }
             }
         }
@@ -50,7 +52,7 @@ fn rosetta_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -61,7 +63,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

@@ -90,7 +90,7 @@ mod samusd;
 mod sheik;
 mod shizue;
 mod shulk;
-mod simon;
+//mod simon;
 mod snake;
 mod sonic;
 mod szerosuit;
@@ -113,7 +113,7 @@ pub fn install(){
     brave::install();        //testing
     buddy::install();       //testing
     captain::install();     //testing
-    chrom::install();       //okay
+    //chrom::install();       //char removed
     cloud::install();       //testing
     common::install();     //lol
     daisy::install();       //testing
@@ -164,7 +164,7 @@ pub fn install(){
     palutena::install();    //testing
     peach::install();       //testing
     pfushigisou::install();
-    pichu::install();       //testing
+    //pichu::install();       //char removed
     pickel::install();
     pikachu::install();
     pikmin::install();
@@ -187,7 +187,7 @@ pub fn install(){
     sheik::install();       //testing
     shizue::install();      //testing
     shulk::install();       //testing
-    simon::install();       //testing
+    //simon::install();       //char removed
     snake::install();       //testing
     sonic::install();
     szerosuit::install();   //testing

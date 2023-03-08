@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::{Hash40, Vector3f};
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -21,7 +20,7 @@ fn ARCHETYPE_EARTH_frame(fighter: &mut L2CFighterCommon) {
         // type: cancel
         //  cancel dash attack with a jump if it counter hits and opponent. additional code in opff
         if curr_motion_kind == hash40("attack_dash") {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && fighter.global_table[MOTION_FRAME].get_f32() >= 19.0 {
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && fighter.global_table[MOTION_FRAME].get_i32() >= 19 {
                 if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
                     StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
                     galeforce_apply_effect(&mut *fighter.module_accessor, 1.0);
@@ -40,7 +39,7 @@ fn ARCHETYPE_EARTH_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -51,7 +50,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

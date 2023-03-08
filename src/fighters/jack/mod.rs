@@ -1,10 +1,8 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
-use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
@@ -50,7 +48,7 @@ use galeforce_utils::vars::*;
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -61,7 +59,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -616,22 +614,40 @@ unsafe fn specialairnshoot(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "jack", script = "game_speciallw", category = ACMD_GAME, low_priority)]
+unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            smash_script::shield!(fighter, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_SHIELD, 0, *FIGHTER_JACK_SHIELD_GROUP_KIND_SPECIAL_LW);
+            smash_script::shield!(fighter, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_JACK_REFLECTOR_KIND_SPECIAL_LW, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+        }
+    frame(lua_state, 29.);
+        if macros::is_excute(fighter)
+        {
+            smash_script::shield!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_SHIELD, 0, *FIGHTER_JACK_SHIELD_GROUP_KIND_SPECIAL_LW);
+            smash_script::shield!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_JACK_REFLECTOR_KIND_SPECIAL_LW, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+        }
+}
+
 #[acmd_script( agent = "jack", script = "game_speciallwcounter", category = ACMD_GAME, low_priority)]
 unsafe fn speciallwcounter(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-        frame(lua_state, 5.);
-            if macros::is_excute(fighter)
-            {
-                macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 12.0, 361, 51, 0, 80, 17.5, 0.0, 8.75, 8.75, None, None, None, 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
-                AttackModule::set_force_reaction(fighter.module_accessor, 0, true, false);
-                AttackModule::set_force_reaction(fighter.module_accessor, 1, true, false);
-            }
-        frame(lua_state, 8.);
-            if macros::is_excute(fighter)
-            {
-                AttackModule::clear_all(fighter.module_accessor);
-            }
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 12.0, 361, 51, 0, 80, 17.5, 0.0, 8.75, 8.75, None, None, None, 0.75, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_ENERGY);
+            AttackModule::set_force_reaction(fighter.module_accessor, 0, true, false);
+            AttackModule::set_force_reaction(fighter.module_accessor, 1, true, false);
+        }
+    frame(lua_state, 8.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
 }
 
 //throws
@@ -689,6 +705,7 @@ pub fn install() {
         attackairb,
         attackairlw,
         specialairnshoot,
+        speciallw,
         speciallwcounter,
         throwb,
         escapeairslide

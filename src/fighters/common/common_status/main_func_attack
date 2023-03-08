@@ -1,0 +1,251 @@
+  _ZN7lua2cpp16L2CFighterCommon32main_func__fighter_status_attackEv
+  
+  
+  local_func__fighter_status_attack_1(this);
+  pLVar3 = &this->field_0x118;
+  lib::L2CValue::operator=(pLVar3,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK11 | _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK
+          | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x99c52257e);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK12 | _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK
+  ;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x9055b74c4);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK13 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x9725c4452);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK100 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x1003559f46);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_DASH |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb6c751ced);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_S3 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb7dd72b57);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_S3_S2 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xcefa7ad71);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_S3_S3 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc98a09de7);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI3 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xacbfc42e6);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI3 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xca808c13d);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW3 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa18b4d5e5);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_S4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb78983dd2);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa5598d745);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xcad47d7b8);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc5748eadb);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc2194ab4b);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_LW4 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON |
+          FIGHTER_LOG_MASK_FLAG_HAJIKI;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa86d04046);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  uVar1 = _FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ADDITIONS_ATTACK_16 |
+          _FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | _FIGHTER_LOG_MASK_FLAG_ACTION_TRIGGER_ON;
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x9ceb46930);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xdf3589b70);
+  lib::L2CValue::L2CValue(&LStack112,uVar1);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x99c52257e);
+  lib::L2CValue::L2CValue(&LStack112,0x1a93df2186);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x9055b74c4);
+  lib::L2CValue::L2CValue(&LStack112,0x1a1d502665);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x9725c4452);
+  lib::L2CValue::L2CValue(&LStack112,0x1ad1fa26fb);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0x1003559f46);
+  lib::L2CValue::L2CValue(&LStack112,0x20e72373c8);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb6c751ced);
+  lib::L2CValue::L2CValue(&LStack112,0x1c57ead860);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb7dd72b57);
+  lib::L2CValue::L2CValue(&LStack112,0x1a219e0d7a);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xcba28ee97);
+  lib::L2CValue::L2CValue(&LStack112,0x1c8ff9836f);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc244b16f0);
+  lib::L2CValue::L2CValue(&LStack112,0x1cbb24f17a);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xcefa7ad71);
+  lib::L2CValue::L2CValue(&LStack112,0x1ca920b053);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc98a09de7);
+  lib::L2CValue::L2CValue(&LStack112,0x1c658ab0cd);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xacbfc42e6);
+  lib::L2CValue::L2CValue(&LStack112,0x1b1eff2608);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xca808c13d);
+  lib::L2CValue::L2CValue(&LStack112,0x1b1eff2608);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa18b4d5e5);
+  lib::L2CValue::L2CValue(&LStack112,0x1b73161f91);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xb78983dd2);
+  lib::L2CValue::L2CValue(&LStack112,0x1a2b5b0463);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa5598d745);
+  lib::L2CValue::L2CValue(&LStack112,0x1b143a2f11);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xcad47d7b8);
+  lib::L2CValue::L2CValue(&LStack112,0x1b143a2f11);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc5748eadb);
+  lib::L2CValue::L2CValue(&LStack112,0x1b143a2f11);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xc2194ab4b);
+  lib::L2CValue::L2CValue(&LStack112,0x1b143a2f11);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xa86d04046);
+  lib::L2CValue::L2CValue(&LStack112,0x1b79d31688);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xea274b695);
+  lib::L2CValue::L2CValue(&LStack112,0x1a2b5b0463);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar2 = (L2CValue *)lib::L2CValue::operator[](pLVar2,0xf5db36b5c);
+  lib::L2CValue::L2CValue(&LStack112,0x1b143a2f11);
+  lib::L2CValue::operator=(pLVar2,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  pLVar3 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0x10f40d7b92);
+  pLVar3 = (L2CValue *)lib::L2CValue::operator[](pLVar3,0xfee188235);
+  lib::L2CValue::L2CValue(&LStack112,0x1b79d31688);
+  lib::L2CValue::operator=(pLVar3,(L2CValue *)&LStack112);
+  lib::L2CValue::~L2CValue(&LStack112);
+  return;
+}

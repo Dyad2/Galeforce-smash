@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
@@ -7,15 +6,12 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::vars::*;
-use custom_var::*;
-
 //global edits
 #[acmd_script( agent = "dedede", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -26,7 +22,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -396,13 +392,13 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.0);
+    frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
-    frame(lua_state, 24.0);
+    frame(lua_state, 24.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
@@ -412,11 +408,12 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 //effect
 #[acmd_script( agent = "dedede", script = "expression_landingheavy", category = ACMD_GAME, low_priority)]
 unsafe fn expressionlandingheavy(fighter: &mut L2CAgentBase) {
+    let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
 
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+            if prev_status != *FIGHTER_STATUS_KIND_ESCAPE_AIR {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

@@ -89,11 +89,6 @@ unsafe fn effectspecialhi2(fighter: &mut L2CAgentBase) {
         {
             macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_lucina_sword1"), Hash40::new("tex_lucina_sword2"), 8, Hash40::new("sword1"), 0.0, 0.0, 1.65, Hash40::new("sword1"), -0.0, -0.0, 12.4, true, Hash40::new("lucina_sword"), Hash40::new("haver"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.2, 0.2);
             macros::LAST_EFFECT_SET_ALPHA(fighter, 0.85);
-
-            //macros::LANDING_EFFECT(fighter, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-            //macros::EFFECT_FOLLOW(fighter, Hash40::new("chrom_tenku_line"), Hash40::new("top"), 0, 8, 0, 0, 0, 0, 1, true);
-            //macros::LAST_EFFECT_SET_ALPHA(fighter, 0.95);
-            //EffectModule::enable_sync_init_pos_last(fighter.module_accessor);
         }
     frame(lua_state, 47.);
         if macros::is_excute(fighter)
@@ -106,12 +101,6 @@ unsafe fn effectspecialhi2(fighter: &mut L2CAgentBase) {
         {
             macros::EFFECT_FOLLOW(fighter, Hash40::new("sys_spin_wind_s"), Hash40::new("top"), 0, 14, -1.5, 0, 90, -90, 1.1, true);
             macros::LAST_EFFECT_SET_RATE(fighter, 2);
-        }
-    frame(lua_state, 49.);
-        if macros::is_excute(fighter)
-        {
-            //macros::EFFECT_OFF_KIND(fighter, Hash40::new("chrom_tenku_sword_spin"), true, true);
-            //macros::EFFECT_OFF_KIND(fighter, Hash40::new("lucina_sword_blue"), true, true);
         }
 }
 
@@ -133,7 +122,6 @@ unsafe fn effectspecialhi4(fighter: &mut L2CAgentBase) {
         {
             macros::AFTER_IMAGE_OFF(fighter, 4);
             macros::LANDING_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 10, 0, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 0, 0, false);
-            //macros::EFFECT(fighter, Hash40::new("chrom_tenku_landing"), Hash40::new("top"), 0, 0, 10, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
             macros::LAST_EFFECT_SET_RATE(fighter, 0.9);
             macros::EFFECT(fighter, Hash40::new("sys_crown"), Hash40::new("top"), 10, 0, 0, 0, 180, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
         }

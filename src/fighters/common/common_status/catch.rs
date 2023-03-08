@@ -4,10 +4,8 @@ use {
     smash::{
         lua2cpp::{L2CFighterCommon, *},
         app::lua_bind::*,
-        lib::{lua_const::*, L2CValue}
+        lib::L2CValue
     },
-    std::mem,
-    galeforce_utils::table_const::*,
 };
 
 //most of this is a gift from wuboy :)
@@ -19,7 +17,7 @@ unsafe fn status_catch(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     // disabled for now, reactivate when i'm done with archetypes?
     // if ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor) < -0.25 {
-    //     if fighter.global_table[MOTION_FRAME].get_f32() <= 1.0 {
+    //     if fighter.global_table[MOTION_FRAME].get_i32() <= 1.0 {
     //         let fighter_kinetic_energy_motion = mem::transmute::<u64, &mut smash::app::FighterKineticEnergyMotion>(KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION));
     //         FighterKineticEnergyMotion::set_speed_mul(fighter_kinetic_energy_motion, -1.0);
     //         PostureModule::reverse_lr(fighter.module_accessor);

@@ -1,25 +1,4 @@
-use smash::{
-    hash40,
-    app::{
-        //BattleObjectModuleAccessor,
-        //BattleObject,
-        //sv_battle_object,
-        lua_bind::*,
-        utility::get_kind
-    },
-    phx::{
-        Vector2f,
-        //Vector3f
-    },
-    lua2cpp::{
-        L2CFighterCommon
-    },
-    lib::lua_const::*
-};
-
-use galeforce_utils::vars::*;
-use galeforce_utils::utils::*;
-use custom_var::*;
+use super::*;
 
 //=================================================================
 //== ECB ADJUSTMENTS
@@ -32,7 +11,7 @@ use custom_var::*;
 //                  prevented lucina's ecb to be shifted while in aether's falling motion
 //                  partly restored zelda's phantom back to 9.0.1 behavior
 //=================================================================
-pub unsafe fn ecb_shifts(fighter : &mut L2CFighterCommon) {
+pub unsafe fn run(fighter : &mut L2CFighterCommon) {
     let object_kind = get_kind(&mut *fighter.module_accessor);
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
     let prev_status_kind: i32 = StatusModule::prev_status_kind(fighter.module_accessor, 0);
@@ -77,7 +56,7 @@ pub unsafe fn ecb_shifts(fighter : &mut L2CFighterCommon) {
                        ].contains(&status_kind))
                     || (WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR))
                     || (WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND))
-                    || (VarModule::is_flag(fighter.battle_object, commons::instance::flag::ESCAPE_AIR_UP));
+                    || (WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) >= 0.66);
 
     if is_fighter(&mut *fighter.module_accessor) {
         if !FighterManager::is_ready_go(singletons::FighterManager()) {
@@ -92,7 +71,7 @@ pub unsafe fn ecb_shifts(fighter : &mut L2CFighterCommon) {
                     // Small
                     let group1: &[i32] = &[*FIGHTER_KIND_KIRBY,*FIGHTER_KIND_PIKACHU,*FIGHTER_KIND_NESS,*FIGHTER_KIND_PURIN,*FIGHTER_KIND_GAMEWATCH,*FIGHTER_KIND_POPO,*FIGHTER_KIND_NANA,*FIGHTER_KIND_PICHU,*FIGHTER_KIND_METAKNIGHT,*FIGHTER_KIND_WARIO,*FIGHTER_KIND_PZENIGAME,*FIGHTER_KIND_PFUSHIGISOU,*FIGHTER_KIND_LUCAS,*FIGHTER_KIND_PIKMIN,*FIGHTER_KIND_TOONLINK,*FIGHTER_KIND_DUCKHUNT,*FIGHTER_KIND_MURABITO,*FIGHTER_KIND_SHIZUE];
                     // Medium
-                    let group2: &[i32] = &[*FIGHTER_KIND_MARIO, *FIGHTER_KIND_YOSHI, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_BUDDY, *FIGHTER_KIND_PICKEL, *FIGHTER_KIND_INKLING];
+                    let group2: &[i32] = &[*FIGHTER_KIND_MARIO, *FIGHTER_KIND_YOSHI, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_BUDDY, /*FIGHTER_KIND_PICKEL,*/ *FIGHTER_KIND_INKLING];
                     // medium large
                     let group3: &[i32] = &[*FIGHTER_KIND_YOUNGLINK];
                     // Large
@@ -112,12 +91,15 @@ pub unsafe fn ecb_shifts(fighter : &mut L2CFighterCommon) {
                         _ => max_offset,
                     };
 
+                    if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+                        max_offset -= 0.2;
+                    }
                     //fix so bayo's side b doesn't go through the stage so much
-                    if object_kind == *FIGHTER_KIND_BAYONETTA && status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U {
+                    else if object_kind == *FIGHTER_KIND_BAYONETTA && status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U {
                         max_offset = 4.5;
                     }
                     //lucina lands earlier while falling with up b
-                    if object_kind == *FIGHTER_KIND_LUCINA && [hash40("special_hi_3"), hash40("landing_fall_special")].contains(&curr_motion_kind) {
+                    else if object_kind == *FIGHTER_KIND_LUCINA && [hash40("special_hi_3"), hash40("landing_fall_special")].contains(&curr_motion_kind) {
                         max_offset = 0.;
                     }
                 }
@@ -126,7 +108,6 @@ pub unsafe fn ecb_shifts(fighter : &mut L2CFighterCommon) {
                 }
             }
             else if situation_kind == *SITUATION_KIND_GROUND {
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::ESCAPE_AIR_UP);
                 max_offset = 0.;
             } 
             else {

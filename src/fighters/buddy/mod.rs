@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -11,26 +10,18 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::vars::*;
-use custom_var::*;
+use galeforce_utils::{vars::*, utils::*};
 
 #[fighter_frame( agent = FIGHTER_KIND_BUDDY )]
 fn buddy_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
-        
         if MotionModule::motion_kind(fighter.module_accessor) == hash40("attack_air_n") {
             if MotionModule::frame(fighter.module_accessor) >= 35.0 && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) 
-              && ((ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0) 
-              && !StopModule::is_stop(fighter.module_accessor) && VarModule::is_flag(fighter.battle_object, commons::instance::flag::DO_ONCE) {
-                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP, false);
-                //let banjump_speed = smash::phx::Vector3f { x: 0.0, y: 3., z: 0.0 };
-                //KineticModule::add_speed(fighter.module_accessor, &banjump_speed);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
+              && check_jump_input(fighter.module_accessor) 
+              && !is_hitlag(fighter.module_accessor) {
+                println!("cancel");
+                fighter.sub_transition_group_check_air_jump_aerial(); //FIXME doesnt work?
             }
-        }
-        if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND || StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_CLIFF_CATCH {
-            VarModule::on_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
         }
     }
 }
@@ -40,7 +31,7 @@ fn buddy_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -51,7 +42,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -197,7 +188,7 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-            MotionModule::set_rate(fighter.module_accessor, 1.55);
+            MotionModule::set_rate(fighter.module_accessor, 1.75);
             macros::ATTACK(fighter, 0,  0, Hash40::new("top"), 1.0, 48, 100, 60, 0, 4.3, 0.0, 4.5, -5.1, None, None, None, 0.7, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 1,  0, Hash40::new("top"), 1.0, 335, 100, 40, 0, 4.3, 0.0, 15.0, -5.1, None, None, None, 0.75, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 2,  0, Hash40::new("top"), 1.0, 220, 100, 40, 0, 4.3, 0.0, 15.0, 6.1, None, None, None, 0.75, 0.8, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_PUNCH);
@@ -208,7 +199,7 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
             {
                 AttackModule::clear_all(fighter.module_accessor);
-                MotionModule::set_rate(fighter.module_accessor, 1.0);
+                MotionModule::set_rate(fighter.module_accessor, 1.2);
             }
     wait(lua_state, 1.0);
     if macros::is_excute(fighter)
@@ -394,15 +385,15 @@ unsafe fn throwb(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "buddy", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    
-    frame(lua_state, 14.0);
-    if macros::is_excute(fighter)
+
+    frame(lua_state, 14.);
+        if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
-    frame(lua_state, 24.0);
-    if macros::is_excute(fighter)
+    frame(lua_state, 24.);
+        if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
         }

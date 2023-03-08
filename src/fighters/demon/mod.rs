@@ -1,7 +1,6 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
-use smash::lib::{lua_const::*, L2CValue};
+use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
 use smash::app::sv_animcmd::*;
@@ -27,19 +26,18 @@ fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
         //let cat4 = ControlModule::get_command_flag_cat(fighter.module_accessor, 3);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
-        //println!("stick_dir: {}", get_stick_dir(&mut *fighter.module_accessor));
 
         //flash tornado attack cancel
-        if curr_motion_kind == hash40("attack_stand_5") && fighter.global_table[MOTION_FRAME].get_f32() <= 3.0 && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
+        if curr_motion_kind == hash40("attack_stand_5") && fighter.global_table[MOTION_FRAME].get_i32() <= 3 && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
         || ControlModule::is_enable_flick_jump(fighter.module_accessor) && ControlModule::get_stick_y(fighter.module_accessor) > 0.7 && ControlModule::get_flick_y(fighter.module_accessor) < 3) {
-            L2CFighterCommon::change_status_jump_mini_attack(fighter, L2CValue::I32(0));
+            L2CFighterCommon::change_status_jump_mini_attack(fighter, 0.into());
             PostureModule::reverse_lr(fighter.module_accessor);
             PostureModule::update_rot_y_lr(fighter.module_accessor);
         }
 
         //abolishing fist anim is stacked over oni front kick
         // if curr_motion_kind == hash40("attack_s3_s") && MotionModule::frame(fighter.module_accessor) >= 61.0 {
-        //     StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
+        //     StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
         // }
         if curr_motion_kind == 68500721045 && MotionModule::frame(fighter.module_accessor) <= 1.0 {
             if !INPUT_IS_COMMAND[entry_id as usize] {
@@ -79,7 +77,7 @@ fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
                 }
                 else if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
                     INPUT_IS_COMMAND[entry_id as usize] = true;
-                    StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STAND_3, false);
+                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_DEMON_STATUS_KIND_ATTACK_STAND_3, false);
                 }
             }
             //cleanup
@@ -104,7 +102,7 @@ fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -115,7 +113,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn dashb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -126,7 +124,7 @@ unsafe fn dashb(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -174,7 +172,7 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            JostleModule::set_push_speed_x_overlap_rate_status(fighter.module_accessor, 20.0);
+            JostleModule::set_push_speed_x_overlap_rate(fighter.module_accessor, 20.0);
         }
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
@@ -191,7 +189,7 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            JostleModule::set_push_speed_x_overlap_rate_status(fighter.module_accessor, 0.0);
+            JostleModule::set_push_speed_x_overlap_rate(fighter.module_accessor, 0.0);
             AttackModule::clear_all(fighter.module_accessor);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO);
@@ -301,7 +299,7 @@ unsafe fn tsunamikick(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            JostleModule::set_push_speed_x_overlap_rate_status(fighter.module_accessor, 0.1);
+            JostleModule::set_push_speed_x_overlap_rate(fighter.module_accessor, 0.1);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
         }
     frame(lua_state, 7.);
@@ -329,7 +327,7 @@ unsafe fn tsunamikick(fighter: &mut L2CAgentBase) {
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
         {
-            JostleModule::set_push_speed_x_overlap_rate_status(fighter.module_accessor, 0.0);
+            JostleModule::set_push_speed_x_overlap_rate(fighter.module_accessor, 0.0);
             AttackModule::clear_all(fighter.module_accessor);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_DEMON_STATUS_ATTACK_STAND_3_FLAG_CHECK_STEP);
             HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
@@ -432,7 +430,7 @@ unsafe fn abolishingfist(fighter: &mut L2CAgentBase) {
         {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 && StopModule::is_stop(fighter.module_accessor) {
+            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 && is_hitlag(fighter.module_accessor) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 5.0, 361, 10, 0, 50, 4.5, 0.0, 0.0, 0.0, Some(0.0), Some(-4.0), Some(0.0), 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new_raw(0x1985267897), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
             }
             else {

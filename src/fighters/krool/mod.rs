@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -28,7 +27,7 @@ fn krool_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -39,7 +38,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -389,6 +388,39 @@ unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "krool", scripts = ["game_special_lw", "game_special_air_lw"], category = ACMD_GAME, low_priority)]
+unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_STATUS_SPECIAL_LW_FLAG_SHIELD);
+            macros::FT_MOTION_RATE(fighter, 0.85);
+        }
+    frame(lua_state, 29.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_KROOL_STATUS_SPECIAL_LW_FLAG_SHIELD);
+            macros::FT_MOTION_RATE(fighter, 1.0);
+        }
+    frame(lua_state, 43.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 0.7);
+        }
+    frame(lua_state, 68.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 0.5);
+        }
+    frame(lua_state, 82.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 1.);
+        }
+}
+
 //other
 #[acmd_script( agent = "krool", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
@@ -427,6 +459,7 @@ pub fn install() {
         attackairn,
         attackairf,
         attackairlw,
+        speciallw,
         escapeairslide,
         appeals
     );

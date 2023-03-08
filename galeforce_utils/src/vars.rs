@@ -25,17 +25,18 @@ That's a LOT of space, and I don't anticipate it all gets used up with proper va
 pub static mut INT_OFFSET : usize = 0x4E19D0;
 // pub static mut INT64_OFFSET : usize = 0x4E19F0;
 pub static mut FLOAT_OFFSET : usize = 0x4E19D0;
-//pub static mut NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET : usize = 0x675A20;
+pub static mut NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET : usize = 0x675A20;
 pub static mut DEFINE_LUA_CONSTANT_OFFSET : usize = 0x3727390; //13.0.1
+
 pub static INT_SEARCH_CODE: &[u8] = &[
     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x11, 0x40, 0xf9,
 ];
 pub static FLOAT_SEARCH_CODE: &[u8] = &[
     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x19, 0x40, 0xf9,
 ];
-pub static INT64_SEARCH_CODE: &[u8] = &[
-    0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x15, 0x40, 0xf9,
-];
+// pub static INT64_SEARCH_CODE: &[u8] = &[
+//     0x00, 0x1c, 0x40, 0xf9, 0x08, 0x00, 0x40, 0xf9, 0x03, 0x15, 0x40, 0xf9,
+// ];
 pub static NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE: &[u8] = &[
     0xff, 0x03, 0x03, 0xd1,
     0xe8, 0x2b, 0x00, 0xfd,
@@ -52,13 +53,11 @@ pub static NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE: &[u8] = &[
 // Common
 // pub const ZERO_VECTOR : Vector3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
 // pub static mut FGC_TRAINING : bool = false;
-
 // pub const ATTACK_AIR_N_MASK : i32 = 0b00001;
 // pub const ATTACK_AIR_F_MASK : i32 = 0b00010;
 // pub const ATTACK_AIR_B_MASK : i32 = 0b00100;
 // pub const ATTACK_AIR_HI_MASK : i32 = 0b01000;
 // pub const ATTACK_AIR_LW_MASK : i32 = 0b10000;
-
 // pub const ATTACK_N_MASK : i32 = 0b0000001;
 // pub const ATTACK_S3_MASK : i32 = 0b0000010;
 // pub const ATTACK_HI3_MASK : i32 = 0b0000100;
@@ -85,10 +84,12 @@ pub mod commons {
             pub const PLATFORM_FALL_STUN : i32 = 0x000C;
             pub const ALLOW_REVERSE_ATTACK_LW3 : i32 = 0x000D;
             pub const WAVEDASH : i32 = 0x000E;
-            pub const ESCAPE_AIR_IS_SLIDE : i32 = 0x000F;
-            pub const ESCAPE_AIR_UP : i32 = 0x0010;
-            pub const IS_VICTIM_GANON_GA : i32 = 0x0011;
-            pub const PURIN_MARK : i32 = 0x0012;
+            //pub const ESCAPE_AIR_UP : i32 = 0x000E; //must stay in instance
+            //pub const JUMP_SQUAT_TO_ESCAPE_AIR : i32 = 0x0011;
+            pub const IS_VICTIM_GANON_GA : i32 = 0x0012;
+            pub const PURIN_MARK : i32 = 0x0013;
+            pub const ALLOW_PERFECT_PIVOT : i32 = 0x0014;
+            pub const SMASH_TURN : i32 = 0x0015;
         }
         pub mod int {
             pub const FRAME_COUNTER : i32 = 0x0000;
@@ -100,25 +101,30 @@ pub mod commons {
             pub const KAMUI_DRAGON_HEX_DURATION : i32 = 0x0006;
         }
         pub mod float {
-            pub const SUBSTICK_X : i32 = 0x0000;
-            pub const SUBSTICK_Y : i32 = 0x0001;
-            pub const ECB_OFFSET_Y : i32 = 0x0002;
+            pub const STICK_X : i32 = 0x0000;
+            pub const STICK_Y : i32 = 0x0001;
+            pub const SUBSTICK_X : i32 = 0x0002;
+            pub const SUBSTICK_Y : i32 = 0x0003;
+            pub const ECB_OFFSET_Y : i32 = 0x0004;
         }
     }
-    // pub mod status {
-    //     pub mod flag {
-    //         pub const JUMP_CANCEL : i32 = 0x1000;
-    //         pub const NORMAL_CANCEL : i32 = 0x1001;
-    //         // pub const DASH_CANCEL : i32 = 0x1002;
-    //         // pub const SPECIAL_CANCEL : i32 = 0x1003;
-    //     }
-    //     pub mod int {
-    //         pub const ENABLED_AERIALS : i32 = 0x1000;
-    //     }
-    //     pub mod float {
-    //         pub const HIT_FRAME : i32 = 0x1000;
-    //     }
-    // }
+     pub mod status {
+         pub mod flag {
+            pub const DISABLE_BACKDASH: i32 = 0x1000;
+            pub const SHIELD_BREAK_ONCE: i32 = 0x1001;
+            //pub const WAVELAND : i32 = 0x1002;
+            //pub const ESCAPE_AIR_IS_SLIDE : i32 = 0x1003;
+            pub const JUMP_SQUAT_TO_ESCAPE_AIR : i32 = 0x1003;
+            // pub const DASH_CANCEL : i32 = 0x1002;
+            // pub const SPECIAL_CANCEL : i32 = 0x1003;
+         }
+         //pub mod int {
+         //    pub const ENABLED_AERIALS : i32 = 0x1000;
+         //}
+         //pub mod float {
+         //    pub const HIT_FRAME : i32 = 0x1000;
+         //}
+    }
 }
 
 // pub mod attack_air {
@@ -153,6 +159,7 @@ pub mod bayonetta {
         pub mod flag {
             pub const DODGE_OFFSET : i32 = 0x0100;
             pub const DODGE_OFFSET_SECOND : i32 = 0x0101;
+            //pub const ENABLE_CANCEL_INTO_SPECIAL_N : i32 = 0x0102;
         }
         pub mod int {
             pub const DODGE_OFFSET_NUM : i32 = 0x0101;
@@ -161,6 +168,7 @@ pub mod bayonetta {
     pub mod status {
         pub mod flag {
             pub const SPECIAL_HI_SHOOT : i32 = 0x1100;
+            pub const DODGE_OFFSET_FORBID : i32 = 0x1101;
         }
     }
 }
@@ -168,6 +176,13 @@ pub mod dolly { //terry
     pub mod instance {
         pub mod float {
             pub const SPECIAL_N_CHARGE : i32 = 0x0100;
+        }
+    }
+}
+pub mod edge { //sephiroth
+    pub mod instance {
+        pub mod flag {
+            pub const FLARE_EXISTS : i32 = 0x0100;
         }
     }
 }
@@ -207,6 +222,13 @@ pub mod gekkouga { //greninja
 //         }
 //     }
 // }
+pub mod kirby {
+    pub mod instance {
+        pub mod int {
+            pub const LAST_HAT : i32 = 0x0100;
+        }
+    }
+}
 pub mod lucario { 
     pub mod instance {
         pub mod int {
@@ -217,6 +239,16 @@ pub mod lucario {
         }
         pub mod flag {
             pub const ATTACK_AIR_LW_CHARGED : i32 = 0x0100;
+        }
+    }
+}
+pub mod link {
+    pub mod instance {
+        pub mod float {
+            pub const DAMAGE_STORAGE : i32 = 0x0100;
+        }
+        pub mod flag {
+            pub const RESTORE_DAMAGE : i32 = 0x0100;
         }
     }
 }
@@ -260,6 +292,11 @@ pub mod reflet {
             pub const GALEFORCE_ATTACK_INPUT_WINDOW : i32 = 0x0100;
         }
     }
+    pub mod status {
+        pub mod flag {
+            pub const ATTACK_BUTTON_RELEASED : i32 = 0x1100;
+        }
+    }
 }
 pub mod rosetta { //rosalina
     pub mod instance {
@@ -268,6 +305,13 @@ pub mod rosetta { //rosalina
         }
     }
 }
+// pub mod rockman { //megaman
+//     pub mod status {
+//         pub mod flag {
+//             pub const ATTACK_HI4_LANDING : i32 = 0x1100;
+//         }
+//     }
+// }
 pub mod roy {
     pub mod instance {
         pub mod float {
@@ -290,55 +334,12 @@ pub mod zelda {
     }
 }
 
-//old
-// //shared
-//     //Flags
-//         //pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_N : i32 = 0x20000116;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_S : i32 = 0x20000117;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_HI : i32 = 0x20000118;
-//         //pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_LW : i32 = 0x20000119;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_SPECIAL_ALL : i32 = 0x2000011A;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_AIR_TURN_INITIATE : i32 = 0x2000011B;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_AIR_TURN_APPEAL_METHOD_INITIATE : i32 = 0x2000011C;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_AIR_TURN_STICK_RELEASED : i32 = 0x2000011D;
-//         pub const commons::instance::flag::GALEFORCE_ATTACK_ON : i32 = 0x2000011E;
-//         pub const commons::instance::flag::GALEFORCE_ATTACK_CONFIRM : i32 = 0x2000011F;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE : i32 = 0x20000120;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_PLATFORM_FALL_STUN : i32 = 0x20000121;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_ALLOW_REVERSE_ATTACK_LW3 : i32 = 0x20000122;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_WAVEDASH : i32 = 0x20000123;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_ESCAPE_AIR_UP : i32 = 0x20000124;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_IS_GANON_GA_VICTIM : i32 = 0x20000125;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_PURIN_MARK : i32 = 0x20000126;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLAG_AIRDODGE_DIRECTIONAL : i32 = 0x20000128;
-
-//     //Integers
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_FRAME_COUNTER : i32 = 0x100000ED; //input frame
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_AIR_TURN_INPUT_FRAME : i32 = 0x100000EE; //input frame
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_AIR_TURN_COUNT : i32 = 0x100000EF; //number of times used
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_AIR_TURN_APPEAL_METHOD_DELAY_FRAME : i32 = 0x100000F0; //taunt delay counter
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_SUBSTICK_AIR_ATTACK : i32 = 0x100000F1;
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_PURIN_MARK_DURATION : i32 = 0x100000F2;
-//         pub const FIGHTER_INSTANCE_WORK_ID_INT_KAMUI_DRAGON_HEX_DURATION : i32 = 0x100000F3;
-
-//     //floats - apparently they can't start at 4d, character specific vars begin there i think
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLOAT_SUBSTICK_X : i32 = 0x5F;
-//         pub const FIGHTER_INSTANCE_WORK_ID_FLOAT_SUBSTICK_Y : i32 = 0x60;
-
 pub mod singletons {
     // All credit for this to blujay, macros are very cool
     use super::*;
     use skyline::nn::ro::LookupSymbol;
     
     static INIT : Once = Once::new();
-
-    pub static mut FIGHTER_MANAGER : *const *mut smash::app::FighterManager = 0 as _;
-    pub static mut FIGHTER_CUTIN_MANAGER : *const *mut smash::app::FighterCutInManager = 0 as _;
-
-    // extern "C" {
-    //     #[link_name = "\u{1}_ZN3lib9SingletonIN3app16BattleObjectSlowEE9instance_E"]
-    //     pub static mut BATTLE_OBJECT_SLOW: *mut u8;
-    // }
     
     macro_rules! expose_singleton {
         ($($public:ident, $private:ident)*) => {
@@ -365,9 +366,14 @@ pub mod singletons {
         }}
     }
 
+    pub static mut FIGHTER_MANAGER : *const *mut smash::app::FighterManager = 0 as _;
+    pub static mut FIGHTER_CUTIN_MANAGER : *const *mut smash::app::FighterCutInManager = 0 as _;
+    pub static mut BATTLE_OBJECT_WORLD : *const *mut smash::app::BattleObjectWorld = 0 as _;
+    
     expose_singleton!(
-        FighterManager, FIGHTER_MANAGER
-        FighterCutInManager, FIGHTER_CUTIN_MANAGER
+        FighterManager,              FIGHTER_MANAGER
+        FighterCutInManager,         FIGHTER_CUTIN_MANAGER
+        BattleObjectWorld,           BATTLE_OBJECT_WORLD
     );
 
     pub fn init() {
@@ -379,6 +385,10 @@ pub mod singletons {
             assign_symbol!(
                 FIGHTER_CUTIN_MANAGER,
                 "_ZN3lib9SingletonIN3app19FighterCutInManagerEE9instance_E\0"
+            );
+            assign_symbol!(
+                BATTLE_OBJECT_WORLD,
+                "_ZN3lib9SingletonIN3app17BattleObjectWorldEE9instance_E\0"
             );
         });
     }

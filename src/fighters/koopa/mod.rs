@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -9,7 +8,7 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::vars::*;
+use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
 use crate::fighters::common::galeforce::*;
 
@@ -17,7 +16,6 @@ use crate::fighters::common::galeforce::*;
 fn cheater_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
 
         if curr_motion_kind == hash40("special_s_catch") && MotionModule::frame(fighter.module_accessor) <= 5. {
             MotionModule::set_rate(fighter.module_accessor, 0.75);
@@ -30,8 +28,8 @@ fn cheater_frame(fighter: &mut L2CFighterCommon) {
         }
 
         if curr_motion_kind == hash40("special_lw") {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && ((ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0) {
-                StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, false);
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && check_jump_input(fighter.module_accessor) {
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, false);
                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
@@ -47,7 +45,7 @@ fn cheater_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -58,7 +56,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -473,12 +471,13 @@ unsafe fn fx_attackairf(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "koopa", script = "expression_landingheavy", category = ACMD_EXPRESSION, low_priority)]
 unsafe fn ex_landingheavy(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
+    let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
 
-    //methodlua2cpp::L2CFighterAnimcmdExpressioncommons::expression_LandingHeavyRumble()()
+    //clears damage speed when using wavedash/land
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 2);
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+            if prev_status != *FIGHTER_STATUS_KIND_ESCAPE_AIR {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

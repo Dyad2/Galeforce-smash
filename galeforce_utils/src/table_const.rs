@@ -38,7 +38,7 @@
     pub const CHECK_GROUND_ATTACK_PRE:        i32 = 0x28;
     pub const DASH_COMMON_PRE:                i32 = 0x29;
     pub const RUN_MAIN_PRE:                   i32 = 0x2A;
-    pub const JUMP_SQUAT_MAIN_PRE:            i32 = 0x2B;
+    pub const JUMP_SQUAT_MAIN_PRE:            i32 = 0x2B; //hdr calls this one CUSTOM_ROUTINE?
     pub const CHECK_AIR_LANDING_PRE:          i32 = 0x2C;
     pub const CHECK_AIR_ITEM_THROW_PRE:       i32 = 0x2D;
     pub const CHECK_AIR_ATTACK_PRE:           i32 = 0x2E;

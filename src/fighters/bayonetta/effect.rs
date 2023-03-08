@@ -1,15 +1,4 @@
-use std::arch::asm;
-use smash::phx::{Hash40, Vector3f};
-use smash::lib::lua_const::*;
-use smash::lua2cpp::L2CAgentBase;
-use smash::app::{
-    lua_bind::*,
-    sv_animcmd::*,
-    sv_animcmd,
-    sv_system,
-};
-use smashline::*;
-use smash_script::*;
+use super::*;
 
 #[acmd_script( agent = "bayonetta", script = "effect_attack11", category = ACMD_EFFECT, low_priority)]
 unsafe fn effectattack11(fighter: &mut L2CAgentBase) {
@@ -556,6 +545,85 @@ unsafe fn effectlandingairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
+//specials
+#[acmd_script( agent = "bayonetta", script = "effect_specialhi", category = ACMD_EFFECT, low_priority)]
+unsafe fn effectspecialhi(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 14.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_whirlwind_l"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.2, 0, 0, 0, 0, 0, 0, false);
+        }
+    frame(lua_state, 15.);
+        if macros::is_excute(fighter)
+        {
+            macros::LANDING_EFFECT(fighter, Hash40::new("sys_v_smoke_a"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.8, 0, 0, 0, 0, 0, 0, false);
+
+            let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND);
+            fighter.clear_lua_stack();
+            smash_script::lua_args!(fighter, effect_kind, Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1, true);
+            sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
+            EffectModule::set_alpha_last(fighter.module_accessor, 0.6);
+
+            let effect_kind2 = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_SPIRAL);
+            fighter.clear_lua_stack();
+            smash_script::lua_args!(fighter, effect_kind2, Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1, true);
+            sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
+            EffectModule::set_alpha_last(fighter.module_accessor, 0.4);
+
+            //macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("bayonetta_afterburner_line2"), Hash40::new("top"), 0, 25, 0, -90, 0, 0, 1.2, true);
+        }
+    frame(lua_state, 32.);
+        if macros::is_excute(fighter)
+        {
+            let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND);
+            fighter.clear_lua_stack();
+            smash_script::lua_args!(fighter, effect_kind, -1);
+            sv_animcmd::EFFECT_DETACH_KIND_WORK(fighter.lua_state_agent);
+        }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_specialairhi", category = ACMD_EFFECT, low_priority)]
+unsafe fn effectspecialairhi(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 15.);
+        if macros::is_excute(fighter)
+        {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_HI_FLAG_REUSE as i32) {
+                let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND);
+                fighter.clear_lua_stack();
+                smash_script::lua_args!(fighter, effect_kind, Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1, true);
+                sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
+                EffectModule::set_alpha_last(fighter.module_accessor, 0.6);
+
+                let effect_kind2 = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_SPIRAL);
+                fighter.clear_lua_stack();
+                smash_script::lua_args!(fighter, effect_kind2, Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1, true);
+                sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
+                EffectModule::set_alpha_last(fighter.module_accessor, 0.4);
+            }
+            else {
+                let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND);
+                fighter.clear_lua_stack();
+                smash_script::lua_args!(fighter, effect_kind, Hash40::new("top"), 0, 30, 0, 0, 0, 0, 1, true);
+                sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
+                EffectModule::set_alpha_last(fighter.module_accessor, 0.6);
+            }
+
+            //macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("bayonetta_afterburner_line2"), Hash40::new("top"), 0, 25, 0, -90, 0, 0, 1.2, true);
+        }
+    frame(lua_state, 32.);
+        if macros::is_excute(fighter)
+        {
+            let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_WITCHTWIST_WIND);
+            fighter.clear_lua_stack();
+            smash_script::lua_args!(fighter, effect_kind, -1);
+            sv_animcmd::EFFECT_DETACH_KIND_WORK(fighter.lua_state_agent);
+        }
+}
+
 #[acmd_script( agent = "bayonetta", script = "effect_specials", category = ACMD_EFFECT, low_priority)]
 unsafe fn effectspecials(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -692,7 +760,7 @@ unsafe fn effectspecialairsdlanding(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             fighter.clear_lua_stack();
-            let boma = sv_system::battle_object_module_accessor(lua_state);
+            let boma = smash::app::sv_system::battle_object_module_accessor(lua_state);
             smash_script::lua_args!(fighter, WorkModule::get_int(boma, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_AFTERBURNER_LINE), -1); //keep boma, immutable borrow stuff
             sv_animcmd::EFFECT_DETACH_KIND_WORK(fighter.lua_state_agent);
             macros::EFFECT_DETACH_KIND(fighter, Hash40::new("bayonetta_afterburner_line2"), -1);
@@ -804,6 +872,270 @@ unsafe fn effectthrowlw(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "bayonetta", script = "effect_walkfast", category = ACMD_EFFECT, low_priority)]
+unsafe fn walkfast(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    for _ in 0..i32::MAX {
+        frame(lua_state, 22.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 47.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 71.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 95.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        wait_loop_sync_mot(lua_state);
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_walkmiddle", category = ACMD_EFFECT, low_priority)]
+unsafe fn walkmiddle(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    for _ in 0..i32::MAX {
+        frame(lua_state, 24.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 54.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 80.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 106.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 4, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        wait_loop_sync_mot(lua_state);
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_walkslow", category = ACMD_EFFECT, low_priority)]
+unsafe fn walkslow(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 2.0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+        }
+    for _ in 0..i32::MAX {
+        frame(lua_state, 28.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 58.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 88.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 118.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        wait_loop_sync_mot(lua_state);
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_run", category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_run(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2.0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    for _ in 0..i32::MAX {
+        frame(lua_state, 15.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 29.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 4.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        frame(lua_state, 45.);
+            if macros::is_excute(fighter)
+            {
+                macros::FOOT_EFFECT(fighter, Hash40::new("sys_run_smoke"), Hash40::new("top"), 2.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+                macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2.5, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+            }
+        wait_loop_sync_mot(lua_state);
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_dash", category = ACMD_EFFECT, low_priority)]
+unsafe fn fxdash(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -3.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    frame(lua_state, 15.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("null"), Hash40::new("top"), 6.0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_runbrake", category = ACMD_EFFECT, low_priority)]
+unsafe fn fxrunbrake(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 6.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 6.0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_runbrakel", category = ACMD_EFFECT, low_priority)]
+unsafe fn fxrunbrakel(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 7.5, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 7.5, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_runbraker", category = ACMD_EFFECT, low_priority)]
+unsafe fn fxrunbraker(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 6.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 6.0, 0, 0, 0, 0, 0, 0.95, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_walk"), Hash40::new("top"), 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+    wait(lua_state, 4.);
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_landingheavy", category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_landingheavy(fighter: &mut L2CAgentBase) {
+    
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_landing_smoke"), Hash40::new("top"), 0.0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+        }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_landinglight", category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_landinglight(fighter: &mut L2CAgentBase) {
+    
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_landing_smoke_s"), Hash40::new("top"), 0.0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.9, 0, 0, 0, 0, 0, 0, false);
+        }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_landingfallspecial", category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_landingfallspecial(fighter: &mut L2CAgentBase) {
+    
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+}
+
+#[acmd_script( agent = "bayonetta", scripts = ["effect_landingairn", "effect_landingairhi", "effect_landingairf", "effect_landingairf2", "effect_landingairf3", "effect_landingairb"], category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_landingairall(fighter: &mut L2CAgentBase) {
+    
+        if macros::is_excute(fighter)
+        {
+            macros::FOOT_EFFECT(fighter, Hash40::new("sys_down_smoke"), Hash40::new("top"), 0.0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+            macros::EFFECT(fighter, Hash40::new("bayonetta_butterfly_landing"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1.0, 0, 0, 0, 0, 0, 0, false);
+        }
+}
+
 pub fn install() {
     smashline::install_acmd_scripts!(
         effectattack11,
@@ -816,9 +1148,23 @@ pub fn install() {
         effectattackairf,
         effectattackairlw,
         effectlandingairlw,
+        effectspecialhi,
+        effectspecialairhi,
         effectspecials,
         effectspecialairsdlanding,
         effectthrowlw,
         effectthrowf,
+        walkfast,
+        walkmiddle,
+        walkslow,
+        fxdash,
+        fx_run,
+        fxrunbrake,
+        fxrunbrakel,
+        fxrunbraker,
+        fx_landingheavy,
+        fx_landinglight,
+        fx_landingfallspecial,
+        fx_landingairall,
     );
 }

@@ -1,10 +1,6 @@
 use {
     custom_var::*,
     skyline::{
-        //nro::{
-            //self,
-            //NroInfo
-        //},
         hooks::{
             getRegionAddress,
             Region
@@ -12,22 +8,21 @@ use {
     },
     smash::{
         hash40,
-        app::{lua_bind::*, *},
-        lib::lua_const::*
+        app::{lua_bind::*, FighterManager, *},
+        lib::lua_const::*,
+        phx::{Vector3f, Hash40},
     },
     galeforce_utils::{
-        table_const::*,
         utils::*,
+        utils::get_battle_object_from_id,
         vars,
         vars::*
     },
-    crate::ecb_shifts::ecb_shifts
 };
 
-#[skyline::from_offset(0x3ac540)]
-pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
-
-//author: wuboy! custom_var stuff. resets status vars when status changes
+//author: 
+// var reset code: wuboy! custom_var stuff. resets status vars when status changes.
+// ecb teleport: hdr code adapted for my needs
 #[skyline::hook( replace = StatusModule::init_settings )]
 pub unsafe fn init_settings_replace(
     boma: *mut BattleObjectModuleAccessor,
@@ -90,7 +85,6 @@ pub unsafe fn init_settings_replace(
         && VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y) != 0.0 {
             if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
                 if StatusModule::prev_situation_kind(boma) != *SITUATION_KIND_GROUND {
-                    println!("teleport this bitch");
                     let fighter_pos = smash::phx::Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma) + VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y), z: PostureModule::pos_z(boma)};
                     PostureModule::set_pos(boma, &fighter_pos);
                 }
@@ -106,14 +100,18 @@ pub unsafe fn init_settings_replace(
 pub unsafe fn on_flag_replace(
 boma: &mut smash::app::BattleObjectModuleAccessor,
 flag: i32) -> u64 {
-    if flag == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI {
-        if !ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) 
-        && (ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::is_enable_flick_jump(boma) && ControlModule::get_stick_y(boma) >= 0.7)) {
+    // let fighter_kind = smash::app::utility::get_kind(boma);
+    // let status_kind = StatusModule::status_kind(boma);
+
+    // if fighter_kind == *FIGHTER_KIND_ROCKMAN 
+    //   && flag == *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING
+    //   && ![*FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_START].contains(&status_kind) {
+    //     return 0;
+    // }
+    if flag == *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI 
+      && (!ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP_MINI) 
+      && (ControlModule::check_button_on(boma, *CONTROL_PAD_BUTTON_JUMP) || (ControlModule::is_enable_flick_jump(boma) && ControlModule::get_stick_y(boma) >= 0.7))) {
             return 0;
-        }
-        else {
-            original!()(boma, flag)
-        }
     }
     else {
         original!()(boma, flag)
@@ -160,13 +158,14 @@ term: i32
     //falling from platforms
     //when hit, check if character is falling off
     if ![*FIGHTER_STATUS_KIND_CATCHED_CUT_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_FALL_GANON].contains(&prev_status_kind_1) {
-        if StopModule::is_stop(module_accessor) && situation_kind == *SITUATION_KIND_GROUND {
+        if is_hitlag(module_accessor) && situation_kind == *SITUATION_KIND_GROUND {
             VarModule::on_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
         }
         if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_DAMAGE].contains(&prev_status_kind) && situation_kind == *SITUATION_KIND_AIR && VarModule::is_flag(object,commons::instance::flag::PLATFORM_FALL_STUN) {
             VarModule::off_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
         }
-        if curr_motion_kind == 50017544460 {
+        if curr_motion_kind == 50017544460 { //0xBA547290C
+            //there's a better way to do this, this will look silly on very low plats
             if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 30 && situation_kind != *SITUATION_KIND_GROUND {
                 return false;
             }
@@ -182,12 +181,7 @@ term: i32
             return false;
         }
     }
-    else if fighter_kind == *FIGHTER_KIND_CHROM {
-        if VarModule::is_flag(object, commons::instance::flag::GALEFORCE_ATTACK_ON) && status_kind == *FIGHTER_STATUS_KIND_WAIT {
-            if term != *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR {
-                return false;
-            }
-        }
+    else if fighter_kind == *FIGHTER_KIND_LUCINA {
         if VarModule::get_int(object, commons::instance::int::FRAME_COUNTER) >= 0 {
             if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S {
                 return false;
@@ -258,6 +252,28 @@ term: i32
             return false;
         }
     }
+    //this one should be a status, but which one lol
+    else if fighter_kind == *FIGHTER_KIND_PICKEL {
+        if [
+             *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_FALL, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_FALL_AERIAL, 
+             *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_AERIAL, 
+             *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_SQUAT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_LANDING,
+             *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_LANDING_LIGHT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WAIT, 
+             *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WALK, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WALK_BACK
+           ].contains(&status_kind) 
+           && [
+             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK, 
+             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR, 
+             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH, 
+             *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH
+           ].contains(&term) {
+            return false;
+        }
+        // if !WorkModule::is_enable_transition_term(boma, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) 
+        //   && term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N {
+        //     return false;
+        //   }
+      }
 
     //aerial turn
     if VarModule::is_flag(object,commons::instance::flag::AIR_TURN_APPEAL_METHOD_INITIATE) && VarModule::get_int(object,commons::instance::int::AIR_TURN_INPUT_FRAME) <= 3 {
@@ -280,25 +296,7 @@ term: i32
     else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S && VarModule::is_flag(object,commons::instance::flag::DISABLE_SPECIAL_S) {
         return false;
     }
-
-    //prevents doing some actions before wavedash lag is over
-    if curr_motion_kind == hash40("landing_heavy") && VarModule::is_flag(object,commons::instance::flag::WAVEDASH) {
-        if get_fighter_common_from_accessor(&mut *module_accessor).global_table[MOTION_FRAME].get_f32() >= 10. {
-        //if MotionModule::frame(module_accessor) >= 10. {
-            if [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON].contains(&term) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    //Dash roll disabling, should be done in status script but uuuh lazy
-    if [*FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_TURN_DASH, *FIGHTER_RYU_STATUS_KIND_DASH_BACK, *FIGHTER_DOLLY_STATUS_KIND_DASH_BACK, *FIGHTER_DEMON_STATUS_KIND_DASH_BACK].contains(&status_kind) {
-        if [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_F, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_B, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE].contains(&term) {
-            return false;
-        }
-    }
+    
     original!()(boma, term)
 }
 
@@ -312,7 +310,7 @@ pub unsafe fn get_active_num_replace(
     let ret_missile = original!()(boma, *FIGHTER_SAMUS_GENERATE_ARTICLE_MISSILE);
     let ret_super = original!()(boma, *FIGHTER_SAMUS_GENERATE_ARTICLE_SUPERMISSILE);
 
-    if fighter_kind == *FIGHTER_KIND_SAMUS && article_kind != *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB { //<-- without this samus can't spawn bombs with missiles out (needs testing)
+    if fighter_kind == *FIGHTER_KIND_SAMUS && article_kind != *FIGHTER_SAMUS_GENERATE_ARTICLE_BOMB { //<-- without this samus can't spawn bombs with missiles out
         if ret_missile == 1 || ret_super == 1 {
             return 9; //random high number so another missile won't be generated
         }
@@ -371,10 +369,131 @@ pub unsafe fn get_attack_air_kind_replace(
 //     let module_accessor = &mut *(*((boma as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
 //     let ret = original!()(boma, param_type, param_hash);
 
-//     //unused, hook disabled
+//     //unused, hook disabled. don't delete
 
 //     return ret;
 // }
+
+//Galeforce attacks and stuff
+#[skyline::hook(offset = NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET)]
+pub unsafe fn notify_log_event_collision_hit_replace(
+fighter_manager: &mut FighterManager,
+attacker_object_id: u32,
+defender_object_id: u32, 
+move_type: f32,
+arg5: i32,
+move_type_again: bool) -> u64 {
+    println!("inside notify_log_event_collision_hit_replace");
+    let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
+    let attacker_object = get_battle_object_from_id(attacker_object_id);
+    let attacker_cat = utility::get_category(&mut *attacker_boma);
+
+    let defender_boma = sv_battle_object::module_accessor(defender_object_id);
+    let defender_object = get_battle_object_from_id(defender_object_id);
+    let defender_cat = utility::get_category(&mut *defender_boma);
+
+    let attacker_kind = sv_battle_object::kind(attacker_object_id);
+
+    if attacker_cat == *BATTLE_OBJECT_CATEGORY_WEAPON {
+        if defender_cat == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+            println!("owner_id: {}", owner_id);
+            let owner_object = get_battle_object_from_id(owner_id);
+            let owner_boma = get_boma_from_id(owner_id);
+
+            //terry (dolly)
+                //type: buff (go! meter)
+                //hitting with power wave above 100% unlocks super specials
+            if attacker_kind == *WEAPON_KIND_DOLLY_WAVE {
+                println!("terry");
+                VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+            //sheik: checks if vanish hits an opponent
+            if attacker_kind == *WEAPON_KIND_SHEIK_FUSIN {
+                println!("sheik");
+                VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+            //Dr.Mario
+            //type: buff
+            //if a supervitamin pill hits an opponent while drMario is close, he gains a temporary buff to movement
+            //the speed buff is in float hook
+            //detecting if drMario's pills hit someone
+            if attacker_kind == *WEAPON_KIND_MARIOD_DRCAPSULE {
+                println!("mariod");
+                if VarModule::get_int(owner_object, mariod::instance::int::GA_MEDECINE_TIMER) <= 0
+                  && (PostureModule::pos_x(defender_boma) - PostureModule::pos_x(owner_boma)).abs() < 33.0
+                  && (PostureModule::pos_y(defender_boma) - PostureModule::pos_y(owner_boma)).abs() < 28.0 {
+                    VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                }
+            }
+        }
+    }
+    else if attacker_cat == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        if defender_cat == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+            let def_status_kind_prev = StatusModule::prev_status_kind(defender_boma, 0);
+            let attacker_motion = MotionModule::motion_kind(attacker_boma);
+            let defender_status = StatusModule::status_kind(defender_boma);
+
+            //Ganon - Warlock's Darkest Flight
+                //type: cancel
+                //cancels aerial side b with up b to regrab
+            if def_status_kind_prev == FIGHTER_STATUS_KIND_CATCHED_AIR_GANON {
+                println!("ganon");
+                if VarModule::is_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                    VarModule::on_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA);
+                }
+            }
+            if VarModule::is_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA)
+            && ![*FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_FALL].contains(&defender_status) {
+                StatusModule::change_status_request(defender_boma, *FIGHTER_STATUS_KIND_FALL, true);
+                MotionModule::change_motion_kind(defender_boma, Hash40{hash: hash40("fall")});
+                let fighter_pos = Vector3f { x: PostureModule::pos_x(attacker_boma) + (7.5 * PostureModule::lr(attacker_boma)), y: PostureModule::pos_y(attacker_boma) + 11.0, z: PostureModule::pos_z(attacker_boma)};
+                PostureModule::set_pos(defender_boma, &fighter_pos);
+            }
+            else {
+                VarModule::off_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA);
+            }
+
+            //Counter hit GAs
+            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100,
+                    *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_HI3,
+                    *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_LW4,
+                    *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_S4].contains(&defender_status) {
+                //palu GA
+                if attacker_kind == *FIGHTER_KIND_PALUTENA {
+                    println!("palu");
+                    if attacker_motion == hash40("attack_dash") {
+                        VarModule::on_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                    }
+                }
+                //Kazuya Abolishing Fist
+                // if smash::app::utility::get_kind(&mut *get_boma(attacker_number as i32)) == *FIGHTER_KIND_DEMON && attacker_curr_motion == hash40("abolishingfist") {
+                //     FIGHTER_GLOBALS[(attacker_number as i32) as usize].counterhit = true;
+                // }
+            }
+
+            //Puff (purin) TODO doesnt work
+            // when rest is used vs an opponent without the mark, reduces endlag on rest and heals
+            //gives opponent the mark when hit by up special
+            // if attacker_kind == *FIGHTER_KIND_PURIN {
+            //     println!("puff");
+            //     if [hash40("special_hi_r"), hash40("special_hi_l"), hash40("special_air_hi_r"), hash40("special_air_hi_l")].contains(&attacker_motion) && !VarModule::is_flag(defender_object, commons::instance::flag::PURIN_MARK) {
+            //         VarModule::on_flag(defender_object, commons::instance::flag::PURIN_MARK);
+            //         VarModule::set_int(defender_object, commons::instance::int::PURIN_MARK_DURATION, 420);
+            //     }
+            //     //checks if victim doesn't have sing's mark, then gives puff their ga.
+            //     if is_status_damage(&mut *defender_boma) {
+            //         if [hash40("special_lw_r"), hash40("special_lw_l"), hash40("special_air_lw_r"), hash40("special_air_lw_l")].contains(&attacker_motion) {
+            //             if !VarModule::is_flag(defender_object, commons::instance::flag::PURIN_MARK) && !VarModule::is_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            //                 VarModule::on_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            //             }
+            //         }
+            //     }
+            // }
+        }
+    }
+    original!()(fighter_manager, attacker_object_id, defender_object_id, move_type, arg5, move_type_again)
+}
 
 #[skyline::hook(offset = FLOAT_OFFSET)]
 pub unsafe fn get_param_float_offset_replace(
@@ -391,7 +510,7 @@ param_hash : u64) -> f32 {
     let ret = original!()(boma, param_type, param_hash);
 
     if is_fighter(module_accessor) {
-        //increases the knockback required to make sakurai angle lift fighters in the air. TODO: test if this does anything?
+        //increases the knockback required to make sakurai angle lift fighters in the air when they are crouching. TODO: test if this does anything?
         if [*FIGHTER_STATUS_KIND_SQUAT, *FIGHTER_STATUS_KIND_SQUAT_B, *FIGHTER_STATUS_KIND_SQUAT_F, *FIGHTER_STATUS_KIND_SQUAT_RV, *FIGHTER_STATUS_KIND_SQUAT_WAIT].contains(&prev_status_kind) {
             if param_type == hash40("battle_object") {
                 if param_hash == hash40("damage_angle_ground_reaction_min") {
@@ -401,24 +520,32 @@ param_hash : u64) -> f32 {
         }
 
         //modifies gravity while in directional airdodges to use the LSI gravity average (a bit higher actually)
-        if VarModule::is_flag(object,commons::instance::flag::ESCAPE_AIR_IS_SLIDE) {
+        if WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
             if param_type == hash40("air_accel_y") && !WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL) {
                 //return 0.086;
-                return 0.1;
+                return 0.1; //this value is arbitrary but feels nice.
             }
         }
 
-        if [*FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA].contains(&fighter_kind) && (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
-            //println!("link_no: {}", )
-            //let partner_object = get_battle_object_from_id(*FIGHTER_POPO_INSTANCE_WORK_ID_INT_PARTNER_OBJECT_ID);
-            if param_hash == hash40("nana_opt_dst") {
-                println!("control!");
-                return 999.0;
-            }
-        }
+        // if [*FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA].contains(&fighter_kind) && (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
+        //     //let partner_object = get_battle_object_from_id(*FIGHTER_POPO_INSTANCE_WORK_ID_INT_PARTNER_OBJECT_ID);
+        //     if param_hash == hash40("nana_opt_dst") {
+        //         return 999.0;
+        //     }
+        // }
+        // if fighter_kind == *FIGHTER_KIND_BAYONETTA {
+        //     if param_hash == hash40("ab_u_rotate") {
+        //         if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 7 {
+        //             return -21.0;
+        //         }
+        //         else {
+        //             return -25.0;
+        //         }
+        //     }
+        // }
 
         //slows down dash speed for characters faster than steve, who has the worst dash speed. faster characters receive a bigger penalty
-        //move this to status when u know how :)
+        //move this to status when u know how :) or calc manually and edit the prc file. lmao
         if param_type == hash40("dash_speed") {
             let dash_speed = ret;
             let reduce = dash_speed - 1.45;
@@ -450,7 +577,7 @@ param_hash : u64) -> f32 {
             }
         }
         else if fighter_kind == *FIGHTER_KIND_MARIOD && VarModule::get_int(object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
-            if [hash40("air_accel_x_mul"), hash40("air_speed_x_stable"), hash40("walk_speed_max"), hash40("run_speed_max"), hash40("dash_speed")].contains(&param_type) {
+            if [hash40("air_accel_x_mul"), hash40("air_speed_x_stable"), hash40("air_brake_x"), hash40("walk_speed_max"), hash40("run_speed_max"), hash40("dash_speed")].contains(&param_type) {
                 return ret * 1.66;
             }
         }
@@ -474,9 +601,9 @@ pub fn install() {
         if let Some(offset) = find_subsequence(text, vars::INT_SEARCH_CODE) {
             vars::INT_OFFSET = offset;
         }
-        // if let Some(offset) = find_subsequence(text, vars::NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE) {
-        //     vars::NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET = offset;
-        // }
+        if let Some(offset) = find_subsequence(text, vars::NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE) {
+            vars::NOTIFY_LOG_EVENT_COLLISION_HIT_OFFSET = offset;
+        }
     }
     skyline::install_hooks!(
         init_settings_replace,
@@ -484,8 +611,13 @@ pub fn install() {
         on_flag_replace, //short hop macro removal
         get_float_replace,
         get_attack_air_kind_replace, //c stick fix
-        //change_status_request_from_script_replace, //Dash roll disabling
+        //change_status_request_from_script_replace, //
         get_active_num_replace, //Samus missile stuff
         get_param_float_offset_replace,
+        notify_log_event_collision_hit_replace //GA stuff
     );
 }
+
+// from wubor
+// #[skyline::hook(offset = 0x6310a0)]
+// unsafe fn fighter_handle_damage_hook(object: *mut BattleObject, arg: *const u8) {

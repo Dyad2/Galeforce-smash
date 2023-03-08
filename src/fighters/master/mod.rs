@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -25,7 +24,7 @@ fn teacher_frame(fighter: &mut L2CFighterCommon) {
            && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N) != 0
            && ControlModule::get_attack_air_kind(fighter.module_accessor) == *FIGHTER_COMMAND_ATTACK_AIR_KIND_N {
                 VarModule::on_flag(fighter.battle_object, master::instance::flag::FAILNAUGHT_TO_AIRN);
-                StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ATTACK_AIR, false);
         }
 
         if ![hash40("special_air_n_start"), hash40("attack_air_n")].contains(&curr_motion_kind) {
@@ -40,7 +39,7 @@ fn teacher_frame(fighter: &mut L2CFighterCommon) {
         }
         if [hash40("attack_s4_hi"), hash40("attack_s4_s")].contains(&curr_motion_kind) && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
             if MotionModule::frame(fighter.module_accessor) <= 30.0 {
-                StatusModule::change_status_force(fighter.module_accessor, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_FRONT, false);
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_FRONT, false);
                 StopModule::end_stop(fighter.module_accessor);
                 ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_SPEAR, false, -1);
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
@@ -56,7 +55,7 @@ fn teacher_frame(fighter: &mut L2CFighterCommon) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -67,7 +66,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);

@@ -1,15 +1,12 @@
-use std::arch::asm;
 use smash::phx::{Hash40, Vector3f};
-use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
-use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
+use smash:: lua2cpp::L2CAgentBase;
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use crate::fighters::common::galeforce::*;
-
+use galeforce_utils::{vars::*};
 
 //weapon
 #[acmd_script( agent = "ness_pk_fire", script = "game_pillar", category = ACMD_GAME, low_priority)]
@@ -45,7 +42,7 @@ unsafe fn pillar(weapon: &mut L2CAgentBase) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -56,7 +53,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -104,7 +101,7 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
 }
 
 //special
-#[acmd_script( agent = "ness", script = "game_specials", category = ACMD_GAME, low_priority)]
+#[acmd_script( agent = "ness", scripts = ["game_specials", "game_specialairs"], category = ACMD_GAME, low_priority)]
 unsafe fn specials(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
@@ -118,17 +115,49 @@ unsafe fn specials(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "ness", script = "game_specialairs", category = ACMD_GAME, low_priority)]
-unsafe fn specialairs(fighter: &mut L2CAgentBase) {
+//grabs / throws
+#[acmd_script( agent = "ness", script = "game_throwb", category = ACMD_GAME, low_priority)]
+unsafe fn throwb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 21.);
+    
         if macros::is_excute(fighter)
         {
-            if ArticleModule::get_active_num(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_PK_FIRE) < 1 {
-                ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_NESS_GENERATE_ARTICLE_PK_FIRE, false, -1);
-                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_NESS_STATUS_SPECIAL_S_FLAG_SHOOT);
-            }
+            macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 11.0, 135, 10, 0, 120, 0.0, 1.0, *ATTACK_LR_CHECK_F,  0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+            macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        }
+    frame(lua_state, 26.);
+        if macros::is_excute(fighter)
+        {
+            macros::CHECK_FINISH_CAMERA(fighter, -5, 18);
+            FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(),2.0);
+            FighterCutInManager::set_throw_finish_offset(singletons::FighterCutInManager(), Vector3f{x:0., y:5., z:0.});
+        }
+    frame(lua_state, 27.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
+        }
+}
+
+#[acmd_script( agent = "ness", script = "game_throwf", category = ACMD_GAME, low_priority)]
+unsafe fn throwf(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 12.0, 45, 130, 0, 15, 0.0, 1.0, *ATTACK_LR_CHECK_F,  0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+            macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
+        }
+    frame(lua_state, 26.);
+        if macros::is_excute(fighter)
+        {
+            macros::CHECK_FINISH_CAMERA(fighter, 14, 6);
+            FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(),1.2);
+        }
+    frame(lua_state, 27.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
         }
 }
 
@@ -157,7 +186,8 @@ pub fn install() {
         pillar,
         attackairhi,
         specials,
-        specialairs,
+        throwf,
+        throwb,
         escapeairslide
     );
 }

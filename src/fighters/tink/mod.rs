@@ -1,4 +1,3 @@
-use std::arch::asm;
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::lib::lua_const::*;
@@ -12,7 +11,6 @@ use smash_script::*;
 #[fighter_frame( agent = FIGHTER_KIND_TOONLINK )]
 fn tink_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        
         if MotionModule::motion_kind(fighter.module_accessor) == hash40("special_hi") {
             if MotionModule::frame(fighter.module_accessor) < 45. {
                 let toonlink_upb_speed = smash::phx::Vector3f { x: 0.085 * ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor), y: 0., z: 0.0 };
@@ -66,7 +64,7 @@ unsafe fn boom_turn(weapon: &mut L2CAgentBase) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -77,7 +75,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -133,6 +131,47 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
         {
             AttackModule::clear_all(fighter.module_accessor);
             MotionModule::set_rate(fighter.module_accessor, 0.85);
+        }
+}
+
+#[acmd_script( agent = "toonlink", script = "game_attackdash", category = ACMD_GAME, low_priority)]
+unsafe fn attackdash(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 0.7);
+        }
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
+        }
+    frame(lua_state, 10.);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.2);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("sword2"), 10.0, 60, 70, 0, 70, 4.2, 5.5, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("sword2"), 10.0, 60, 70, 0, 70, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("arml"), 10.0, 60, 70, 0, 70, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+        }
+    wait(lua_state, 2.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 2, 0, Hash40::new("sword2"), 7.0, 75, 60, 0, 70, 4.2, 5.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("sword2"), 7.0, 75, 60, 0, 70, 4.2, 5.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("arml"), 7.0, 75, 60, 0, 70, 4.2, 5.5, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_TOONLINK_HIT, *ATTACK_REGION_SWORD);
+        }
+    wait(lua_state, 8.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    wait(lua_state, 10.);
+        if macros::is_excute(fighter)
+        {
+            CancelModule::enable_cancel(fighter.module_accessor);
         }
 }
 
@@ -299,6 +338,28 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 //effect
+#[acmd_script( agent = "toonlink", script = "effect_attackdash", category = ACMD_EFFECT, low_priority )]
+unsafe fn effect_attackdash(fighter: &mut L2CAgentBase) {
+
+    frame(fighter.lua_state_agent, 6.0);
+        if macros::is_excute(fighter) 
+        {
+            macros::LANDING_EFFECT(fighter, Hash40::new("sys_dash_smoke"), Hash40::new("top"), -4, 0, 0, 0, 0, 0, 0.85, 0, 0, 0, 0, 0, 0, false);
+        }
+    frame(fighter.lua_state_agent, 10.0);
+        if macros::is_excute(fighter) 
+        {
+            macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("toonlink_sword1"), Hash40::new("toonlink_sword2"), 7, Hash40::new("sword1"), 0.5, 0.0, -0.5, Hash40::new("sword1"), 10.57, -0.13, -0.12, true, Hash40::new("null"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.5, 0.2);
+            macros::EFFECT_FOLLOW(fighter, Hash40::new("toonlink_sword"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true);
+        }
+    frame(fighter.lua_state_agent, 19.0);
+        if macros::is_excute(fighter) 
+        {
+            macros::AFTER_IMAGE_OFF(fighter, 5);
+            macros::EFFECT_OFF_KIND(fighter, Hash40::new("toonlink_sword"), false, false);
+        }
+}
+
 #[acmd_script( agent = "toonlink", scripts = ["effect_appeallwr", "effect_appeallwl"], category = ACMD_EFFECT, low_priority)]
 unsafe fn fx_appeallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -381,10 +442,12 @@ pub fn install() {
         turndash,
         attacks3,
         attacklw3,
+        attackdash,
         attackairlw,
         specials1,
         appeallw,
         escapeairslide,
         fx_appeallw,
+        effect_attackdash,
     );
 }

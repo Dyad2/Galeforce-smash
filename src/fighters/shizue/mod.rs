@@ -1,64 +1,13 @@
-use std::arch::asm;
 use smash::phx::Hash40;
-use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
-use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
+use smash::{lua2cpp::L2CAgentBase};
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-
-
 use crate::fighters::common::galeforce::*;
 use galeforce_utils::vars::*;
-use custom_var::*;
-
-// #[fighter_frame( agent = FIGHTER_KIND_SHIZUE )]
-// fn capitalism_frame(fighter: &mut L2CFighterCommon) {
-//     unsafe {
-//         let lua_state = fighter.lua_state_agent;
-//         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-
-//         //GA - Isabellistic Trap
-//         //type: restriction lift
-//         //launch mine while in forward or back throw
-//         if !is_operation_cpu(fighter.module_accessor) {
-//             // if [hash40("throw_f"), hash40("throw_b")].contains(&curr_motion_kind) {
-//             //     if MotionModule::frame(fighter.module_accessor) >= 10.0 && MotionModule::frame(fighter.module_accessor) < 21.0 && WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE) {
-//             //         if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-//             //             ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
-//             //             VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_GALEFORCE_ATTACK_ON);
-//             //             WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE);
-//             //         }
-//             //     }
-//             // }
-//             // else {
-//             //     VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_DO_ONCE);
-//             // }
-//             // if WorkModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-//             //     galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
-//             //     WorkModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
-//             // }
-//             if [hash40("throw_f"), hash40("throw_b")].contains(&curr_motion_kind) {
-//                 if MotionModule::frame(fighter.module_accessor) >= 10.0 && MotionModule::frame(fighter.module_accessor) < 21.0 {
-//                     if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-//                         ArticleModule::shoot(fighter.module_accessor, *FIGHTER_SHIZUE_GENERATE_ARTICLE_CLAYROCKET, smash::app::ArticleOperationTarget(0), false);
-//                         WorkModule::off_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE);
-//                         if !WorkModule::is_flag(fighter.module_accessor, FIGHTER_INSTANCE_WORK_ID_FLAG_DO_ONCE) {
-//                         }
-//                     }
-//                 }
-//             }
-//             else {
-//                 VarModule::on_flag(fighter.battle_object, _INSTANCE_WORK_ID_FLAG_DO_ONCE);
-//             }
-//             if WorkModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-//                 WorkModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
-//             }
-//         }
-//     }
-// }
 
 //weapons
 #[acmd_script( agent = "shizue_pot", script = "game_throwed", category = ACMD_GAME, low_priority)]
@@ -130,7 +79,7 @@ unsafe fn clayrocketfly(weapon: &mut L2CAgentBase) {
 unsafe fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 14.);
+    frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
@@ -141,7 +90,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
 unsafe fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 4.);
+    frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
@@ -287,9 +236,6 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
-    //smashline::install_agent_frames!(
-    //    capitalism_frame
-    //);
     smashline::install_acmd_scripts!(
         dash,
         turndash,

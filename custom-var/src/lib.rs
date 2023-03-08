@@ -32,17 +32,9 @@ impl CustomVarManager {
         let object_id = unsafe{
             (*object).battle_object_id
         };
-        // println!("[VarModule] Restting VarModule for {:#x}", object_id);
         let mut manager = CUSTOM_VAR_MANAGER.write();
         let x = if let Some(mut modules) = manager.modules.try_write() {
             let _ = modules.insert(object_id, VarModule::new());
-            // let x = modules.insert(object_id, VarModule::new());
-            // if x.is_none() {
-            //     println!("[VarModule] There was no VarModule previously present for this Object ID!");
-            // }
-            // else {
-            //     println!("[VarModule] Replaced a previously existing VarModule!");
-            // }
             true
         }
         else {
@@ -115,15 +107,12 @@ impl VarModule {
     /// * `mask` - A mask of the reset values to determine what to reset
     #[export_name = "VarModule__reset"]
     pub extern "Rust" fn reset(object: *mut BattleObject, mask: u8) {
-        // println!("[VarModule] Reset");
         let object_id = unsafe{
             (*object).battle_object_id
         };
-        // println!("[VarModule] object_id: {:#x}", object_id);
         let mut manager = CUSTOM_VAR_MANAGER.read();
         let mut modules = manager.modules.write();
         if let Some(mut module) = modules.get_mut(&object_id) {
-            // println!("[VarModule] Resetting for {:#x}", object_id);
             if mask & Self::RESET_INSTANCE_INT != 0 {
                 module.int[0].fill(0);
             }
