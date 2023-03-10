@@ -8,9 +8,8 @@ use {
     },
     smash::{
         hash40,
-        lua2cpp::L2CFighterBase,
         app::{lua_bind::*, FighterManager, *},
-        lib::{lua_const::*, L2CValue},
+        lib::lua_const::*,
         phx::{Vector3f, Hash40},
     },
     galeforce_utils::{
@@ -18,7 +17,6 @@ use {
         utils::get_battle_object_from_id,
         vars,
         vars::*,
-        table_const::*
     },
 };
 
@@ -581,319 +579,12 @@ param_hash : u64) -> f32 {
     original!()(boma, param_type, param_hash)
 }
 
-
-//the following code is related to running opff on main instead of exec. it's all from HDR, I only adapted it for galeforce
-
-// Articles that should bypass running their MAIN status before KineticModule::UpdateEnergy and GroundCollision::process
-const EXCEPTION_WEAPON_KINDS: [smash::lib::LuaConst ; 12] = [
-    WEAPON_KIND_PICKEL_PLATE,
-    WEAPON_KIND_MASTER_SWORD,
-    WEAPON_KIND_LUCAS_HIMOHEBI,
-    WEAPON_KIND_SZEROSUIT_WHIP,
-    WEAPON_KIND_SZEROSUIT_WHIP2,
-    WEAPON_KIND_SAMUS_GBEAM,
-    WEAPON_KIND_SAMUSD_GBEAM,
-    WEAPON_KIND_SHIZUE_FISHINGLINE,
-    WEAPON_KIND_TOONLINK_HOOKSHOT,
-    WEAPON_KIND_YOUNGLINK_HOOKSHOT,
-    WEAPON_KIND_JACK_DOYLE,
-    WEAPON_KIND_PICKEL_FORGE
-];
-
-// For one reason or another, the below statuses/kinds do not play well with running before energy update/ground collision
-// so they must be ran using vanilla's order of operations
-unsafe fn skip_early_main_status(boma: *mut BattleObjectModuleAccessor) -> bool {
-    let kind = smash::app::utility::get_kind(&mut *boma);
-    let status_kind = StatusModule::status_kind(boma);
-
-    if is_fighter(boma)
-    && ( kind == *FIGHTER_KIND_RICHTER
-    && [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_SIMON
-            && [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_LW4].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_MASTER
-            && [*FIGHTER_MASTER_STATUS_KIND_SPECIAL_N_MAX_SHOOT].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_JACK
-            && [*FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_JACK_STATUS_KIND_SPECIAL_CUSTOMIZE].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_PFUSHIGISOU
-            && status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI)
-        || (kind == *FIGHTER_KIND_KAMUI
-            && [*FIGHTER_KAMUI_STATUS_KIND_SPECIAL_S_ATTACK, *FIGHTER_KAMUI_STATUS_KIND_SPECIAL_S_WALL, *FIGHTER_KAMUI_STATUS_KIND_SPECIAL_S_WALL_ATTACK_F, *FIGHTER_KAMUI_STATUS_KIND_SPECIAL_S_WALL_ATTACK_B].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_INKLING
-            && [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_DASH, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_RUN, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_RUN_TURN, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_WALK, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_WALK_TURN, *FIGHTER_INKLING_STATUS_KIND_SPECIAL_S_END].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_DOLLY
-            && [*FIGHTER_STATUS_KIND_FINAL, *FIGHTER_DOLLY_STATUS_KIND_SUPER_SPECIAL].contains(&status_kind))
-        || (kind == *FIGHTER_KIND_PICKEL
-            && [*FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WAIT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_FALL, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_FALL_AERIAL, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WALK, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_LANDING, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_WALK_BACK, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_SQUAT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_AERIAL, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_LANDING_LIGHT].contains(&status_kind))
-    {
-        return true;
-    }
-
-    if get_category(boma) == *BATTLE_OBJECT_CATEGORY_WEAPON
-    && EXCEPTION_WEAPON_KINDS.iter().any(|x| **x == kind ) {
-        return true;
-    }
-    false
-}
-
-// This group of functions is normally run after KineticModule::UpdateEnergy and GroundCollision::process
-// Calls MAIN status script, and associated functions
-unsafe fn run_main_status_original(boma: *mut BattleObjectModuleAccessor, is_stop: bool, is_skip: bool) {
-    if !is_stop {
-        let area_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0xc0 / 8) as *const u64;
-        let vtable = *(area_module as *const *const u64);
-        let area_module__something: extern "C" fn(*const u64) = std::mem::transmute(*(((vtable as u64) + 0x68) as *const u64));
-        area_module__something(area_module);
-
-        let item_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0xc8 / 8) as *const u64;
-        let vtable = *(item_module as *const *const u64);
-        let item_module__something: extern "C" fn(*const u64) = std::mem::transmute(*(((vtable as u64) + 0x50) as *const u64));
-        item_module__something(item_module);
-    }
-
-    let physics_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x80 / 8) as *const u64;
-    let vtable = *(physics_module as *const *const u64);
-    let physics_module__update_rope_matrix: extern "C" fn(*const u64, bool, bool) = std::mem::transmute(*(((vtable as u64) + 0x60) as *const u64));
-    physics_module__update_rope_matrix(physics_module, false, false);
-
-    if !is_stop {
-        let motion_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x88 / 8) as *const u64;
-        let vtable = *(motion_module as *const *const u64);
-        let motion_module__something: extern "C" fn(*const u64) = std::mem::transmute(*(((vtable as u64) + 0x208) as *const u64));
-        motion_module__something(motion_module);
-    }
-
-    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x58 / 8) as *const u64;
-    let vtable = *(ground_module as *const *const u64);
-    let ground_module__get_correct: extern "C" fn(*const u64) -> i32 = std::mem::transmute(*(((vtable as u64) + 0x158) as *const u64));
-    let is_correct = ground_module__get_correct(ground_module);
-
-    if is_correct != 0 {
-        let ground_module__get_touch_pos: extern "C" fn(*const u64, u64) = std::mem::transmute(*(((vtable as u64) + 0x4a0) as *const u64));
-        ground_module__get_touch_pos(ground_module, 8);
-
-        let effect_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x140 / 8) as *const u64;
-        let vtable = *(effect_module as *const *const u64);
-        let effect_module__idk: extern "C" fn(*const u64) = std::mem::transmute(*(((vtable as u64) + 0x3e0) as *const u64));
-        effect_module__idk(effect_module);
-    }
-
-    let status_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x40 / 8) as *const u64;
-    let vtable = *(status_module as *const *const u64);
-    let status_module__run_lua_status: extern "C" fn(*const u64) = std::mem::transmute(*(((vtable as u64) + 0x68) as *const u64));
-    status_module__run_lua_status(status_module);
-
-    let something_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0xe8 / 8) as *const u64;
-    let vtable = *(something_module as *const *const u64);
-    let something_module__idk: extern "C" fn(*const u64, u64, u64) = std::mem::transmute(*(((vtable as u64) + 0x48) as *const u64));
-    something_module__idk(something_module, is_stop as u64, is_skip as u64);
-
-    let effect_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x140 / 8) as *const u64;
-    let vtable = *(effect_module as *const *const u64);
-    let effect_module__idk: extern "C" fn(*const u64, u64) = std::mem::transmute(*(((vtable as u64) + 0x58) as *const u64));
-    effect_module__idk(effect_module, 1);
-}
-
-// This runs immediately before KineticModule::UpdateEnergy is called
-#[skyline::hook(offset = 0x3a82b0, inline)]
-unsafe fn kinetic_module__call_update_energy_hook(ctx: &skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[23].x.as_ref() as *mut BattleObjectModuleAccessor;
-    let object_id = (*boma).battle_object_id;
-    let object = get_battle_object_from_id(object_id);
-
-    if VarModule::has_var_module(object) { VarModule::on_flag(object, commons::instance::flag::BEFORE_GROUND_COLLISION);}
-
-    if skip_early_main_status(boma) {
-        return;
-    }
-
-    let stop_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x90 / 8) as *const u64;
-    let vtable = *(stop_module as *const *const u64);
-    let stop_module__is_stop: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0x88) as *const u64));
-    let is_stop = stop_module__is_stop(stop_module);
-
-    let slow_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x170 / 8) as *const u64;
-    let vtable = *(slow_module as *const *const u64);
-    let slow_module__is_skip: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0xb0) as *const u64));
-    let is_skip = slow_module__is_skip(slow_module);
-
-    // Calling this BEFORE kinetic energy updates and stage collision is processed allows us to bypass the "1f physics delay"
-    run_main_status_original(boma, is_stop, is_skip);
-}
-
-// This runs immediately before KineticModule::UpdateEnergy is called, during hitlag
-#[skyline::hook(offset = 0x3a8168, inline)]
-unsafe fn kinetic_module__call_update_energy_stop_hook(ctx: &skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[23].x.as_ref() as *mut BattleObjectModuleAccessor;
-    let object_id = (*boma).battle_object_id;
-    let object = get_battle_object_from_id(object_id);
-
-    if VarModule::has_var_module(object) { VarModule::on_flag(object, commons::instance::flag::BEFORE_GROUND_COLLISION); }
-
-    if skip_early_main_status(boma) {
-        return;
-    }
-
-    let stop_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x90 / 8) as *const u64;
-    let vtable = *(stop_module as *const *const u64);
-    let stop_module__is_stop: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0x88) as *const u64));
-    let is_stop = stop_module__is_stop(stop_module);
-
-    let slow_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x170 / 8) as *const u64;
-    let vtable = *(slow_module as *const *const u64);
-    let slow_module__is_skip: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0xb0) as *const u64));
-    let is_skip = slow_module__is_skip(slow_module);
-
-    // Calling this BEFORE kinetic energy updates and stage collision is processed allows us to bypass the "1f physics delay"
-    run_main_status_original(boma, is_stop, is_skip);
-}
-
-#[skyline::hook(offset = 0x3a85b4, inline)]
-unsafe fn run_lua_status_hook(ctx: &skyline::hooks::InlineCtx) {
-    let boma = *ctx.registers[22].x.as_ref() as *mut BattleObjectModuleAccessor;
-    let object_id = (*boma).battle_object_id;
-    let object = get_battle_object_from_id(object_id);
-
-    if VarModule::has_var_module(object) { VarModule::off_flag(object, commons::instance::flag::BEFORE_GROUND_COLLISION);}
-
-    let stop_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x90 / 8) as *const u64;
-    let vtable = *(stop_module as *const *const u64);
-    let stop_module__is_stop: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0x88) as *const u64));
-    let is_stop = stop_module__is_stop(stop_module);
-
-    let slow_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x170 / 8) as *const u64;
-    let vtable = *(slow_module as *const *const u64);
-    let slow_module__is_skip: extern "C" fn(*const u64) -> bool = std::mem::transmute(*(((vtable as u64) + 0xb0) as *const u64));
-    let is_skip = slow_module__is_skip(slow_module);
-
-    if skip_early_main_status(boma) {
-        if is_fighter(boma)
-        && !StatusModule::is_changing(boma)
-        && get_fighter_common_from_accessor(&mut *boma).global_table[MOTION_FRAME].get_i32() == 0
-        {
-            let status_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x40 / 8) as *const u64;
-            *(((status_module as u64) + 0xf4) as *mut bool) = true;  // StatusModule::is_changing = true
-            run_main_status_original(boma, is_stop, is_skip);
-            *(((status_module as u64) + 0xf4) as *mut bool) = false;  // StatusModule::is_changing = false
-
-        }
-        else {
-            run_main_status_original(boma, is_stop, is_skip);
-        }
-        return;
-    }
-
-    // Reset airtime counter when your situation kind is changed, rather than when entering a landing status
-    if is_fighter(boma)
-    && StatusModule::prev_situation_kind(boma) == *SITUATION_KIND_AIR
-    && StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND
-    {
-        WorkModule::set_int(boma, 0, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR);
-    }
-
-    // No need to check for motion kind changes if we are:
-    //   1. Not currently detecting surface collision
-    //   2. Neither on the ground nor in the air
-    if GroundModule::get_correct(boma) == *GROUND_CORRECT_KIND_NONE
-    || ![*SITUATION_KIND_GROUND, *SITUATION_KIND_AIR].contains(&StatusModule::situation_kind(boma))
-    {
-        return;
-    }
-
-    let ground_module = *(boma as *mut BattleObjectModuleAccessor as *const u64).add(0x58 / 8);
-    let ground_collision_info = *((ground_module + 0x28) as *mut *mut f32);
-
-    let prev_collision_line_up = ((ground_collision_info as u64) + 0x190) as *mut GroundCollisionLine;
-    let prev_collision_line_left = ((ground_collision_info as u64) + 0x1c0) as *mut GroundCollisionLine;
-    let prev_collision_line_right = ((ground_collision_info as u64) + 0x1f0) as *mut GroundCollisionLine;
-    let prev_collision_line_down = ((ground_collision_info as u64) + 0x220) as *mut GroundCollisionLine;
-
-    let collision_line_up = ((ground_collision_info as u64) + 0x10) as *mut GroundCollisionLine;
-    let collision_line_left = ((ground_collision_info as u64) + 0x40) as *mut GroundCollisionLine;
-    let collision_line_right = ((ground_collision_info as u64) + 0x70) as *mut GroundCollisionLine;
-    let collision_line_down = ((ground_collision_info as u64) + 0xa0) as *mut GroundCollisionLine;
-
-    // This check passes only on the first frame you come into contact with a surface (ground/wall/ceiling)
-    if *(prev_collision_line_up as *mut u64) == 0 && *(collision_line_up as *mut u64) != 0
-    || *(prev_collision_line_left as *mut u64) == 0 && *(collision_line_left as *mut u64) != 0
-    || *(prev_collision_line_right as *mut u64) == 0 && *(collision_line_right as *mut u64) != 0
-    || *(prev_collision_line_down as *mut u64) == 0 && *(collision_line_down as *mut u64) != 0 {
-        // This runs the MAIN status once, ignoring sub-statuses, to ensure we change motion kind when coming into contact with a surface
-        // Otherwise, our motion kind will update a frame late (e.g. landing animation)
-        if VarModule::has_var_module(object) { VarModule::on_flag(object, commons::instance::flag::CHECK_CHANGE_MOTION_ONLY);}
-        run_main_status_original(boma, is_stop, is_skip);
-        if VarModule::has_var_module(object) { VarModule::off_flag(object, commons::instance::flag::CHECK_CHANGE_MOTION_ONLY);}
-    }
-}
-
-// This runs immediately before MAIN status script
-#[skyline::hook(offset = 0x48baf0)]
-unsafe fn lua_module__call_line_status_system(lua_module: u64) {
-    let boma = *(lua_module as *mut *mut BattleObjectModuleAccessor).add(1);
-    let object_id = (*boma).battle_object_id;
-    let object = get_battle_object_from_id(object_id);
-
-    if is_fighter(boma)
-    && skip_early_main_status(boma)
-    && StatusModule::is_changing(boma)
-    && VarModule::is_flag(object, commons::instance::flag::BEFORE_GROUND_COLLISION) {
-        return;
-    }
-    call_original!(lua_module)
-}
-
-// This function runs once per frame for all battle objects, immediately before MAIN status
-// Processes of this function include:
-//   1. Incrementing CURRENT_FRAME counter in global table
-//   2. Calling INIT status
-//   3. Calling sub statuses
-//   4. Updating situation kind in global table
-#[skyline::hook(replace = smash::lua2cpp::L2CFighterBase_sys_line_status_system_control)]
-pub unsafe fn sys_line_status_system_control_hook(fighter: &mut L2CFighterBase) -> L2CValue {
-    if VarModule::has_var_module(fighter.battle_object)
-    && VarModule::is_flag(fighter.battle_object, commons::instance::flag::CHECK_CHANGE_MOTION_ONLY)
-    && fighter.global_table[MOTION_FRAME].get_i32() != 0
-    {
-        // When we are calling MAIN status for the sole purpose of changing motion kind upon contact with a surface,
-        // there is no need to increment the CURRENT_FRAME counter,
-        // or run sub statuses (which are often used to increment various counters used during a status)
-        // So we are only updating situation kind, then returning
-        // MAIN status will then be called after returning
-        let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
-        fighter.global_table[SITUATION_KIND].assign(&L2CValue::I32(situation_kind));
-        fighter.global_table[0xD].assign(&L2CValue::Bool(false));
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::CHECK_CHANGE_MOTION_ONLY);
-        0.into()
-    }
-    else {
-        /*if VarModule::has_var_module(fighter.battle_object)*/ VarModule::off_flag(fighter.battle_object, commons::instance::flag::CHECK_CHANGE_MOTION_ONLY);
-        call_original!(fighter)
-    }
-}
-
-//end of hdr code
-
 fn find_subsequence(haystack: &[u8], needle: &[u8]) -> Option<usize> {
     haystack.windows(needle.len()).position(|window| window == needle)
 }
 
 pub fn install() {
     unsafe{
-
-        // Stubs MAIN status execution functions
-        // These functions are run conditionally in run_main_status_original
-        skyline::patching::Patch::in_text(0x3a8518).nop();
-        skyline::patching::Patch::in_text(0x3a8528).nop();
-        skyline::patching::Patch::in_text(0x3a8540).nop();
-        skyline::patching::Patch::in_text(0x3a8568).nop();
-        skyline::patching::Patch::in_text(0x3a859c).nop();
-        skyline::patching::Patch::in_text(0x3a85b0).nop();
-        skyline::patching::Patch::in_text(0x3a85c0).nop();
-        skyline::patching::Patch::in_text(0x3a85d8).nop();
-        skyline::patching::Patch::in_text(0x3a85f0).nop();
-
-
-
         let text_ptr = getRegionAddress(Region::Text) as *const u8;
         let text_size = (getRegionAddress(Region::Rodata) as usize) - (text_ptr as usize);
         let text = std::slice::from_raw_parts(text_ptr, text_size);
@@ -917,13 +608,6 @@ pub fn install() {
         get_active_num_replace, //Samus missile stuff
         get_param_float_offset_replace,
         notify_log_event_collision_hit_replace, //GA stuff
-
-        //hdr opff on main
-        kinetic_module__call_update_energy_hook,
-        kinetic_module__call_update_energy_stop_hook,
-        run_lua_status_hook,
-        lua_module__call_line_status_system,
-        sys_line_status_system_control_hook
     );
 }
 

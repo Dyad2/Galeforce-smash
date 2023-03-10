@@ -1,5 +1,5 @@
-use smash::app::{sv_battle_object, BattleObject, BattleObjectModuleAccessor};
-use smash::lua2cpp::L2CFighterCommon;
+use smash::app::{sv_battle_object, BattleObject};
+//use smash::lua2cpp::L2CFighterCommon;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::*;
@@ -12,12 +12,12 @@ extern "C"{
     #[link_name = "\u{1}_ZN3app9smashball16is_training_modeEv"]
     pub fn is_training_mode() -> bool;
 }
-pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
-    unsafe {
-        let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
-        std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CFighterCommon))
-    }
-}
+// pub fn get_fighter_common_from_accessor<'a>(boma: &'a mut BattleObjectModuleAccessor) -> &'a mut L2CFighterCommon {
+//     unsafe {
+//         let lua_module = *(boma as *mut BattleObjectModuleAccessor as *mut u64).add(0x190 / 8);
+//         std::mem::transmute(*((lua_module + 0x1D8) as *mut *mut L2CFighterCommon))
+//     }
+// }
 
 //end hdr code
 
