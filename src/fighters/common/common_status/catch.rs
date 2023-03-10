@@ -1,12 +1,4 @@
-#![allow(unused_must_use)]
-
-use {
-    smash::{
-        lua2cpp::{L2CFighterCommon, *},
-        app::lua_bind::*,
-        lib::L2CValue
-    },
-};
+use super::*;
 
 //most of this is a gift from wuboy :)
 #[skyline::hook(replace = L2CFighterCommon_status_Catch)]
@@ -28,6 +20,7 @@ unsafe fn status_catch(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_Catch_Main as *const () as _))
 }
 
+
 #[skyline::hook(replace = L2CFighterCommon_status_CatchDash)]
 unsafe fn status_catchdash(fighter: &mut L2CFighterCommon) -> L2CValue {
     ItemModule::set_have_item_visibility(fighter.module_accessor, false, 0);
@@ -35,6 +28,7 @@ unsafe fn status_catchdash(fighter: &mut L2CFighterCommon) -> L2CValue {
     GrabModule::set_rebound(fighter.module_accessor, true);
     fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_CatchDash_Main as *const () as _))
 }
+
 
 #[skyline::hook(replace = L2CFighterCommon_status_CatchTurn)]
 unsafe fn status_catchturn(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -55,5 +49,34 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    skyline::nro::add_hook(nro_hook).unwrap();
+    // install_hooks!(
+    //     bac_status_catch,
+    //     bac_status_catchdash,
+    //     bac_status_catchturn,
+    //     status_catch,
+    //     status_catchdash,
+    //     status_catchturn,
+    // );
 }
+
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon34bind_address_call_status_CatchEPN3lib8L2CAgentE")]
+// unsafe fn bac_status_catch(fighter: &mut L2CFighterCommon, _arg: L2CAgent) {
+//     fighter.status_Catch();
+// }
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon12status_CatchEv")]
+// unsafe fn status_catch(fighter: &mut L2CFighterCommon) {
+
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon34bind_address_call_status_CatchDashEPN3lib8L2CAgentE")]
+// unsafe fn bac_status_catchdash(fighter: &mut L2CFighterCommon, _arg: L2CAgent) {
+//     fighter.status_CatchDash();
+// }
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon16status_CatchDashEv")]
+// unsafe fn status_catchdash(fighter: &mut L2CFighterCommon) {
+
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon34bind_address_call_status_CatchTurnEPN3lib8L2CAgentE")]
+// unsafe fn bac_status_catchturn(fighter: &mut L2CFighterCommon, _arg: L2CAgent) {
+//     fighter.status_CatchTurn();
+// }
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon16status_CatchTurnEv")]
+// unsafe fn status_catchturn(fighter: &mut L2CFighterCommon) {

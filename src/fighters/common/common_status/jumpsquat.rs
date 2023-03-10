@@ -20,9 +20,10 @@ unsafe fn status_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon21status_JumpSquat_MainEv")]
 unsafe fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
-
-    let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[JUMP_SQUAT_MAIN_PRE].get_ptr());
-    if fighter.global_table[JUMP_SQUAT_MAIN_PRE].get_bool() && callable(fighter).get_bool() {
+    if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() && {
+        let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr());
+        callable(fighter).get_bool()
+    } {
         return 1.into();
     }
     
@@ -49,10 +50,10 @@ unsafe fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
         } 
         else if !fighter.sub_transition_specialflag_hoist().get_bool() {
             let cat2 = fighter.global_table[CMD_CAT2].get_i32();
-            let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[ATTACK_HI4_PRE].get_ptr());
+            let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[CHECK_ATTACK_HI4_UNIQ].get_ptr());
             if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START)
             && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-                if fighter.global_table[ATTACK_HI4_PRE].get_bool() != false && callable(fighter).get_bool() {
+                if fighter.global_table[CHECK_ATTACK_HI4_UNIQ].get_bool() != false && callable(fighter).get_bool() {
                     return 0.into();
                 }
                 if cat2 & *FIGHTER_PAD_CMD_CAT2_FLAG_ATTACK_DASH_ATTACK_HI4 != 0
@@ -68,9 +69,8 @@ unsafe fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon40uniq_process_JumpSquat_exec_status_paramEN3lib8L2CValueE")]
 unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommon, _arg: L2CValue) {
     
-    //had to read hdr code to understand what happens here. still not sure i got it all lol
-    let should_check = if fighter.global_table[JUMP_SQUAT_MAIN_PRE].get_bool() {
-        let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = fighter.global_table[JUMP_SQUAT_MAIN_PRE].get_ptr() as _;
+    let should_check = if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() {
+        let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr() as _;
         if !custom_routine.is_null() {
             let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(custom_routine);
             callable(fighter);
@@ -91,16 +91,17 @@ unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommo
     let update_rate = MotionModule::update_rate(fighter.module_accessor);
     let frame = MotionModule::frame(fighter.module_accessor);
     let end_frame = MotionModule::end_frame_from_hash(fighter.module_accessor, Hash40::new_raw(MotionModule::motion_kind(fighter.module_accessor))) as u32 as f32;
+    //let end_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("jump_squat_frame"), 0);
     let cat1 = fighter.global_table[CMD_CAT1].get_i32();
     
     if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_AIR_ESCAPE != 0 || ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD_HOLD))
     && cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N == 0 {
-        if !(fighter.global_table[FIGHTER_KIND].get_i32() == *FIGHTER_KIND_PICKEL 
+        if !(fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PICKEL 
         && [*FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N1_JUMP_SQUAT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_SQUAT].contains(&StatusModule::prev_status_kind(fighter.module_accessor, 0))) {
             VarModule::on_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR);
         }
     }
-    if end_frame <= (frame * update_rate) || VarModule::is_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) /*to interrupt jumpsquat with airdodge*/ {
+    if (frame + update_rate) >= end_frame || VarModule::is_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) {
         StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), false);
         let situation_kind = fighter.global_table[SITUATION_KIND].clone();
         fighter.global_table[PREV_SITUATION_KIND].assign(&situation_kind);
@@ -142,6 +143,69 @@ unsafe fn uniq_process_JumpSquat_exec_status(fighter: &mut L2CFighterCommon) -> 
     0.into()
 }
 
+#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon29sub_jump_squat_uniq_check_subEN3lib8L2CValueE")]
+unsafe fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, flag: L2CValue) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
+        return;
+    }
+    let end_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("jump_squat_frame"), 0) as f32;
+    if WorkModule::is_flag(fighter.module_accessor, flag.get_i32()) {
+            if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
+            || ControlModule::is_jump_mini_button(fighter.module_accessor) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+            }
+    }
+    else {
+        let stick_y = fighter.global_table[STICK_Y].get_f32();
+        let jump_neutral_y = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_neutral_y"));
+        if stick_y < jump_neutral_y {
+            if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON)
+            && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+                return;
+            }
+        }
+        else {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        }
+        //if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON)
+        //&& ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK)
+        //&& ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+        //    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        //}
+    }
+}
+
+#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon41sub_jump_squat_uniq_check_sub_mini_attackEv")]
+unsafe fn sub_jump_squat_uniq_check_sub_mini_attack(fighter: &mut L2CFighterCommon) {
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
+        return;
+    }
+    if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK) {
+        if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON)
+        && fighter.global_table[MOTION_FRAME].get_f32() > 0.0 {
+            FighterControlModuleImpl::reserve_on_attack_button(fighter.module_accessor);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FLAG_RESERVE_ATTACK_BUTTON_ON);
+        }
+    }
+    else {
+        if !ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK) {
+                return;
+            }
+        }
+        else if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP) && !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_RESERVE_JUMP_MINI_ATTACK) {
+            return;
+        }
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW_FORCE);
+        WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ITEM_THROW);
+        // WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
+        // WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_MINI_ATTACK);
+    }
+}
+
 pub fn install() {
     install_status_scripts!(
         status_JumpSquat,
@@ -151,180 +215,8 @@ pub fn install() {
     install_hooks!(
         status_JumpSquat_Main,
         uniq_process_JumpSquat_exec_status_param,
-        uniq_process_JumpSquat_exec_status
-        
+        uniq_process_JumpSquat_exec_status,
+        sub_jump_squat_uniq_check_sub,
+        sub_jump_squat_uniq_check_sub_mini_attack
     );
 }
-
-//this is where FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI is set for short hop macro?
-// void __thiscall
-// lua2cpp::L2CFighterCommon::sub_jump_squat_uniq_check_sub(L2CFighterCommon *this,L2CValue param_1)
-
-// {
-//   long lVar1;
-//   byte bVar2;
-//   bool bVar3;
-//   int iVar4;
-//   ulong uVar5;
-//   L2CValue *this_00;
-//   ulong uVar6;
-//   float fVar7;
-//   L2CValue LStack160;
-//   L2CValue LStack144;
-//   L2CValue LStack128;
-//   L2CValue LStack112;
-//   L2CValue LStack96;
-//   L2CValue LStack80;
-//   L2CValue LStack64;
-
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon29sub_jump_squat_uniq_check_subEN3lib8L2CValueE")]
-unsafe fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, param1: i32) {
-
-    if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
-        if !WorkModule::is_flag(fighter.module_accessor, param1) {
-            let stick_y = fighter.global_table[STICK_Y].get_f32();
-            let param = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("jump_neutral_y"));
-            if stick_y < param {
-                if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-                    if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-                        if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-//   lib::L2CValue::L2CValue(&LStack96,FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP);
-//   iVar4 = lib::L2CValue::as_integer(&LStack96);
-//   bVar2 = app::lua_bind::WorkModule__is_flag_impl(this->moduleAccessor,iVar4);
-//   lib::L2CValue::L2CValue(&LStack80,(bool)(bVar2 & 1));
-//   lib::L2CValue::L2CValue(&LStack64,false);
-//   uVar5 = lib::L2CValue::operator==(&LStack80,(L2CValue *)&LStack64);
-//   lib::L2CValue::~L2CValue(&LStack64);
-//   lib::L2CValue::~L2CValue(&LStack80);
-//   lib::L2CValue::~L2CValue(&LStack96);
-//   if ((uVar5 & 1) == 0) {
-//     return;
-//   }
-//   iVar4 = lib::L2CValue::as_integer((L2CValue *)(ulong)param_1);
-//   bVar2 = app::lua_bind::WorkModule__is_flag_impl(this->moduleAccessor,iVar4);
-//   lib::L2CValue::L2CValue(&LStack64,(bool)(bVar2 & 1));
-//   bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack64);
-//   lib::L2CValue::~L2CValue(&LStack64);
-//   if ((bVar3 & 1U) == 0) {
-//     this_00 = (L2CValue *)lib::L2CValue::operator[](&this->globalTable,0x1b);
-//     lib::L2CValue::L2CValue(&LStack80,0x6e5ec7051);
-//     lib::L2CValue::L2CValue(&LStack96,0xe5fbcdc0e);
-//     uVar5 = lib::L2CValue::as_integer(&LStack80);
-//     uVar6 = lib::L2CValue::as_integer(&LStack96);
-//     fVar7 = (float)app::lua_bind::WorkModule__get_param_float_impl(this->moduleAccessor,uVar5,uVar6)
-//     ;
-//     lib::L2CValue::L2CValue(&LStack64,fVar7);
-//     uVar5 = lib::L2CValue::operator<(this_00,(L2CValue *)&LStack64);
-//     if ((uVar5 & 1) == 0) {
-//       lib::L2CValue::~L2CValue(&LStack64);
-//       lib::L2CValue::~L2CValue(&LStack96);
-//       lib::L2CValue::~L2CValue(&LStack80);
-//     }
-//     else {
-//       lib::L2CValue::L2CValue(&LStack128,CONTROL_PAD_BUTTON_CSTICK_ON);
-//       iVar4 = lib::L2CValue::as_integer(&LStack128);
-//       bVar2 = app::lua_bind::ControlModule__check_button_on_impl(this->moduleAccessor,iVar4);
-//       lib::L2CValue::L2CValue(&LStack112,(bool)(bVar2 & 1));
-//       bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack112);
-//       if ((bVar3 & 1U) == 0) {
-//         bVar2 = 1;
-//       }
-//       else {
-//         lib::L2CValue::L2CValue(&LStack160,CONTROL_PAD_BUTTON_SPECIAL);
-//         iVar4 = lib::L2CValue::as_integer(&LStack160);
-//         bVar2 = app::lua_bind::ControlModule__check_button_on_impl(this->moduleAccessor,iVar4);
-//         lib::L2CValue::L2CValue(&LStack144,(bool)(bVar2 & 1));
-//         bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack144);
-//         bVar2 = bVar3 ^ 1;
-//         lib::L2CValue::~L2CValue(&LStack144);
-//         lib::L2CValue::~L2CValue(&LStack160);
-//       }
-//       lib::L2CValue::~L2CValue(&LStack112);
-//       lib::L2CValue::~L2CValue(&LStack128);
-//       lib::L2CValue::~L2CValue(&LStack64);
-//       lib::L2CValue::~L2CValue(&LStack96);
-//       lib::L2CValue::~L2CValue(&LStack80);
-//       if ((bVar2 & 1) != 0) {
-//         lib::L2CValue::L2CValue(&LStack64,_FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
-//         iVar4 = lib::L2CValue::as_integer(&LStack64);
-//         app::lua_bind::WorkModule__on_flag_impl(this->moduleAccessor,iVar4);
-//         goto LAB_71001e1290;
-//       }
-//     }
-//     lib::L2CValue::L2CValue(&LStack80,CONTROL_PAD_BUTTON_CSTICK_ON);
-//     iVar4 = lib::L2CValue::as_integer(&LStack80);
-//     bVar2 = app::lua_bind::ControlModule__check_button_trigger_impl(this->moduleAccessor,iVar4);
-//     lib::L2CValue::L2CValue(&LStack64,(bool)(bVar2 & 1));
-//     bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack64);
-//     if ((bVar3 & 1U) != 0) {
-//       lib::L2CValue::L2CValue(&LStack112,CONTROL_PAD_BUTTON_ATTACK);
-//       iVar4 = lib::L2CValue::as_integer(&LStack112);
-//       bVar2 = app::lua_bind::ControlModule__check_button_trigger_impl(this->moduleAccessor,iVar4);
-//       lib::L2CValue::L2CValue(&LStack96,(bool)(bVar2 & 1));
-//       bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack96);
-//       if ((bVar3 & 1U) != 0) {
-//         lib::L2CValue::L2CValue(&LStack144,CONTROL_PAD_BUTTON_SPECIAL);
-//         iVar4 = lib::L2CValue::as_integer(&LStack144);
-//         bVar2 = app::lua_bind::ControlModule__check_button_off_impl(this->moduleAccessor,iVar4);
-//         lib::L2CValue::L2CValue(&LStack128,(bool)(bVar2 & 1));
-//         bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack128);
-//         lib::L2CValue::~L2CValue(&LStack128);
-//         lib::L2CValue::~L2CValue(&LStack144);
-//         lib::L2CValue::~L2CValue(&LStack96);
-//         lib::L2CValue::~L2CValue(&LStack112);
-//         lib::L2CValue::~L2CValue(&LStack64);
-//         lib::L2CValue::~L2CValue(&LStack80);
-//         if ((bVar3 & 1U) == 0) {
-//           return;
-//         }
-//         lib::L2CValue::L2CValue(&LStack64,_FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
-//         iVar4 = lib::L2CValue::as_integer(&LStack64);
-//         app::lua_bind::WorkModule__on_flag_impl(this->moduleAccessor,iVar4);
-//         goto LAB_71001e1290;
-//       }
-//       lib::L2CValue::~L2CValue(&LStack96);
-//       lib::L2CValue::~L2CValue(&LStack112);
-//     }
-//     lib::L2CValue::~L2CValue(&LStack64);
-//     lVar1 = -0x40;
-//   }
-//   else {
-//     lib::L2CValue::L2CValue(&LStack80,CONTROL_PAD_BUTTON_JUMP);
-//     iVar4 = lib::L2CValue::as_integer(&LStack80);
-//     bVar2 = app::lua_bind::ControlModule__check_button_off_impl(this->moduleAccessor,iVar4);
-//     lib::L2CValue::L2CValue(&LStack64,(bool)(bVar2 & 1));
-//     bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack64);
-//     if ((bVar3 & 1U) == 0) {
-//       bVar2 = app::lua_bind::ControlModule__is_jump_mini_button_impl(this->moduleAccessor);
-//       lib::L2CValue::L2CValue(&LStack96,(bool)(bVar2 & 1));
-//       bVar3 = lib::L2CValue::operator.cast.to.bool(&LStack96);
-//       lib::L2CValue::~L2CValue(&LStack96);
-//       lib::L2CValue::~L2CValue(&LStack64);
-//       lib::L2CValue::~L2CValue(&LStack80);
-//       if ((bVar3 & 1U) == 0) {
-//         return;
-//       }
-//     }
-//     else {
-//       lib::L2CValue::~L2CValue(&LStack64);
-//       lib::L2CValue::~L2CValue(&LStack80);
-//     }
-//     lib::L2CValue::L2CValue(&LStack64,_FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_JUMP_MINI);
-//     iVar4 = lib::L2CValue::as_integer(&LStack64);
-//     app::lua_bind::WorkModule__on_flag_impl(this->moduleAccessor,iVar4);
-// LAB_71001e1290:
-//     lVar1 = -0x30;
-//   }
-//   lib::L2CValue::~L2CValue((L2CValue *)(&stack0xfffffffffffffff0 + lVar1));
-//   return;
-// }

@@ -50,21 +50,23 @@ pub static NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE: &[u8] = &[
     0xfb, 0x03, 0x00, 0xaa
 ];
 
-// Common
-// pub const ZERO_VECTOR : Vector3f = Vector3f { x: 0.0, y: 0.0, z: 0.0 };
-// pub static mut FGC_TRAINING : bool = false;
-// pub const ATTACK_AIR_N_MASK : i32 = 0b00001;
-// pub const ATTACK_AIR_F_MASK : i32 = 0b00010;
-// pub const ATTACK_AIR_B_MASK : i32 = 0b00100;
-// pub const ATTACK_AIR_HI_MASK : i32 = 0b01000;
-// pub const ATTACK_AIR_LW_MASK : i32 = 0b10000;
-// pub const ATTACK_N_MASK : i32 = 0b0000001;
-// pub const ATTACK_S3_MASK : i32 = 0b0000010;
-// pub const ATTACK_HI3_MASK : i32 = 0b0000100;
-// pub const ATTACK_LW3_MASK : i32 = 0b0001000;
-// pub const ATTACK_S4_MASK : i32 = 0b0010000;
-// pub const ATTACK_HI4_MASK : i32 = 0b0100000;
-// pub const ATTACK_LW4_MASK : i32 = 0b1000000;
+pub mod archetype {
+    pub mod aggressive {
+        pub const All_ROUNDER   : i32 = 0x0000;
+        pub const RUSHDOWN      : i32 = 0x0001;
+        pub const GRAPPLER      : i32 = 0x0002;
+        pub const LEDGE_TRAP    : i32 = 0x0003;
+    }
+    pub mod defensive {
+        pub const ZONER         : i32 = 0x0000;
+        pub const SETPLAY       : i32 = 0x0001;
+        pub const BAIT_PUNISH   : i32 = 0x0002;
+    }
+    pub mod traits {
+        pub const HEAVY         : i32 = 0x0000;
+        pub const LIGHTWEIGHT   : i32 = 0x0001;
+    }
+}
 
 pub mod commons {
     pub mod instance {
@@ -84,12 +86,14 @@ pub mod commons {
             pub const PLATFORM_FALL_STUN : i32 = 0x000C;
             pub const ALLOW_REVERSE_ATTACK_LW3 : i32 = 0x000D;
             pub const WAVEDASH : i32 = 0x000E;
-            //pub const ESCAPE_AIR_UP : i32 = 0x000E; //must stay in instance
-            //pub const JUMP_SQUAT_TO_ESCAPE_AIR : i32 = 0x0011;
             pub const IS_VICTIM_GANON_GA : i32 = 0x0012;
             pub const PURIN_MARK : i32 = 0x0013;
             pub const ALLOW_PERFECT_PIVOT : i32 = 0x0014;
             pub const SMASH_TURN : i32 = 0x0015;
+            //hdr
+            pub const BEFORE_GROUND_COLLISION : i32 = 0x0016;
+            pub const CHECK_CHANGE_MOTION_ONLY : i32 = 0x0017;
+            //end hdr
         }
         pub mod int {
             pub const FRAME_COUNTER : i32 = 0x0000;

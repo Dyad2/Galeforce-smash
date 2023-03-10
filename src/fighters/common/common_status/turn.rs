@@ -34,8 +34,8 @@ unsafe extern "C" fn status_pre_turncommon(fighter: &mut L2CFighterCommon) {
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon16status_Turn_MainEv")]
 unsafe extern "C" fn status_turn_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[TURN_PRE].get_ptr());
-    if fighter.global_table[TURN_PRE].get_bool() && callable(fighter).get_bool() {
+    let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[TURN_UNIQ].get_ptr());
+    if fighter.global_table[TURN_UNIQ].get_bool() && callable(fighter).get_bool() {
         return 1.into();
     }
     

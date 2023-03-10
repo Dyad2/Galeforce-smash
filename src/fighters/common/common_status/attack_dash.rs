@@ -97,7 +97,7 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         }
     }
     let reserve_log_attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
-    if jump_frame == 1 && !fighter.global_table[IN_HITLAG].get_bool() && reserve_log_attack_kind > 0 {
+    if jump_frame == 1 && !fighter.global_table[IS_STOP].get_bool() && reserve_log_attack_kind > 0 {
         FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, reserve_log_attack_kind);
         WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
     }
