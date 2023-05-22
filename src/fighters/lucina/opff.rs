@@ -6,6 +6,7 @@ fn masked_marth_frame(fighter: &mut L2CFighterCommon) {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
+        //please make status for those holy
         if curr_motion_kind == hash40("special_hi") {
             VarModule::on_flag(fighter.battle_object, marcina::instance::flag::LUCINA_SPECIAL_HI_LANDING);
             AttackModule::clear_all(fighter.module_accessor);
@@ -40,34 +41,36 @@ fn masked_marth_frame(fighter: &mut L2CFighterCommon) {
             macros::AFTER_IMAGE_OFF(fighter, 1);
         }
 
-        //GA - Exalt's Exertion - Father's teachings
+        //GA - Exalt's Exertion
         // type: cancel
         //  Hits side b 3 (any angle) and cancel it with a wavedash. Disables side b for s short time.
-        if !is_operation_cpu(fighter.module_accessor) {
-            if status_kind == *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S3 {
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        if [*FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S2, *FIGHTER_MARTH_STATUS_KIND_SPECIAL_S3].contains(&status_kind) { //hoping the common status doesnt work for s4
+            if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+        }
+        else {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        }
+        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && !StopModule::is_stop(fighter.module_accessor) {
+            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR {
+                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+                    VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                    VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 360);
+                    galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
+                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
                 }
             }
-            else {
+            else if fighter.global_table[STICK_X].get_f32() * PostureModule::lr(fighter.module_accessor) >= 0.1 && ControlModule::get_flick_x(fighter.module_accessor) < 5 {
                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-            }
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                StopModule::cancel_hit_stop(fighter.module_accessor);
-                if ControlModule::get_stick_y(fighter.module_accessor) > 0.0 {
-                    ControlModule::set_main_stick_y(fighter.module_accessor, 0.0);
-                }
+                VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 360);
                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
-                StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
-                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
-                //MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 420);
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_DASH, true);
             }
-            if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) >= 0 {
-                chrom_disable_dance_effect(fighter);
-                VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
-            }
+        }
+        if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) >= 0 {
+            chrom_disable_dance_effect(fighter);
+            VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
         }
     }
 }

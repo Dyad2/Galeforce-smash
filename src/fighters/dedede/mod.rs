@@ -6,6 +6,9 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+use galeforce_utils::vars::*;
+use custom_var::*;
+
 //global edits
 #[acmd_script( agent = "dedede", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
@@ -372,8 +375,8 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("hammer2"), 10.0, 361, 98, 0, 15, 5.0, -12.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_dedede_hammer"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("hammer2"), 12.0, 361, 98, 0, 30, 8.0, 2.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_dedede_hammer"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("hammer2"), 10.0, 361, 90, 0, 30, 5.0, -12.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_dedede_hammer"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("hammer2"), 12.0, 361, 98, 0, 30, 8.0, -2.0, 0.0, 0.0, None, None, None, 1.25, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_dedede_hammer"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEDEDE, *ATTACK_REGION_HAMMER);
         }
     frame(lua_state, 16.0);
         if macros::is_excute(fighter)
@@ -408,12 +411,11 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 //effect
 #[acmd_script( agent = "dedede", script = "expression_landingheavy", category = ACMD_GAME, low_priority)]
 unsafe fn expressionlandingheavy(fighter: &mut L2CAgentBase) {
-    let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
 
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-            if prev_status != *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

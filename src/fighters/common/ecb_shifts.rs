@@ -71,7 +71,7 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
                     // Small
                     let group1: &[i32] = &[*FIGHTER_KIND_KIRBY,*FIGHTER_KIND_PIKACHU,*FIGHTER_KIND_NESS,*FIGHTER_KIND_PURIN,*FIGHTER_KIND_GAMEWATCH,*FIGHTER_KIND_POPO,*FIGHTER_KIND_NANA,*FIGHTER_KIND_PICHU,*FIGHTER_KIND_METAKNIGHT,*FIGHTER_KIND_WARIO,*FIGHTER_KIND_PZENIGAME,*FIGHTER_KIND_PFUSHIGISOU,*FIGHTER_KIND_LUCAS,*FIGHTER_KIND_PIKMIN,*FIGHTER_KIND_TOONLINK,*FIGHTER_KIND_DUCKHUNT,*FIGHTER_KIND_MURABITO,*FIGHTER_KIND_SHIZUE];
                     // Medium
-                    let group2: &[i32] = &[*FIGHTER_KIND_MARIO, *FIGHTER_KIND_YOSHI, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_BUDDY, /*FIGHTER_KIND_PICKEL,*/ *FIGHTER_KIND_INKLING];
+                    let group2: &[i32] = &[*FIGHTER_KIND_MARIO, *FIGHTER_KIND_YOSHI, *FIGHTER_KIND_LUIGI, *FIGHTER_KIND_MARIOD, *FIGHTER_KIND_PLIZARDON, *FIGHTER_KIND_DIDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_ROCKMAN, *FIGHTER_KIND_GEKKOUGA, *FIGHTER_KIND_PACMAN, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_MIIFIGHTER, *FIGHTER_KIND_MIISWORDSMAN, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_BUDDY, *FIGHTER_KIND_INKLING];
                     // medium large
                     let group3: &[i32] = &[*FIGHTER_KIND_YOUNGLINK];
                     // Large
@@ -79,7 +79,9 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
                     // X-Large
                     let group5: &[i32] = &[*FIGHTER_KIND_DONKEY, *FIGHTER_KIND_CAPTAIN, *FIGHTER_KIND_KOOPA, *FIGHTER_KIND_ROY, *FIGHTER_KIND_CHROM, *FIGHTER_KIND_LITTLEMAC, *FIGHTER_KIND_SZEROSUIT, *FIGHTER_KIND_SNAKE, *FIGHTER_KIND_IKE, *FIGHTER_KIND_WIIFIT, *FIGHTER_KIND_ROSETTA, *FIGHTER_KIND_REFLET, *FIGHTER_KIND_SHULK, *FIGHTER_KIND_RYU, *FIGHTER_KIND_KEN, *FIGHTER_KIND_CLOUD, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_SIMON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_JACK, *FIGHTER_KIND_BRAVE, *FIGHTER_KIND_DOLLY, *FIGHTER_KIND_TANTAN, *FIGHTER_KIND_SAMUS, *FIGHTER_KIND_SAMUSD];
                     // XX-Large
-                    let group6: &[i32] = &[*FIGHTER_KIND_BAYONETTA, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_EDGE, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KAMUI, *FIGHTER_KIND_LINK, *FIGHTER_KIND_PALUTENA,];
+                    let group6: &[i32] = &[*FIGHTER_KIND_BAYONETTA, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_EDGE, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KAMUI, *FIGHTER_KIND_LINK, *FIGHTER_KIND_PALUTENA];
+                    // others
+                    let group7: &[i32] = &[*FIGHTER_KIND_PICKEL];
 
                     max_offset = match object_kind {
                         y if group1.contains(&y) => 2.,
@@ -88,14 +90,15 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
                         y if group4.contains(&y) => 4.5,
                         y if group5.contains(&y) => 5.,
                         y if group6.contains(&y) => 5.5,
+                        y if group7.contains(&y) => 0.0,
                         _ => max_offset,
                     };
 
-                    if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
-                        max_offset -= 0.2;
-                    }
+                    // if status_kind == *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+                    //     max_offset -= 0.2;
+                    // }
                     //fix so bayo's side b doesn't go through the stage so much
-                    else if object_kind == *FIGHTER_KIND_BAYONETTA && status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U {
+                    if object_kind == *FIGHTER_KIND_BAYONETTA && status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U {
                         max_offset = 4.5;
                     }
                     //lucina lands earlier while falling with up b
@@ -109,10 +112,10 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
             }
             else if situation_kind == *SITUATION_KIND_GROUND {
                 max_offset = 0.;
-            } 
-            else {
-                max_offset = VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y);
             }
+            // else {
+            //     max_offset = VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y);
+            // }
             VarModule::set_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y, max_offset);
             GroundModule::set_rhombus_offset(fighter.module_accessor, &Vector2f{x : 0.0, y : VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y)});
         }

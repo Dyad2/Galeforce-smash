@@ -32,14 +32,21 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
             MotionModule::set_rate(fighter.module_accessor, 1.5);
         }
 
+        //prevents dtilt from crossing up shields
+        if curr_motion_kind == hash40("attack_lw3") && AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            let fighter_kinetic_energy_motion = mem::transmute::<u64, &mut smash::app::FighterKineticEnergyMotion>(KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION));
+            FighterKineticEnergyMotion::set_speed_mul(fighter_kinetic_energy_motion, 0.3);
+        }
+
         //kirby hat in victory screen!
         if FighterManager::is_ready_go(singletons::FighterManager()) {
             LAST_HAT[entry_id as usize] = WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
             //VarModule::set_int(fighter.battle_object, kirby::instance::int::LAST_HAT, WorkModule::get_int(fighter.module_accessor, *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA));
         }
-        if [hash40("win_1"), hash40("win_2"), hash40("win_3")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_f32() == 1.0 {
+        if [hash40("win_1"), hash40("win_2"), hash40("win_3")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_i32() == 1 {
             //let last_hat = VarModule::get_int(fighter.battle_object, kirby::instance::int::LAST_HAT);
             WorkModule::set_int(fighter.module_accessor, LAST_HAT[entry_id as usize], *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
+            FighterSpecializer_Kirby::get_copy_setup();
             FighterSpecializer_Kirby::copy_setup(instance_boma, 0, smash::app::FighterKind(LAST_HAT[entry_id as usize]), false, false);
         }
     }
@@ -65,7 +72,6 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
 //             macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 90, 30, 0, 60, 3.8, 0.0, 3.0, -6.1, Some(0.0), Some(9.0), Some(-9.6), 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
 //         }
 // }
-
 
 //global edits
 #[acmd_script( agent = "kirby", script = "game_dash", category = ACMD_GAME, low_priority)]
@@ -104,6 +110,7 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
             if macros::is_excute(fighter)
             {
                 JostleModule::set_status(fighter.module_accessor, false);
+                MotionModule::set_rate(fighter.module_accessor, 1.2);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("toel"), 7.5, 90, 12, 0, 75, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
             }
         frame(lua_state, 18.);
@@ -111,25 +118,25 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
             {
                 macros::ATTACK(fighter, 1, 0, Hash40::new("toel"), 5.0, 361, 7, 0, 50, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
             }
-        frame(lua_state, 25.);
+        frame(lua_state, 27.);
             if macros::is_excute(fighter)
             {
                 AttackModule::clear_all(fighter.module_accessor);
                 JostleModule::set_status(fighter.module_accessor, true);
+                MotionModule::set_rate(fighter.module_accessor, 0.6);
             }
-        frame(lua_state, 30.);
+        frame(lua_state, 28.);
             if macros::is_excute(fighter)
             {
-                MotionModule::set_rate(fighter.module_accessor, 0.66);
                 if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
                     CancelModule::enable_cancel(fighter.module_accessor);
                 }
             }
-        frame(lua_state, 34.);
-            if macros::is_excute(fighter)
-            {
-                MotionModule::set_rate(fighter.module_accessor, 1.0);
-            }
+        // frame(lua_state, 34.);
+        //     if macros::is_excute(fighter)
+        //     {
+        //         MotionModule::set_rate(fighter.module_accessor, 1.0);
+        //     }
 }
 
 #[acmd_script( agent = "kirby", script = "game_attackdash", category = ACMD_GAME, low_priority)]
@@ -362,6 +369,23 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 //         }
 // }
 
+#[acmd_script( agent = "kirby", script = "effect_attacklw3", category = ACMD_EFFECT, low_priority )]
+unsafe fn effect_attacklw3(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 5.0);
+    if macros::is_excute(fighter) {
+        macros::FOOT_EFFECT(fighter, Hash40::new("sys_turn_smoke"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
+    }
+    frame(fighter.lua_state_agent, 6.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("sys_attack_arc_d"), Hash40::new("sys_attack_arc_d"), Hash40::new("top"), -1, 2.5, 6, 0, -10, 5, 0.9, true, *EF_FLIP_YZ);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.5);
+    }
+    frame(fighter.lua_state_agent, 8.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_OFF_KIND(fighter, Hash40::new("sys_attack_arc_b"), true, true);
+    }
+}
+
 pub fn install() {
     smashline::install_agent_frames!(
         kirby_frame
@@ -380,6 +404,7 @@ pub fn install() {
         specialairhi2,
         specialhi2,
         escapeairslide,
+        effect_attacklw3,
         //effectfinalcutterregular
     );
 }

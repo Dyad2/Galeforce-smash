@@ -1,5 +1,4 @@
 use smash::phx::Hash40;
-use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
@@ -8,52 +7,11 @@ use smashline::*;
 use smash_script::*;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*};
+use galeforce_utils::{vars::*};
 use custom_var::*;
 
-static mut BLOCKED_ATTACK : bool = false;
-
-#[fighter_frame( agent = FIGHTER_KIND_ROY )]
-fn lordling_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-        let status_kind = StatusModule::status_kind(fighter.module_accessor);
-
-        //GA - Winning Road
-        // type: cancel
-        //  allows roy to cancel some grounded attacks with up taunt, gaining armor to bait counter attacks and gaining HP
-        if !is_operation_cpu(fighter.module_accessor) {
-            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S3].contains(&status_kind) {
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    VarModule::set_float(fighter.battle_object, roy::instance::float::GALEFORCE_ATTACK_TIMER, MotionModule::frame(fighter.module_accessor));
-                    VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                }
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && MotionModule::frame(fighter.module_accessor) >= VarModule::get_float(fighter.battle_object, roy::instance::float::GALEFORCE_ATTACK_TIMER) + 10.0 {
-                        StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
-                        galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
-                        VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                        VarModule::set_float(fighter.battle_object, roy::instance::float::GALEFORCE_ATTACK_TIMER, 999.0);
-                    }
-                }
-            }
-            else if [hash40("appeal_hi_l"), hash40("appeal_hi_r")].contains(&curr_motion_kind) {
-                let damage_info = DamageModule::start_damage_info_log(fighter.module_accessor) as *mut smash::app::DamageInfo;
-                if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 && is_hitlag(fighter.module_accessor) {
-                    BLOCKED_ATTACK = true;
-                }
-                if BLOCKED_ATTACK {
-                    CancelModule::enable_cancel(fighter.module_accessor);
-                }
-            }
-            else {
-                BLOCKED_ATTACK = false;
-                VarModule::set_float(fighter.battle_object, roy::instance::float::GALEFORCE_ATTACK_TIMER, 999.0);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-            }
-        }
-    }
-}
+pub mod effects;
+pub mod opff;
 
 //global edits
 #[acmd_script( agent = "roy", script = "game_dash", category = ACMD_GAME, low_priority)]
@@ -224,7 +182,6 @@ unsafe fn airf(fighter: &mut L2CAgentBase) {
 // #[acmd_script( agent = "roy", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 // unsafe fn airn(fighter: &mut L2CAgentBase) {
 //     let lua_state = fighter.lua_state_agent;
-
 //         frame(lua_state, 1.);
 //             if macros::is_excute(fighter)
 //             {
@@ -602,7 +559,8 @@ unsafe fn appealhil(fighter: &mut L2CAgentBase) {
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
             {
-                smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+                //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+                HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);
             }
         wait(lua_state, 5.);
             if macros::is_excute(fighter)
@@ -612,7 +570,8 @@ unsafe fn appealhil(fighter: &mut L2CAgentBase) {
         wait(lua_state, 35.);
             if macros::is_excute(fighter)
             {
-                smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+                //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+                HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
     }
@@ -626,7 +585,8 @@ unsafe fn appealhir(fighter: &mut L2CAgentBase) {
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
             {
-                smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+                //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+                HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_INVINCIBLE), 0);
             }
         wait(lua_state, 5.);
             if macros::is_excute(fighter)
@@ -636,7 +596,8 @@ unsafe fn appealhir(fighter: &mut L2CAgentBase) {
         wait(lua_state, 35.);
             if macros::is_excute(fighter)
             {
-                smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+                //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+                HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
     }
@@ -659,85 +620,9 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-//effects
-#[acmd_script( agent = "roy", script = "effect_attackairlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectairlw(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 12.);
-        if macros::is_excute(fighter)
-        {
-            macros::EFFECT_FOLLOW_NO_STOP(fighter, Hash40::new("roy_fire"), Hash40::new("sword1"), 0, 0, 0, 0, 0, 0, 1, true)
-        }
-    frame(lua_state, 20.);
-        if macros::is_excute(fighter)
-        {
-            macros::EFFECT_OFF_KIND(fighter, Hash40::new("roy_fire"), false, false);
-        }
-}
-
-#[acmd_script( agent = "roy", script = "effect_attackairn", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectairn(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 8.0);
-        if macros::is_excute(fighter)
-        {
-            macros::AFTER_IMAGE4_ON_arg29(fighter, Hash40::new("tex_roy_sword1"), Hash40::new("tex_roy_sword2"), 10, Hash40::new("sword1"), 0.0, 0.0, -0.8, Hash40::new("sword1"), -0.0, -0.0, 14.5, true, Hash40::new("roy_sword"), Hash40::new("sword1"), 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0, *EFFECT_AXIS_X, 0, *TRAIL_BLEND_ALPHA, 101, *TRAIL_CULL_NONE, 1.3, 0.2);
-            macros::EFFECT_FOLLOW(fighter, Hash40::new("roy_sword_light"), Hash40::new("sword1"), 0, 0, 10.5, 0, 0, 0, 1.0, true);
-            macros::LAST_EFFECT_SET_ALPHA(fighter, 0.6);
-        }
-    wait(lua_state, 3.0);
-        if macros::is_excute(fighter)
-        {
-            macros::AFTER_IMAGE_OFF(fighter, 4);
-        }
-    wait(lua_state, 4.0);
-        if macros::is_excute(fighter)
-        {
-            macros::EFFECT_OFF_KIND(fighter, Hash40::new("roy_sword_light"), false, true);
-        }
-}
-
-//sound
-#[acmd_script( agent = "roy", script = "sound_attackairlw", category = ACMD_SOUND, low_priority)]
-unsafe fn soundairlw(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 10.);
-        if macros::is_excute(fighter)
-        {
-            macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_roy_rnd_attack_air"));
-        }
-    wait(lua_state, 3.);
-        if macros::is_excute(fighter)
-        {
-            macros::PLAY_SE(fighter, Hash40::new("se_roy_attackair_f01"));
-            macros::PLAY_SE(fighter, Hash40::new("se_roy_special_h01"));
-        }
-}
-
-#[acmd_script( agent = "roy", script = "sound_attackairn", category = ACMD_SOUND, low_priority)]
-unsafe fn soundairn(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 5.0);
-        if macros::is_excute(fighter)
-        {
-            macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_roy_rnd_attack_air"));
-        }
-    wait(lua_state, 3.0);
-        if macros::is_excute(fighter)
-        {
-            macros::PLAY_SE(fighter, Hash40::new("se_roy_attackair_n01"));
-        }
-}
-
-
 pub fn install() {
-    smashline::install_agent_frames!(
-        lordling_frame
-    );
+    effects::install();
+    opff::install();
     smashline::install_acmd_scripts!(
         dash,
         turndash,
@@ -759,9 +644,5 @@ pub fn install() {
         specialairs4lw,
         speciallw,
         escapeairslide,
-        effectairlw,
-        effectairn,
-        soundairlw,
-        soundairn
     );
 }

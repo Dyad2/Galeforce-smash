@@ -471,13 +471,11 @@ unsafe fn fx_attackairf(fighter: &mut L2CAgentBase) {
 #[acmd_script( agent = "koopa", script = "expression_landingheavy", category = ACMD_EXPRESSION, low_priority)]
 unsafe fn ex_landingheavy(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
-    let prev_status = StatusModule::prev_status_kind(fighter.module_accessor, 0);
 
-    //clears damage speed when using wavedash/land
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 2);
-            if prev_status != *FIGHTER_STATUS_KIND_ESCAPE_AIR {
+            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

@@ -45,7 +45,7 @@ unsafe fn status_DashCommon(fighter: &mut L2CFighterCommon) {
     WorkModule::set_int(fighter.module_accessor, WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("turn_dash_frame")), *FIGHTER_STATUS_DASH_WORK_INT_TURN_DASH_FRAME);
     WorkModule::set_int(fighter.module_accessor, WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("retry_turn_dash_frame")), *FIGHTER_STATUS_DASH_WORK_INT_RETRY_TURN_DASH_FRAME);
     WorkModule::set_int(fighter.module_accessor, WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("dash_enable_attack_frame")), *FIGHTER_STATUS_DASH_WORK_INT_ENABLE_ATTACK_FRAME);
-    if fighter.global_table[PREV_STATUS_KIND] == FIGHTER_STATUS_KIND_RUN_BRAKE {
+    if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_RUN_BRAKE {
         let run_brake_attack_escape_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("run_brake_attack_escape_frame"));
         WorkModule::set_int(fighter.module_accessor, run_brake_attack_escape_frame - fighter.global_table[0x25].get_i32(), *FIGHTER_STATUS_DASH_WORK_INT_INVALID_ATTACK_ESCAPE_FRAME); //what is 0x25?
         if 0 < WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_DASH_WORK_INT_INVALID_ATTACK_ESCAPE_FRAME) {
@@ -119,7 +119,7 @@ unsafe extern "C" fn status_dash_main_common(fighter: &mut L2CFighterCommon, arg
 
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon15status_Dash_SubEv")]
 unsafe fn status_Dash_sub(fighter: &mut L2CFighterCommon) {
-    let some_float = if fighter.global_table[PREV_STATUS_KIND] != FIGHTER_STATUS_KIND_LANDING || fighter.global_table[PREV_STATUS_KIND] != FIGHTER_STATUS_KIND_LANDING_LIGHT {
+    let some_float = if fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING || fighter.global_table[PREV_STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING_LIGHT {
         6.0f32
     } else {
         0.0f32

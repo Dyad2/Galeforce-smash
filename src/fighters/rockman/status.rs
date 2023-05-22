@@ -43,51 +43,95 @@ unsafe fn rocky_attackhi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe extern "C" fn rockman_attack_hi4_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     let speed = MotionModule::trans_move_speed(fighter.module_accessor);
     if !fighter.sub_transition_group_check_air_cliff().get_bool() {
-        if !MotionModule::is_end(fighter.module_accessor) {
-            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
+        if CancelModule::is_enable_cancel(fighter.module_accessor) {
+            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && fighter.sub_wait_ground_check_common(false.into()).get_bool() {
                 return 0.into()
             }
-            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR && !fighter.sub_air_check_fall_common().get_bool() {
+            if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR && fighter.sub_air_check_fall_common().get_bool() {
                 return 0.into()
-            }
-            if speed.y < -0.001 {
-                if fighter.sub_transition_group_check_air_landing().get_bool() {
-                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
-                    return 0.into()
-                }
             }
         }
-        if !fighter.status_AttackHi4Start_Main().get_bool() {
-            if !MotionModule::is_end(fighter.module_accessor) {
+        if speed.y < -0.001 {
+            if fighter.sub_transition_group_check_air_landing().get_bool() {
+                WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
+                //fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
                 return 0.into()
             }
-            else {
+        }
+        if status_AttackHi4_Main_minjump(fighter) { //was status_AttackHi3_Main_minjump() in vanilla, refer to fn below
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING);
+            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
+            return 1.into()
+        }
+        else {
+            if MotionModule::is_end(fighter.module_accessor) {
                 WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
                 fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
                 return 0.into()
             }
-        }
-        else {
-            //VarModule::off_flag(fighter.battle_object, rockman::status::flag::ATTACK_HI4_LANDING);
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING);
-            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
-            return 1.into()
+            else {
+                return 0.into()
+            }
         }
     }
     return 1.into()
 }
 
+pub unsafe fn status_AttackHi4_Main_minjump(fighter: &mut L2CFighterCommon) -> bool { //not an actual status fn, reimplements status_AttackHi3_Main_minjump()
+    let jump_mini_attack_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+    
+    if 0 < jump_mini_attack_frame {
+        if !StopModule::is_stop(fighter.module_accessor) {
+            if fighter.sub_check_button_jump().get_bool() {
+                let motion = MotionModule::motion_kind(fighter.module_accessor);
+                MotionAnimcmdModule::call_script_single(fighter.module_accessor, *FIGHTER_ANIMCMD_EXPRESSION, Hash40::new_raw(motion), -1);
+                WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+                fighter.change_status_jump_mini_attack(true.into());
+                return true;
+            }
+        }
+    }
+    else if 1 == jump_mini_attack_frame {
+        if fighter.global_table[IS_STOP].get_bool() == false {
+            let attack_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+            if 0 < attack_kind {
+                FighterStatusModuleImpl::reset_log_action_info(fighter.module_accessor, attack_kind);
+                WorkModule::set_int64(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_LOG_ATTACK_KIND);
+                return false;
+            }
+        }
+    }
+    return false;
+}
+
 #[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI4, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
+    //fighter.status_AttackHi4Start_Main();
     fighter.status_AttackHi4_common(L2CValue::U64(0xa5598d745)); //the u64 should be attack_hi4 ? vanilla script had attack_hi3
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_AIR_LANDING);
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING);
-    //VarModule::on_flag(fighter.battle_object, rockman::status::flag::ATTACK_HI4_LANDING);
     WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING_LIGHT);
     
     fighter.sub_shift_status_main(L2CValue::Ptr(rockman_attack_hi4_main_loop as *const () as _))
+    //unk(fighter, false); //doesnt do shit why is still called
 }
+
+// pub unsafe unk(fighter: &mut L2CFighterCommon, unk: bool) -> L2CValue {
+//     println!("unk!");
+//     if unk {
+//         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK) {
+//             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
+//             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_ATTACK_DISABLE_MINI_JUMP_ATTACK);
+//             WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+//         }
+//         else {
+//             WorkModule::count_down_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME, 0);
+//         }
+//         WorkModule::inc_int(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_WORK_INT_FRAME);
+//         return 1.into();
+//     }
+// }
 
 #[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI4, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {

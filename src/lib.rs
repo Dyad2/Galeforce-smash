@@ -4,6 +4,9 @@
 #![allow(non_upper_case_globals)]
 #![allow(unused_macros)]
 
+//TODO:
+// dolly crash (dthrow?)
+
 use skyline::libc::c_char;
 
 mod fighters;

@@ -8,35 +8,30 @@ use smashline::*;
 use smash_script::*;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*};
+use galeforce_utils::{vars::*, table_const::*};
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PEACH )]
 fn parasoleil_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-
         //GA - Lucky pull
         // type: cancel
-        //  allows to pull a turnip after landing utilt        
-        if !is_operation_cpu(fighter.module_accessor) {
-            if curr_motion_kind == hash40("attack_hi3") {
-                if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-                        VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                    }
-                }
-                if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) == false {
-                    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && MotionModule::frame(fighter.module_accessor) >= 14.0 {
-                        StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, true);
-                        galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
-                        VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                    }
-                }
+        //  allows to pull a turnip after landing forward throw. probably doesnt need to be in opff
+        if curr_motion_kind == hash40("throw_f") {
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+              && fighter.global_table[MOTION_FRAME].get_i32() >= 20 {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
-            else {
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON)
+              && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+                StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_SPECIAL_LW, true);
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
+        }
+        else {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
     }
 }
@@ -70,6 +65,59 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
+#[acmd_script( agent = "peach", script = "game_attack11", category = ACMD_GAME, low_priority )]
+unsafe fn attack11(fighter: &mut L2CAgentBase) {
+
+    frame(fighter.lua_state_agent, 1.0);
+        if macros::is_excute(fighter) 
+        {
+            MotionModule::set_rate(fighter.module_accessor, 0.4);
+        }
+    frame(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter) 
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.0, 361, 25, 0, 30, 2.0, 0.0, 9.0, 5.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 2.0, 180, 15, 0, 20, 2.0, 0.0, 9.0, 8.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 2.0, 180, 15, 0, 20, 2.4, 0.0, 9.0, 10.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 2.0, 361, 25, 0, 30, 2.0, 0.0, 9.0, 8.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 4, 0, Hash40::new("top"), 2.0, 361, 15, 0, 20, 2.4, 0.0, 9.0, 10.5, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+        }
+    wait(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter) 
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    frame(fighter.lua_state_agent, 7.0);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_COMBO);
+        }
+    frame(fighter.lua_state_agent, 13.0);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_ENABLE_NO_HIT_COMBO);
+        }
+}
+
+#[acmd_script( agent = "peach", script = "game_attack12", category = ACMD_GAME, low_priority )]
+unsafe fn attack12(fighter: &mut L2CAgentBase) {
+
+    frame(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("arml"), 3.0, 35, 70, 0, 60, 3.0, 2.5, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("arml"), 3.0, 35, 70, 0, 60, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("shoulderl"), 3.0, 35, 70, 0, 60, 3.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PEACH_BINTA, *ATTACK_REGION_PUNCH);
+        }
+    wait(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+            MotionModule::set_rate(fighter.module_accessor, 1.1);
+        }
+}
+
 #[acmd_script( agent = "peach", script = "game_attackdash", category = ACMD_GAME, low_priority)]
 unsafe fn attackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -256,6 +304,8 @@ pub fn install() {
     smashline::install_acmd_scripts!(
         dash,
         turndash,
+        attack11,
+        attack12,
         attackdash,
         attacklw4,
         attackhi4,

@@ -19,7 +19,7 @@ fn tortue_frame(fighter: &mut L2CFighterCommon) {
         //let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
-        if [*FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_SHOOT].contains(&status_kind) && fighter.global_table[MOTION_FRAME].get_f32() <= 5.0 {
+        if [*FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_CHARGE, *FIGHTER_PZENIGAME_STATUS_KIND_SPECIAL_N_SHOOT].contains(&status_kind) && fighter.global_table[MOTION_FRAME].get_i32() <= 5 {
             if ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor) < 0.0 && !VarModule::is_flag(fighter.battle_object, commons::instance::flag::DO_ONCE) {
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
                 PostureModule::reverse_lr(fighter.module_accessor);

@@ -166,6 +166,7 @@ unsafe fn attacks4wwa(weapon: &mut L2CAgentBase) {
         if macros::is_excute(weapon)
             {
                 VisibilityModule::set_int64(weapon.module_accessor, hash40("body") as i64,  hash40("body_hide") as i64);
+                LinkModule::unlink_all(weapon.module_accessor);
             }
         frame(lua_state, 8.);
             if macros::is_excute(weapon)

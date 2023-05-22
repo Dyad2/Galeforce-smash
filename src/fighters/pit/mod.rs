@@ -1,10 +1,12 @@
 use smash::phx::Hash40;
-use smash::lib::lua_const::*;
+use smash::lib::{lua_const::*, L2CValue};
 use smash::app::lua_bind::*;
-use smash::lua2cpp::L2CAgentBase;
+use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
+
+mod status;
 
 //weapon
 // #[acmd_script( agent = "pit_bowarrow", script = "game_fly", category = ACMD_GAME, low_priority)]
@@ -171,6 +173,7 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
+    status::install();
     smashline::install_acmd_scripts!(
         dash,
         turndash,

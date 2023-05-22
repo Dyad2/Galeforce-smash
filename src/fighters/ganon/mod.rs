@@ -10,7 +10,7 @@ use smash_script::*;
 use std::mem;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, table_const::*, utils::*};
+use galeforce_utils::{vars::*, table_const::*};
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_GANON )]
@@ -738,8 +738,7 @@ unsafe fn escapen(fighter: &mut L2CAgentBase) {
     frame(lua_state, 20.);
         if macros::is_excute(fighter)
         {
-            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 && is_hitlag(fighter.module_accessor)
-            {
+            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 {
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }

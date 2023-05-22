@@ -291,7 +291,6 @@ unsafe fn attack15(fighter: &mut L2CAgentBase) {
 }
 
 //tilts
-//tsunami kick
 #[acmd_script( agent = "demon", script = "game_attackstand31", category = ACMD_GAME, low_priority)]
 unsafe fn tsunamikick(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -430,7 +429,7 @@ unsafe fn abolishingfist(fighter: &mut L2CAgentBase) {
         {
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 && is_hitlag(fighter.module_accessor) {
+            if DamageModule::check_no_reaction(fighter.module_accessor, damage_info) == 1 {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 5.0, 361, 10, 0, 50, 4.5, 0.0, 0.0, 0.0, Some(0.0), Some(-4.0), Some(0.0), 0.3, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA_d, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new_raw(0x1985267897), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_PUNCH01, *ATTACK_REGION_PUNCH);
             }
             else {
@@ -733,6 +732,41 @@ unsafe fn attackstep2f(fighter: &mut L2CAgentBase) {
         }
 }
 
+//air
+#[acmd_script( agent = "demon", script = "game_attackairb", category = ACMD_GAME, low_priority)]
+unsafe fn attackairb(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        }
+    frame(lua_state, 11.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 16.0, 40, 74, 0, 40, 5.0, 0.0, 11.0, -9.0, Some(0.0), Some(11.0), Some(-3.0), 0.6, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        }
+    wait(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear(fighter.module_accessor, 1, false);
+            AttackModule::clear(fighter.module_accessor, 2, false);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 361, 74, 0, 40, 4.0, 0.0, 11.0, -11.0, Some(0.0), Some(11.0), Some(-3.0), 0.4, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_B, false, 4, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_DEMON_KICK, *ATTACK_REGION_KICK);
+        }
+    wait(lua_state, 5.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    frame(lua_state, 35.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        }
+}
+
+//other
 #[acmd_script( agent = "demon", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
 unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -772,6 +806,7 @@ pub fn install() {
             expressionabolishingfist,
         attackstep2,
         attackstep2f,
+        attackairb,
         escapeairslide
     );
 }

@@ -24,10 +24,11 @@ fn friend_frame(fighter: &mut L2CFighterCommon) {
         // Allows cancelling the counter attack when counter detects a hit. Grants intangibility
         // TODO: rewrite in status
         if curr_motion_kind == hash40("special_lw_hit") || curr_motion_kind == hash40("special_air_lw_hit") {
-            if fighter.global_table[MOTION_FRAME].get_i32() == 3 && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
+            if fighter.global_table[MOTION_FRAME].get_i32() <= 3 && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
                 VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 20);
+                CancelModule::enable_cancel(fighter.module_accessor);
                 if situation_kind == *SITUATION_KIND_GROUND {
                     StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
                 }

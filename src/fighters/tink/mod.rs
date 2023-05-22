@@ -8,17 +8,22 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+use galeforce_utils::{table_const::*};
+
 #[fighter_frame( agent = FIGHTER_KIND_TOONLINK )]
 fn tink_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         if MotionModule::motion_kind(fighter.module_accessor) == hash40("special_hi") {
             if MotionModule::frame(fighter.module_accessor) < 45. {
-                let toonlink_upb_speed = smash::phx::Vector3f { x: 0.085 * ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor), y: 0., z: 0.0 };
+                let toonlink_upb_speed = smash::phx::Vector3f { x: 0.14 * ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor), y: 0., z: 0.0 };
                 let x_vel = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                if (x_vel <= 0.5 && x_vel >= 0.0) || toonlink_upb_speed.x < 0.0 {
-                    KineticModule::add_speed(fighter.module_accessor, &toonlink_upb_speed);
-                }
-                if (x_vel >= -0.5 && x_vel <= 0.0) || toonlink_upb_speed.x > 0.0 {
+                // if (x_vel <= 0.5 && x_vel >= 0.0) || toonlink_upb_speed.x < 0.0 {
+                //     KineticModule::add_speed(fighter.module_accessor, &toonlink_upb_speed);
+                // }
+                // if (x_vel >= -0.5 && x_vel <= 0.0) || toonlink_upb_speed.x > 0.0 {
+                //     KineticModule::add_speed(fighter.module_accessor, &toonlink_upb_speed);
+                // }
+                if x_vel.abs() < 0.5 && !fighter.global_table[IS_STOP].get_bool() {
                     KineticModule::add_speed(fighter.module_accessor, &toonlink_upb_speed);
                 }
             }

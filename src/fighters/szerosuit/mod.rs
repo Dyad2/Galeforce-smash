@@ -41,8 +41,6 @@ fn szerosuit_frame(fighter: &mut L2CFighterCommon) {
     }
 }
 
-
-
 //global edits
 #[acmd_script( agent = "szerosuit", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
@@ -429,6 +427,44 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
+// #[acmd_script( agent = "szerosuit", script = "game_speciallwstart", category = ACMD_GAME, low_priority )]
+// unsafe fn speciallwstart(fighter: &mut L2CAgentBase) {
+
+//     frame(fighter.lua_state_agent, 3.0);
+//         if macros::is_excute(fighter)
+//         {
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_START_WAIT_INPUT);
+//             MotionModule::set_rate(fighter.module_accessor, 0.75);
+//         }
+//     frame(fighter.lua_state_agent, 13.0);
+//         if macros::is_excute(fighter)
+//         {
+//             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+//         }
+//     frame(fighter.lua_state_agent, 14.0);
+//         if macros::is_excute(fighter)
+//         {
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_KICK_ENABLE);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_REVERSE);
+//         }
+//     frame(fighter.lua_state_agent, 19.0);
+//         if macros::is_excute(fighter)
+//         {
+//             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_TREAD_ENABLE);
+//         }
+//     frame(fighter.lua_state_agent, 27.0);
+//         if macros::is_excute(fighter)
+//         {
+//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_WALL_JUMP_ENABLE);
+//         }
+//     frame(fighter.lua_state_agent, 39.0);
+//         if macros::is_excute(fighter)
+//         {
+//             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_SZEROSUIT_STATUS_SPECIAL_LW_FLAG_TREAD_ENABLE);
+//         }
+// }
+
 #[acmd_script( agent = "szerosuit", script = "game_specialairlwflip", category = ACMD_GAME, low_priority)]
 unsafe fn airlwflip(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -479,6 +515,7 @@ pub fn install() {
         landingairlw,
         specialhi,
         specialairhi,
+        //speciallwstart,
         airlwflip,
         escapeairslide
     );

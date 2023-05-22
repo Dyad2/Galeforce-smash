@@ -1,4 +1,4 @@
-use smash::phx::Hash40;
+use smash::phx::{Hash40, Vector4f};
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CAgentBase, L2CFighterCommon};

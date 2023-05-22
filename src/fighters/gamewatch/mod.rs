@@ -1,61 +1,56 @@
 //use smash::phx::Hash40;
-use smash::lib::lua_const::*;
+use smash::lib::{
+    lua_const::*,
+    L2CValue,
+};
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
+use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-//global edits
-#[acmd_script( agent = "gamewatch", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
+//use crate::fighters::common::galeforce::*;
+use galeforce_utils::{vars::*, utils::*, table_const::*};
+use custom_var::*;
 
-    frame(lua_state, 15.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
-        }
-}
+mod acmd;
+mod status;
 
-#[acmd_script( agent = "gamewatch", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
+#[fighter_frame( agent = FIGHTER_KIND_GAMEWATCH )]
+fn cardboard_frame(fighter: &mut L2CFighterCommon) {
+    unsafe {
+        let status_kind = StatusModule::status_kind(fighter.module_accessor);
 
-    frame(lua_state, 1.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
+        //fixme: doesnt work? the exact same code works for the belmonts
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI {
+            VarModule::on_flag(fighter.battle_object,commons::instance::flag::DISABLE_SPECIAL_HI)
         }
-    frame(lua_state, 16.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
+        if is_special_reset(&mut *fighter.module_accessor) {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::DISABLE_SPECIAL_HI);
         }
-}
 
-//others
-#[acmd_script( agent = "gamewatch", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 14.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_S && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if !VarModule::is_flag(fighter.battle_object,commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                if ControlModule::get_flick_y(fighter.module_accessor) < 1 {
+                    VarModule::on_flag(fighter.battle_object,commons::instance::flag::GALEFORCE_ATTACK_ON);
+                    if fighter.global_table[STICK_Y].get_f32() >= 0.15  {
+                        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND) != 9 {
+                            VarModule::set_int(fighter.battle_object, WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND) + 1, gamewatch::instance::int::JUDGE_STORED_KIND);
+                        }
+                    }
+                    else if fighter.global_table[STICK_Y].get_f32() >= -0.15 {
+                        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND) != 1 {
+                            VarModule::set_int(fighter.battle_object, WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND) - 1, gamewatch::instance::int::JUDGE_STORED_KIND);
+                        }
+                    }
+                }
+            }
         }
-    frame(lua_state, 24.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
-        }
+    }
 }
 
 pub fn install() {
-    smashline::install_acmd_scripts!(
-        dash,
-        turndash,
-        escapeairslide
-    );
+    acmd::install();
+    status::install();
 }

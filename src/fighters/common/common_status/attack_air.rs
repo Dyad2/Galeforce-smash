@@ -22,7 +22,6 @@ unsafe fn sub_attack_air(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
 
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon21sub_attack_air_commonEN3lib8L2CValueE")]
 unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
-    println!("sub_attackair_common");
     ControlModule::reset_trigger(fighter.module_accessor);
     ControlModule::reset_flick_y(fighter.module_accessor);
     ControlModule::reset_flick_sub_y(fighter.module_accessor);
@@ -42,7 +41,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon33bind_address_call_attack_air_uniqEPN3lib8L2CAgentENS1_8L2CValueE")]
 // unsafe fn bac_attackair_uniq(fighter: &mut L2CFighterCommon, _param1: L2CAgent, param2: L2CValue) {
-
 //     println!("attackair_uniq");
 //     if is_training_mode() {
 //         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING) {
@@ -113,7 +111,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon24attack_air_common_stransEv")]
 // unsafe fn status_attackair_common_strans(fighter: &mut L2CFighterCommon) -> L2CValue {
-// unsafe fn status_attackair_common_strans(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     println!("attack_air_common_strans");
 //     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_KEEP_AIR) {
 //         println!("keep air");
@@ -183,8 +180,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 #[common_status_script(status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END,
     symbol = "_ZN7lua2cpp16L2CFighterCommon20status_end_AttackAirEv")]
 unsafe fn status_AttackAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-
-    println!("status_AttackAir_end");
     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
     return 0.into();
 }

@@ -14,7 +14,6 @@ use custom_var::*;
 #[fighter_frame( agent = FIGHTER_KIND_FALCO )]
 fn falco_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
         let status_kind = StatusModule::status_kind(fighter.module_accessor);
         let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
 
@@ -48,7 +47,7 @@ fn falco_frame(fighter: &mut L2CFighterCommon) {
                     galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);
                 }
             }
-            if curr_motion_kind == hash40("escape_air_slide") {
+            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
                 //interrupts an airdodge with an aerial
                 if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
                     galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);

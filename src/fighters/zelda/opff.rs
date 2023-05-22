@@ -29,12 +29,6 @@ fn best_princess_frame(fighter: &mut L2CFighterCommon) {
                     }
                 }
             }
-            //TODO should be in status script
-            // if situation_kind == *SITUATION_KIND_GROUND && status_kind == *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2 && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-            //     //StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3, false);
-            //     fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), false.into());
-            //     VarModule::on_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL);
-            // }
             if ![hash40("special_hi_start"), hash40("special_air_hi_start"), hash40("special_hi"), hash40("special_air_hi")].contains(&curr_motion_kind) {
                 VarModule::off_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL);
             }

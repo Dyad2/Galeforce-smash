@@ -2,23 +2,7 @@ use super::*;
 
 #[status_script(agent="reflet", status = FIGHTER_STATUS_KIND_ATTACK_DASH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn status_attackdash(fighter: &mut L2CFighterCommon) -> L2CValue {
-
-    // let bo = smash::app::sv_system::battle_object(fighter.lua_state_agent);
-    // let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-
-    // if fighter.global_table[MOTION_FRAME].get_i32() == 6.0 {
-    //     if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
-    //         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
-    //         FighterSpecializer_Reflet::change_hud_kind(instance_bo, *FIGHTER_REFLET_MAGIC_KIND_SWORD);
-    //         VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-    //     }
-    //     else {
-    //         WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
-    //         VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
-    //     }
-    // }
-
-    //calls the standard dash attack status instead of robin's custom one. the levin stuff is managed in opff for now
+    //calls the standard dash attack status instead of robin's custom one.
     fighter.status_AttackDash();
     return 0.into()
 }

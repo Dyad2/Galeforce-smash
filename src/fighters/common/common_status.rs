@@ -10,22 +10,22 @@ mod guard;
 mod jumpsquat;
 mod landing;
 mod run;
-//mod shieldbreakDown;
-//mod shieldbreakFly;
+mod shieldbreakDown;
+mod shieldbreakFly;
 mod turn;
 
 pub fn install() {
-    attack_dash::install();
     //attackair::install();
+    attack_dash::install();
     catch::install();
     dash::install();
-    escape::install();
     escape_air::install();
+    escape::install();
     guard::install();
     jumpsquat::install();
     landing::install();
     run::install();
-    //shieldbreakDown::install();
-    //shieldbreakFly::install();
+    shieldbreakDown::install();
+    shieldbreakFly::install();
     turn::install();
 }

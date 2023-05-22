@@ -50,23 +50,23 @@ pub static NOTIFY_LOG_EVENT_COLLISION_HIT_SEARCH_CODE: &[u8] = &[
     0xfb, 0x03, 0x00, 0xaa
 ];
 
-pub mod archetype {
-    pub mod aggressive {
-        pub const All_ROUNDER   : i32 = 0x0000;
-        pub const RUSHDOWN      : i32 = 0x0001;
-        pub const GRAPPLER      : i32 = 0x0002;
-        pub const LEDGE_TRAP    : i32 = 0x0003;
-    }
-    pub mod defensive {
-        pub const ZONER         : i32 = 0x0000;
-        pub const SETPLAY       : i32 = 0x0001;
-        pub const BAIT_PUNISH   : i32 = 0x0002;
-    }
-    pub mod traits {
-        pub const HEAVY         : i32 = 0x0000;
-        pub const LIGHTWEIGHT   : i32 = 0x0001;
-    }
-}
+// pub mod archetype {
+//     pub mod aggressive {
+//         pub const All_ROUNDER   : i32 = 0x0000;
+//         pub const RUSHDOWN      : i32 = 0x0001;
+//         pub const GRAPPLER      : i32 = 0x0002;
+//         pub const LEDGE_TRAP    : i32 = 0x0003;
+//     }
+//     pub mod defensive {
+//         pub const ZONER         : i32 = 0x0000;
+//         pub const SETPLAY       : i32 = 0x0001;
+//         pub const BAIT_PUNISH   : i32 = 0x0002;
+//     }
+//     pub mod traits {
+//         pub const HEAVY         : i32 = 0x0000;
+//         pub const LIGHTWEIGHT   : i32 = 0x0001;
+//     }
+// }
 
 pub mod commons {
     pub mod instance {
@@ -76,30 +76,29 @@ pub mod commons {
             pub const DISABLE_SPECIAL_HI : i32 = 0x0002;
             pub const DISABLE_SPECIAL_LW : i32 = 0x0003;
             pub const DISABLE_SPECIAL_ALL : i32 = 0x0004;
-            pub const AIR_TURN_INITIATE : i32 = 0x0005;
-            pub const AIR_TURN_APPEAL_METHOD_INITIATE : i32 = 0x0006;
-            pub const AIR_TURN_STICK_RELEASED : i32 = 0x0007;
-            pub const AIR_TURN_INVALID : i32 = 0x0008;
-            pub const GALEFORCE_ATTACK_ON : i32 = 0x0009;
-            pub const GALEFORCE_ATTACK_CONFIRM : i32 = 0x000A;
-            pub const DO_ONCE : i32 = 0x000B;
-            pub const PLATFORM_FALL_STUN : i32 = 0x000C;
-            pub const ALLOW_REVERSE_ATTACK_LW3 : i32 = 0x000D;
-            pub const WAVEDASH : i32 = 0x000E;
-            pub const IS_VICTIM_GANON_GA : i32 = 0x0012;
-            pub const PURIN_MARK : i32 = 0x0013;
-            pub const ALLOW_PERFECT_PIVOT : i32 = 0x0014;
-            pub const SMASH_TURN : i32 = 0x0015;
+            pub const AIR_TURN_STICK_RELEASED : i32 = 0x0005;
+            pub const AIR_TURN_INVALID : i32 = 0x0006;
+            pub const GALEFORCE_ATTACK_ON : i32 = 0x0007;
+            pub const GALEFORCE_ATTACK_CONFIRM : i32 = 0x0008;
+            pub const DO_ONCE : i32 = 0x0009;
+            pub const PLATFORM_FALL_STUN : i32 = 0x000A;
+            pub const ALLOW_REVERSE_ATTACK_LW3 : i32 = 0x000B;
+            pub const WAVEDASH : i32 = 0x000C;
+            pub const IS_VICTIM_GANON_GA : i32 = 0x000D;
+            pub const PURIN_MARK : i32 = 0x000E;
+            pub const ALLOW_PERFECT_PIVOT : i32 = 0x000F;
+            pub const SMASH_TURN : i32 = 0x0010;
+            pub const MEWTWO_PRESSURED : i32 = 0x0011;
             //hdr
-            pub const BEFORE_GROUND_COLLISION : i32 = 0x0016;
-            pub const CHECK_CHANGE_MOTION_ONLY : i32 = 0x0017;
+            pub const BEFORE_GROUND_COLLISION : i32 = 0x0012;
+            pub const CHECK_CHANGE_MOTION_ONLY : i32 = 0x0013;
             //end hdr
         }
         pub mod int {
             pub const FRAME_COUNTER : i32 = 0x0000;
-            pub const AIR_TURN_INPUT_FRAME : i32 = 0x0001;
-            pub const AIR_TURN_COUNT : i32 = 0x0002;
-            //pub const AIR_TURN_APPEAL_METHOD_DELAY_FRAME : i32 = 0x0003; //uses INPUT_FRAME now
+            pub const AIR_TURN_INITIATE_METHOD : i32 = 0x0001; //0 == off, 1 == stick, 2 == taunt
+            pub const AIR_TURN_INPUT_FRAME : i32 = 0x0002;
+            pub const AIR_TURN_COUNT : i32 = 0x0003;
             pub const SUBSTICK_AIR_ATTACK : i32 = 0x0004;
             pub const PURIN_MARK_DURATION : i32 = 0x0005;
             pub const KAMUI_DRAGON_HEX_DURATION : i32 = 0x0006;
@@ -115,10 +114,10 @@ pub mod commons {
      pub mod status {
          pub mod flag {
             pub const DISABLE_BACKDASH: i32 = 0x1000;
-            pub const SHIELD_BREAK_ONCE: i32 = 0x1001;
+            //pub const SHIELD_BREAK_ONCE: i32 = 0x1001;
             //pub const WAVELAND : i32 = 0x1002;
             //pub const ESCAPE_AIR_IS_SLIDE : i32 = 0x1003;
-            pub const JUMP_SQUAT_TO_ESCAPE_AIR : i32 = 0x1003;
+            pub const JUMP_SQUAT_TO_ESCAPE_AIR : i32 = 0x1001;
             // pub const DASH_CANCEL : i32 = 0x1002;
             // pub const SPECIAL_CANCEL : i32 = 0x1003;
          }
@@ -130,33 +129,6 @@ pub mod commons {
          //}
     }
 }
-
-// pub mod attack_air {
-//     pub mod flag {
-//         pub const WHIFF : i32 = 0x1000;
-//     }
-// }
-// pub mod guard_off {
-//     pub mod int {
-//         pub const ATTACK_CANCEL_FRAME : i32 = 0x1000;
-//     }
-// }
-// pub mod appeal {
-//     pub mod flag {
-//         pub const HOLD : i32 = 0x1000;
-//         pub const LOOP : i32 = 0x1001;
-//         pub const ENABLE_ACTION : i32 = 0x1002;
-//     }
-//     pub mod int {
-//         pub const HOLD_BUTTON : i32 = 0x1000;
-//         pub const ACTION_BUTTON : i32 = 0x1001;
-//         pub const RESTART_FRAME : i32 = 0x1002;
-//     }
-//     pub mod int64 {
-//         pub const ACTION_MOT : i32 = 0x1000;
-//         pub const LOOP_MOT : i32 = 0x1001;
-//     }
-// }
 
 pub mod bayonetta {
     pub mod instance {
@@ -173,6 +145,13 @@ pub mod bayonetta {
         pub mod flag {
             pub const SPECIAL_HI_SHOOT : i32 = 0x1100;
             pub const DODGE_OFFSET_FORBID : i32 = 0x1101;
+        }
+    }
+}
+pub mod captain {
+    pub mod status {
+        pub mod flag {
+            pub const ALLOW_SPECIAL_N_CRITICAL : i32 = 0x1100;
         }
     }
 }
@@ -209,6 +188,13 @@ pub mod gaogaen { //incineroar
         }
         pub mod float {
             pub const REVENGE_BONUS_PRESERVE : i32 = 0x0100;
+        }
+    }
+}
+pub mod gamewatch {
+    pub mod instance {
+        pub mod int {
+            pub const JUDGE_STORED_KIND : i32 = 0x0100;
         }
     }
 }
@@ -252,7 +238,7 @@ pub mod link {
             pub const DAMAGE_STORAGE : i32 = 0x0100;
         }
         pub mod flag {
-            pub const RESTORE_DAMAGE : i32 = 0x0100;
+            pub const RESTORE_DAMAGE : i32 = 0x0101;
         }
     }
 }
@@ -284,6 +270,13 @@ pub mod metaknight {
     pub mod instance {
         pub mod flag {
             pub const MACH_TORNADO_HIT : i32 = 0x0100;
+        }
+    }
+}
+pub mod pickel {
+    pub mod instance {
+        pub mod flag {
+            pub const ALLOW_SPECIAL_N : i32 = 0x0100;
         }
     }
 }
@@ -326,14 +319,14 @@ pub mod roy {
 pub mod sheik {
     pub mod instance {
         pub mod flag {
-            pub const ATTACK_AIR_LW_S : i32 = 0x0100;
+            pub const ATTACK_AIR_LW_W : i32 = 0x0100;
         }
     }
 }
 pub mod zelda {
     pub mod instance {
         pub mod flag {
-            pub const SPECIAL_HI_CANCEL : i32 = 0x1100;
+            pub const SPECIAL_HI_CANCEL : i32 = 0x0100;
         }
     }
 }

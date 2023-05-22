@@ -10,7 +10,7 @@ fn bayo_frame(fighter: &mut L2CFighterCommon) {
         //GA - Witch's Ascent
         // type: restriction lift
         //  after using afterburner kick once, hitting with dabk allows an additional use of upwards abk
-        //   note: it does enable ladder combos, but with so many abk hits if the opponent doesn't sdi it's on them. seriously
+        //   note: it does enable ladder combos, but with so many abk hits if the opponent doesn't sdi it's on them
         if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U 
           && AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
             VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
@@ -21,7 +21,7 @@ fn bayo_frame(fighter: &mut L2CFighterCommon) {
           && VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
             VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM);
         }
-        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM) {
+        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_CONFIRM) {
             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_SPECIAL_AIR_S_USED_COUNT);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_DISABLE_AIR_SPECIAL_S);
             if (status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U || status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_D) && MotionModule::frame(fighter.module_accessor) < 3.0 {
@@ -95,7 +95,7 @@ fn bayo_frame(fighter: &mut L2CFighterCommon) {
 
         //prevents landing prematurily when using up b. TODO: status script plz
         if [hash40("special_hi"), hash40("special_air_hi")].contains(&curr_motion_kind) {
-            if fighter.global_table[MOTION_FRAME].get_i32() <= 35 {
+            if fighter.global_table[MOTION_FRAME].get_i32() <= 34 {
                 StatusModule::set_keep_situation_air(fighter.module_accessor, true);
                 GroundModule::pass_floor(fighter.module_accessor);
             }

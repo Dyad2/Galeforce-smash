@@ -8,20 +8,23 @@ mod opff;
 
 use {
     smashline::*,
+    smash_script::*,
     std::mem,
     smash::{
         hash40,
         app::{
             utility::get_kind,
             BattleObject,
+            BattleObjectModuleAccessor,
+            FighterSpecializer_Reflet,
             sv_battle_object,
+            FighterUtil::*,
             FighterUtil,
-            lua_bind::*
+            lua_bind::*,
         },
         phx::{
             Vector2f,
             Vector3f,
-            Vector4f,
             Hash40
         },
         lua2cpp::{
@@ -30,14 +33,10 @@ use {
         },
         lib:: {
             L2CValue,
-            //L2CAgent,
+            L2CAgent,
             lua_const::*
         }
     },
-    // skyline::{
-    //     nn::ro::LookupSymbol,
-    //     nro::{self, NroInfo}
-    // },
     custom_var::*,
     galeforce_utils::{
         table_const::*,

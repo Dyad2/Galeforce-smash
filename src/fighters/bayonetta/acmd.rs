@@ -37,7 +37,7 @@ unsafe fn jab1(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10, 3, 10, 5, true);
-            MotionModule::set_rate(fighter.module_accessor, 1.6);
+            MotionModule::set_rate(fighter.module_accessor, 1.4);
         }
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
@@ -48,12 +48,11 @@ unsafe fn jab1(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 1.2, 361, 6, 0, 52, 3.0, 0.0, 5.5, 3.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true,0, 0.0, 0, false, false, false,false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 3, 0, Hash40::new("top"), 1.2, 180, 6, 0, 30, 3.2, 0.0, 10.0, 11.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true,0, 0.0, 0, false, false, false,false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_FIGHTER, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
             macros::ATTACK(fighter, 4, 0, Hash40::new("top"), 1.2, 361, 6, 0, 30, 3.2, 0.0, 10.0, 11.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true,0, 0.0, 0, false, false, false,false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, 8.0, false);
-            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 1, 8.0, false);
-            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 8.0, false);
-            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 8.0, false);
-            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 8.0, false);
-            AttackModule::set_shield_stiff_mul(fighter.module_accessor, 0.5); //makes it less likely to push fighters down platforms
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, 5.0, false);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 1, 5.0, false);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 2, 5.0, false);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 3, 5.0, false);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 4, 5.0, false);
         }
     frame(lua_state, 11.); //13
         if macros::is_excute(fighter)
@@ -909,7 +908,6 @@ unsafe fn landingairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-
 //grabs & throws
 #[acmd_script( agent = "bayonetta", script = "game_catch", category = ACMD_GAME, low_priority)]
 unsafe fn catch(fighter: &mut L2CAgentBase) {
@@ -1035,42 +1033,6 @@ unsafe fn throwf(fighter: &mut L2CAgentBase) {
             smash_script::notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 30, 0, 1);
         }
 }
-
-//bullet climax cancel
-// #[acmd_script( agent = "bayonetta", script = "game_throwb", category = ACMD_GAME, low_priority)]
-// unsafe fn throwb(fighter: &mut L2CAgentBase) {
-//     let lua_state = fighter.lua_state_agent;
-
-//         if macros::is_excute(fighter)
-//         {
-//             macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 6.0, 45, 60, 0, 80, 0.0, 1.0, *ATTACK_LR_CHECK_F,  0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-//             macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 40, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
-//         }
-//     frame(lua_state, 11.);
-//         if macros::is_excute(fighter)
-//         {
-//             macros::REVERSE_LR(fighter);
-//         }
-//     frame(lua_state, 14.);
-//         if macros::is_excute(fighter)
-//         {
-//             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 48, 150, 0, 60, 6.0, 0.0, 17.0, -7.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-//             AttackModule::set_catch_only_all(fighter.module_accessor, true, false);
-//             macros::CHECK_FINISH_CAMERA(fighter, 13, 10);
-//             FighterCutInManager::set_throw_finish_zoom_rate(singletons::FighterCutInManager(), 1.3);
-//         }
-//     frame(lua_state, 15.);
-//         if macros::is_excute(fighter)
-//         {
-//             macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW,Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor, *FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));
-//             AttackModule::clear_all(fighter.module_accessor);
-//         }
-//     frame(lua_state, 37.);
-//         if macros::is_excute(fighter)
-//         {
-//             VarModule::on_flag(fighter.battle_object, bayonetta::instance::flag::ENABLE_CANCEL_INTO_SPECIAL_N);
-//         }
-// }
 
 //Other
 #[acmd_script( agent = "bayonetta", script = "game_escapeb", category = ACMD_GAME, low_priority)]

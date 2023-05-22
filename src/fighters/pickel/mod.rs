@@ -1,23 +1,28 @@
 use {
     smash::{
-        phx::Hash40,
-        lua2cpp::{
-            L2CFighterCommon,
-            L2CAgentBase
+        phx::{
+            Hash40, 
         },
-        app:: {
+        app::{
             lua_bind::*,
-            sv_animcmd::*
+            sv_animcmd::*,
         },
-        lib::lua_const::*,
+        lib::{
+            lua_const::*,
+        },
+        lua2cpp::{
+            L2CFighterCommon, 
+            L2CAgentBase
+        }
     },
-
     galeforce_utils::{
-        table_const::*,
+        vars::*, 
+        table_const::*, 
     },
-    smash_script::*,
+    std::mem,
     smashline::*,
-    std::mem
+    smash_script::*,
+    custom_var::*,
 };
 
 //opff
@@ -37,6 +42,14 @@ fn luigi_two_frame(fighter: &mut L2CFighterCommon) {
             PostureModule::reverse_lr(fighter.module_accessor);
             PostureModule::update_rot_y_lr(fighter.module_accessor);
             FighterKineticEnergyMotion::set_speed_mul(fighter_kinetic_energy_motion, -1.0);
+        }
+        //removing pmlg. might not affect all setups? 
+        if (fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR && !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR))
+         || (fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK)) {
+            VarModule::off_flag(fighter.battle_object, pickel::instance::flag::ALLOW_SPECIAL_N);
+        }
+        else {
+            VarModule::on_flag(fighter.battle_object, pickel::instance::flag::ALLOW_SPECIAL_N);
         }
     }
 }

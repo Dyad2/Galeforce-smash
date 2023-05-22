@@ -32,7 +32,6 @@ unsafe fn bac_status_landing_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = L2CFighterCommon_status_Landing_Main)]
 unsafe fn status_LandingMain(fighter: &mut L2CFighterCommon) -> L2CValue {
-    //println!("landing_main");
 
     //checks if fighter is using wavedash, and enables some statuses accordingly
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
@@ -44,7 +43,6 @@ unsafe fn status_LandingMain(fighter: &mut L2CFighterCommon) -> L2CValue {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
         }
     }
-
     if !fighter.status_Landing_MainSub().get_bool() {
         fighter.sub_landing_cancel_check_damage_face();
     }
@@ -62,6 +60,21 @@ unsafe fn status_LandingEnd(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_landing_cancel_damage_face();
     //println!("delet wavedash");
     VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+        
+    return 0.into()
+}
+
+#[skyline::hook(replace = L2CFighterCommon_bind_address_call_status_end_landing_fall_special)]
+unsafe fn bac_status_LandingEndFallSpecial(fighter: &mut L2CFighterCommon) -> L2CValue {
+    fighter.status_end_Landing()
+}
+
+#[skyline::hook(replace = L2CFighterCommon_status_end_landing_fall_special)]
+unsafe fn status_LandingEndFallSpecial(fighter: &mut L2CFighterCommon) -> L2CValue {
+
+    println!("delet wavedash");
+    VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+        
     return 0.into()
 }
 
@@ -73,7 +86,9 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
             bac_status_landing,
             status_landing,
             bac_status_landing_end,
-            status_LandingEnd
+            status_LandingEnd,
+            bac_status_LandingEndFallSpecial,
+            status_LandingEndFallSpecial
         );
     }
 }

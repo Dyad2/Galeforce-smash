@@ -8,7 +8,8 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-//use crate::custom::galeforce::zelda_buff_effect;
+use galeforce_utils::vars::*;
+use custom_var::*;
 
 
 #[fighter_frame( agent = FIGHTER_KIND_KROOL )]
@@ -120,27 +121,27 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL as i32), 0);
             AttackModule::clear_all(fighter.module_accessor);
         }
-        frame(lua_state, 17.);
+    frame(lua_state, 17.);
         if macros::is_excute(fighter)
         {
-            macros::ATTACK(fighter, 0, 1, Hash40::new("bust"), 2.0, 280, 100, 100, 0, 6.5, 7.0, 1.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+            macros::ATTACK(fighter, 0, 1, Hash40::new("bust"), 3.0, 280, 100, 100, 0, 6.5, 7.0, 1.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
             AttackModule::set_attack_height_all(fighter.module_accessor, smash::app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
         }
-        frame(lua_state, 20.);
+    frame(lua_state, 20.);
         if macros::is_excute(fighter)
         {
-            macros::ATTACK(fighter, 0, 1, Hash40::new("bust"), 2.0, 290, 100, 80, 0, 6.5, 7.0, 1.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+            macros::ATTACK(fighter, 0, 1, Hash40::new("bust"), 3.0, 290, 100, 80, 0, 6.5, 7.0, 1.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
             AttackModule::set_attack_height_all(fighter.module_accessor, smash::app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
         }
-        frame(lua_state, 22.);
+    frame(lua_state, 22.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_OFF);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 361, 30, 0, 90, 6.0, 0.0, 6.0, 0.0, Some(0.0), Some(6.0), Some(14.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 9.0, 361, 30, 0, 90, 3.0, 0.0, 9.0, 6.0, Some(0.0), Some(9.0), Some(15.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 361, 50, 0, 90, 6.0, 0.0, 6.0, 0.0, Some(0.0), Some(6.0), Some(14.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 9.0, 361, 50, 0, 90, 3.0, 0.0, 9.0, 6.0, Some(0.0), Some(9.0), Some(15.0), 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
             AttackModule::set_attack_height_all(fighter.module_accessor, smash::app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
         }
-        wait(lua_state, 4.);
+    wait(lua_state, 4.);
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
@@ -445,6 +446,17 @@ unsafe fn appeals(_fighter: &mut L2CAgentBase) {
     //keep empty, removes belly armor
 }
 
+#[acmd_script( agent = "krool", script = "expression_landingheavy", category = ACMD_EXPRESSION, low_priority )]
+unsafe fn expression_landingheavy(fighter: &mut L2CAgentBase) {
+    
+    if macros::is_excute(fighter) {
+        slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
+        if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+            macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
+        }
+    }
+}
+
 pub fn install() {
     smashline::install_agent_frames!(
         krool_frame
@@ -461,6 +473,7 @@ pub fn install() {
         attackairlw,
         speciallw,
         escapeairslide,
-        appeals
+        appeals,
+        expression_landingheavy
     );
 }

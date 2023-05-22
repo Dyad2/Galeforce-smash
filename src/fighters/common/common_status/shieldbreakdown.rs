@@ -1,13 +1,11 @@
-//FIXME: shieldbreaks freeze fighters
-
 use super::*; 
 
 #[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
     symbol = "_ZN7lua2cpp16L2CFighterCommon26status_pre_ShieldBreakDownEv")]
 unsafe fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    println!("status_ShieldBreakDown_pre");
 
     let mask = (*FIGHTER_STATUS_ATTR_DAMAGE | *FIGHTER_STATUS_ATTR_DISABLE_SHIELD_RECOVERY) as u64;
+    let mask2 = *FS_SUCCEEDS_KEEP_EFFECT | *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_SOUND;
     StatusModule::init_settings(
         fighter.module_accessor, 
         smash::app::SituationKind(*SITUATION_KIND_GROUND), 
@@ -18,7 +16,7 @@ unsafe fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLAG, 
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_INT, 
         *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT,
-        0
+        mask2
     );
     FighterStatusModuleImpl::set_fighter_status_data(
         fighter.module_accessor, 
@@ -32,60 +30,63 @@ unsafe fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue
         0,
         0
     );
-    fighter.sub_shift_status_main(L2CValue::Ptr(bac_status_ShieldBreakDown as *const () as _));
+    //fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_ShieldBreakDown as *const () as _));
     return 0.into();
 }
 
-#[skyline::hook(replace = L2CFighterCommon_bind_address_call_status_ShieldBreakDown_Main)]
-unsafe fn bac_status_ShieldBreakDown_Main(fighter: &mut L2CFighterCommon, _agent : L2CAgent) {
-    println!("bac_status_ShieldBreakDown_Main");
-    fighter.status_ShieldBreakDown_Main();
+#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon40bind_address_call_status_ShieldBreakDownEPN3lib8L2CAgentE")]
+unsafe fn bac_status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
+    fighter.status_ShieldBreakDown();
 }
 
 #[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon26status_pre_ShieldBreakDownEv")]
-unsafe fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    println!("status_ShieldBreakDown_main");
+    symbol = "_ZN7lua2cpp16L2CFighterCommon22status_ShieldBreakDownEv")]
+unsafe fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
+
+    //smash::app::sv_fighter_util::is
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DOWN_FLAG_UP);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_hi_3"), 0.0, 1.0, false, 0.0, false, false); //motion becomes damage_hi_3, we want to change it here so the main script works
+    MotionModule::set_rate(fighter.module_accessor, 0.66);
     
-    if fighter.global_table[MOTION_FRAME].get_f32() >= 20.0 {
+    let shield_reset_hp = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("shield_reset")); //
+    WorkModule::set_float(fighter.module_accessor, shield_reset_hp, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
+    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_CHECK_DEAD_AREA_FORCE);
+
+    if !FighterUtil::check_melee_rule_time(300.0, smash::app::FighterCheckMeleeRuleTime(0), true) { //might not be right for training mode idk
+        HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
+    }
+    macros::PLAY_SE(fighter, Hash40::new_raw(0x14fe0eb7e3 as u64)); //shield break sound
+    fighter.sub_shift_status_main(L2CValue::Ptr(status_ShieldBreakDown_main as *const () as _));
+}
+
+// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon45bind_address_call_status_ShieldBreakDown_MainEPN3lib8L2CAgentE")]
+// unsafe fn bac_status_ShieldBreakDown_Main(fighter: &mut L2CFighterCommon) {
+//     println!("bac_status_ShieldBreakDown_Main");
+//     fighter.status_ShieldBreakDown_Main();
+// }
+
+#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon27status_ShieldBreakDown_MainEv")]
+unsafe fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+   
+    if fighter.global_table[MOTION_FRAME].get_i32() >= 25 {
+        HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_FURAFURA.into(), false.into());
+        }
+        else {
+            fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), false.into());
         }
     }
     return 0.into();
 }
 
-#[skyline::hook(replace = L2CFighterCommon_bind_address_call_status_ShieldBreakDown)]
-unsafe fn bac_status_ShieldBreakDown(fighter: &mut L2CFighterCommon, _agent : L2CAgent) {
-    println!("bac_status_ShieldBreakDown");
-    fighter.status_ShieldBreakDown();
-}
-
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon22status_ShieldBreakDownEv")]
-unsafe fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
-    println!("status_ShieldBreakDown");
-
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_hi_3"), 0.0, 1.0, false, 0.0, false, false); //motion becomes damage_hi_3, we want to change it here so the main script works
-    MotionModule::set_rate(fighter.module_accessor, 0.75);
-    fighter.sub_shift_status_main(L2CValue::Ptr(bac_status_ShieldBreakDown_Main as *const () as _));
-}
-
-fn nro_hook(info: &skyline::nro::NroInfo) {
-    if info.name == "common" {
-        skyline::install_hooks!(
-            bac_status_ShieldBreakDown_Main,
-            bac_status_ShieldBreakDown,
-        );
-    }
-}
-
 pub fn install() {
     install_status_scripts!(
+        status_ShieldBreakDown,
         status_ShieldBreakDown_pre,
-        status_ShieldBreakDown_main
     );
     install_hooks!(
-        status_ShieldBreakDown,
+        bac_status_ShieldBreakDown,
+        status_ShieldBreakDown_main,
     );
-    skyline::nro::add_hook(nro_hook);
 }

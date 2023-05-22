@@ -203,8 +203,8 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 75, 168, 0, 40, 6.2, 0.0, 18.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
-                macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.0, 75, 168, 0, 40, 7.0, 0.0, 24.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.0, 75, 168, 0, 40, 6.2, 0.0, 18.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.0, 75, 168, 0, 40, 7.0, 0.0, 24.0, 0.0, None, None, None, 2.5, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
         }
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
@@ -245,9 +245,6 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-            }
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             AttackModule::clear_all(fighter.module_accessor);
         }
@@ -358,17 +355,17 @@ unsafe fn specialhiall(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "gekkouga", scripts = ["game_specialhifall", "game_specialhi2fall", "game_specialhilandingfall"], category = ACMD_GAME, low_priority)]
-unsafe fn specialhifall(fighter: &mut L2CAgentBase) {
+// #[acmd_script( agent = "gekkouga", scripts = ["game_specialhifall", "game_specialhi2fall", "game_specialhilandingfall"], category = ACMD_GAME, low_priority)]
+// unsafe fn specialhifall(fighter: &mut L2CAgentBase) {
 
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-        if macros::is_excute(fighter)
-        {
-            HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-        }
-    }
-}
+//     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+//         if macros::is_excute(fighter)
+//         {
+//             HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
+//             VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//         }
+//     }
+// }
 
 #[acmd_script( agent = "gekkouga", script = "game_specialsattackf", category = ACMD_GAME, low_priority)]
 unsafe fn specialsattackf(fighter: &mut L2CAgentBase) {
@@ -600,7 +597,7 @@ pub fn install() {
         attackairf,
         attackairb,
         specialhiall,
-        specialhifall,
+        //specialhifall,
         specialsattackf,
         specialairsattackf,
         specialsattackb,

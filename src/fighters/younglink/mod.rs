@@ -13,7 +13,7 @@ use smashline::*;
 use smash_script::*;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, table_const::*, utils::*};
+use galeforce_utils::{vars::*, table_const::*};
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_YOUNGLINK )]
@@ -28,7 +28,7 @@ fn grasshopper_frame(fighter: &mut L2CFighterCommon) {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
-            if !AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && !is_hitlag(fighter.module_accessor) {
+            if !AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
                 if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                     //MotionModule::change_motion_force_inherit_frame(fighter.module_accessor, Hash40::new("air_catch_move"), 1.0, 1.0, 1.0);
                     //MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40::new("air_catch_move"), 1.0, 1.0, 0.0, true, false);

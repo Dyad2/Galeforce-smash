@@ -13,16 +13,19 @@ use custom_var::*;
 #[fighter_frame( agent = FIGHTER_KIND_PALUTENA )]
 fn ARCHETYPE_EARTH_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
-        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
+        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
 
         //GA - Divine lightstep
         // type: cancel
-        //  cancel dash attack with a jump if it counter hits and opponent. additional code in opff
-        if curr_motion_kind == hash40("attack_dash") {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && fighter.global_table[MOTION_FRAME].get_i32() >= 19 {
+        //  allows palu to cancel dash attack with a jump
+        if fighter.global_table[STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_ATTACK_DASH {
+            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
-                    StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_SQUAT, false);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
+                    WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
+                    fighter.sub_transition_group_check_ground_jump_mini_attack();
+                    fighter.sub_transition_group_check_ground_jump();
                     galeforce_apply_effect(&mut *fighter.module_accessor, 1.0);
                     VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 }
@@ -30,6 +33,20 @@ fn ARCHETYPE_EARTH_frame(fighter: &mut L2CFighterCommon) {
         }
         else {
             VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        }
+        //moving up tilt? idk testing shit
+        if curr_motion_kind == hash40("attack_hi3") && fighter.global_table[MOTION_FRAME].get_i32() < 45 && !AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
+            let palu_attackhi3_speed = smash::phx::Vector3f { x: 0.12 * ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor), y: 0., z: 0.0 };
+            let x_vel = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+
+            if x_vel.abs() < 0.5 && !fighter.global_table[IS_STOP].get_bool() {
+                KineticModule::add_speed(fighter.module_accessor, &palu_attackhi3_speed);
+            }
+        }
+        //summon board test!
+        if [hash40("special_lw"), hash40("special_air_lw")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_i32() <= 5 && ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_STATUS_SPECIAL_LW_FLAG_CHANGE_STATUS_REFLECT);
+            fighter.change_status(FIGHTER_PALUTENA_STATUS_KIND_SPECIAL_LW_REFLECT.into(), false.into());
         }
     }
 }
@@ -63,12 +80,70 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
+#[acmd_script( agent = "palutena", script = "game_attack100end", category = ACMD_GAME, low_priority )]
+unsafe fn game_attack100end(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 1.0);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.4);
+        }
+    frame(fighter.lua_state_agent, 5.0);
+        if macros::is_excute(fighter)
+        {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.5, 361, 140, 0, 55, 6.0, 0.0, 9.0, 10.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 3.5, 361, 140, 0, 55, 6.0, 0.0, 9.0, 16.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_magic"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
+        }
+    wait(fighter.lua_state_agent, 2.0);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+            MotionModule::set_rate(fighter.module_accessor, 1.1);
+        }
+}
+
+#[acmd_script( agent = "palutena", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
+unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 2.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 0.75);
+        }
+    frame(lua_state, 10.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.4, 367, 100, 20, 0, 3.5, 0.0, 17.0, 4.0, None, None, None, 0.2, 0.3, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 1.4, 130, 100, 50, 0, 2.0, 0.0, 14.0, 10.5, Some(0.0), Some(14.0), Some(-5.0), 0.2, 0.3, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 1.4, 190, 100, 40, 0, 2.0, 0.0, 20.0, 10.5, Some(0.0), Some(20.0), Some(-5.0), 0.2, 0.3, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 3, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        }
+    frame(lua_state, 30.);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 1);
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+    frame(lua_state, 31.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 4.5, 85, 136, 0, 75, 3.0, 0.0, 23.0, 10.5, Some(0.0), Some(23.0), Some(-5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 4.5, 85, 136, 0, 75, 3.0, 0.0, 17.0, 10.5, Some(0.0), Some(17.0), Some(-5.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 1, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_OBJECT);
+        }
+    frame(lua_state, 33.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+        }
+}
+
 #[acmd_script( agent = "palutena", script = "game_attackdash", category = ACMD_GAME, low_priority)]
 unsafe fn attackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
-        if macros::is_excute(fighter){
+        if macros::is_excute(fighter)
+        {
             macros::HIT_NODE(fighter, Hash40::new("shoulderl"), *HIT_STATUS_INVINCIBLE);
             macros::HIT_NODE(fighter, Hash40::new("arml"), *HIT_STATUS_INVINCIBLE);
             macros::HIT_NODE(fighter, Hash40::new("virtual"), *HIT_STATUS_INVINCIBLE);
@@ -92,6 +167,14 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
             macros::HIT_NODE(fighter, Hash40::new("arml"), *HIT_STATUS_NORMAL);
             macros::HIT_NODE(fighter, Hash40::new("virtual"), *HIT_STATUS_OFF);
             AttackModule::clear_all(fighter.module_accessor);
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+        }
+    frame(lua_state, 24.);
+        if macros::is_excute(fighter)
+        {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
 }
 
@@ -258,28 +341,28 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_PALUTENA_STATUS_SPECIAL_LW_FLAG_SHIELD);
             fighter.clear_lua_stack();
-            smash_script::lua_args!(fighter, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
-            shield(fighter.lua_state_agent);
-            macros::SEARCH(fighter, 0, 0, Hash40::new("top"), 12.3, 0.0, 10.0, 1.5, None, None, None, *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
+            // smash_script::lua_args!(fighter, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+            // shield(fighter.lua_state_agent);
+            //macros::SEARCH(fighter, 0, 0, Hash40::new("top"), 12.3, 0.0, 10.0, 1.5, None, None, None, *COLLISION_KIND_MASK_AH, *HIT_STATUS_MASK_ALL, 1, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false);
             macros::FT_MOTION_RATE(fighter, 0.75);
         }
     frame(lua_state, 35.);
         if macros::is_excute(fighter)
         {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_PALUTENA_STATUS_SPECIAL_LW_FLAG_SHIELD);
-            fighter.clear_lua_stack();
-            smash_script::lua_args!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
-            shield(fighter.lua_state_agent);
+            // fighter.clear_lua_stack();
+            // smash_script::lua_args!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+            // shield(fighter.lua_state_agent);
 
             FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 3.0, 3.2);
 
-            fighter.clear_lua_stack();
-            smash_script::lua_args!(fighter, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR, 0);
-            search(fighter.lua_state_agent);
+            // fighter.clear_lua_stack();
+            // smash_script::lua_args!(fighter, *MA_MSC_CMD_SEARCH_SEARCH_SCH_CLR, 0);
+            // search(fighter.lua_state_agent);
         }
 }
 
-#[acmd_script( agent = "palutena", script = "game_speciallwattack", category = ACMD_GAME, low_priority)]
+#[acmd_script( agent = "palutena", scripts = ["game_speciallwattack", "game_specialairlwattack"], category = ACMD_GAME, low_priority)]
 unsafe fn speciallwattack(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
@@ -302,6 +385,33 @@ unsafe fn speciallwattack(fighter: &mut L2CAgentBase) {
         {
             macros::FT_MOTION_RATE(fighter, 0.5);
             AttackModule::clear_all(fighter.module_accessor);
+        }
+}
+
+#[acmd_script( agent = "palutena", scripts = ["game_speciallwreflect", "game_specialairlwreflect"], category = ACMD_GAME, low_priority)]
+unsafe fn speciallwreflect(fighter: &mut L2CAgentBase) {
+
+        if macros::is_excute(fighter)
+        {
+            if !ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR) {
+                shield!(fighter, *MA_MSC_CMD_SHIELD_ON, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+                ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_PALUTENA_GENERATE_ARTICLE_REFLECTIONBOARD, false, -1);
+            }
+        }
+    frame(fighter.lua_state_agent, 5.0);
+        if macros::is_excute(fighter)
+        {
+            shield!(fighter, *MA_MSC_CMD_SHIELD_OFF, *COLLISION_KIND_REFLECTOR, *FIGHTER_PALUTENA_REFLECTOR_KIND_REFLECTOR, *FIGHTER_REFLECTOR_GROUP_EXTEND);
+        }
+    frame(fighter.lua_state_agent, 10.0);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 0.6);
+        }
+    frame(fighter.lua_state_agent, 35.0);
+        if macros::is_excute(fighter)
+        {
+            macros::FT_MOTION_RATE(fighter, 1.0);
         }
 }
 
@@ -381,13 +491,16 @@ pub fn install() {
     smashline::install_acmd_scripts!(
         dash,
         turndash,
+        game_attack100end,
         attackdash,
+        attackhi3,
         attackhi4,
         attackairb,
         attackairn,
         attackairf,
         speciallw,
         speciallwattack,
+        speciallwreflect,
         throwhi,
         throwb,
         escapeairslide

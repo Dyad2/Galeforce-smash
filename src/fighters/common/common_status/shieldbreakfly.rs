@@ -3,8 +3,6 @@ use super::*;
 #[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
     symbol = "_ZN7lua2cpp16L2CFighterCommon26status_ShieldBreakFly_MainEv")]
 unsafe fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) {
-    
-    println!("status_ShieldBreakFly_Main");
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN.into(), true.into()); //made custom
@@ -19,9 +17,7 @@ unsafe fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) {
 #[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
     symbol = "_ZN7lua2cpp16L2CFighterCommon25status_pre_ShieldBreakFlyEv")]
 unsafe fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-    println!("status_ShieldBreakFly_pre");
     
-    let mask = (*FIGHTER_STATUS_ATTR_DAMAGE | *FIGHTER_STATUS_ATTR_DISABLE_SHIELD_RECOVERY) as u64;    
     StatusModule::init_settings(
         fighter.module_accessor, 
         smash::app::SituationKind(*SITUATION_KIND_GROUND), 
@@ -41,11 +37,17 @@ unsafe fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
         false, 
         false, 
         false, 
-        mask,
-        *FIGHTER_STATUS_ATTR_DAMAGE as u32,
+        0,
+        *FIGHTER_STATUS_ATTR_DISABLE_SHIELD_RECOVERY as u32,
         0,
         0
     );
+
+    //stops shieldstun from applying speed after break
+    fighter.clear_lua_stack();
+    smash_script::lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_DAMAGE, 0.0, 0.0);
+    smash::app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+    
     return 0.into();
 }
 
