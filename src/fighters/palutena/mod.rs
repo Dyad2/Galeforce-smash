@@ -2,7 +2,7 @@ use smash::phx::{Hash40, Vector3f};
 use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
-use smash::app::{sv_animcmd::*, lua_bind::*, sv_module_access::*};
+use smash::app::{sv_animcmd::*, lua_bind::*};
 use smashline::*;
 use smash_script::*;
 
@@ -170,11 +170,7 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
-        }
-    frame(lua_state, 24.);
-        if macros::is_excute(fighter)
-        {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            MotionModule::set_rate(fighter.module_accessor, 0.875);
         }
 }
 

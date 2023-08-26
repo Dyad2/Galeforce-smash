@@ -1,5 +1,26 @@
 use super::*;
 
+pub unsafe fn cancel_effect(fighter : &mut L2CFighterCommon) {
+    
+    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL) {
+        let frame = VarModule::get_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER);
+        if frame < 24 {
+            if frame % 4 == 0 {
+                macros::FLASH(fighter, 0.5, 0.0, 1.0, 1.0);
+            }
+            else if frame % 2 == 0 {
+                macros::COL_NORMAL(fighter);
+            }
+            VarModule::add_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 1);
+        }
+        else {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
+            VarModule::set_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 0);
+            //macros::FLASH(fighter, 1.0, 1.0, 1.0, 1.0);
+        }
+    }
+}
+
 #[smashline::fighter_frame_callback]
 fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
     unsafe {
@@ -18,6 +39,8 @@ fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
             ecb_shifts::run(fighter);
             controls::run(fighter);
             galeforce::run(fighter);
+
+            cancel_effect(fighter);
 
             //Custom Jostling.
             //  Jostling is enabled depending on fighter status. some fighters always have jostling enabled.
@@ -42,48 +65,6 @@ fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
             else {
                 JostleModule::set_team(fighter.module_accessor, 0);
             }
-
-            // if VarModule::is_flag(fighter.battle_object, commons::instance::flag::MEWTWO_PRESSURED) {
-            //     DamageModule::set_damage_mul(fighter.module_accessor, 1.5);
-            // }
-
-            // if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) == 0 { //run only once, not per fighter
-            //     for fighter1 in 0 .. TOTAL_FIGHTER {
-            //         let mut jostle_on = false;
-                    
-            //         let fighter1_boma = &mut *sv_battle_object::module_accessor(smash::app::Fighter::get_id_from_entry_id(fighter1));
-            //         let status_kind1 = StatusModule::status_kind(fighter1_boma);
-            //         let curr_motion_kind1 = MotionModule::motion_kind(fighter1_boma);
-            //         let fighter_kind1 = get_kind(fighter1_boma);
-            //         for fighter2 in 0 .. TOTAL_FIGHTER {
-            //             let fighter2_boma = &mut *sv_battle_object::module_accessor(smash::app::Fighter::get_id_from_entry_id(fighter2));
-            //             let status_kind2 = StatusModule::status_kind(fighter2_boma);
-            //             let curr_motion_kind2 = MotionModule::motion_kind(fighter2_boma);
-            //             let fighter_kind2 = get_kind(fighter2_boma);
-
-            //             if fighter2 > fighter1 { //if fighter 2 is smaller, the loop has already ran for that player pair. skip.
-            //                 if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_FURAFURA, *FIGHTER_STATUS_KIND_FURAFURA_STAND, *FIGHTER_STATUS_KIND_SLEEP, *FIGHTER_STATUS_KIND_BIND, *FIGHTER_STATUS_KIND_DOWN, *FIGHTER_STATUS_KIND_DOWN_CONTINUE, *FIGHTER_STATUS_KIND_DOWN_WAIT, *FIGHTER_STATUS_KIND_DOWN_WAIT_CONTINUE, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_TURN].contains(&status_kind1) 
-            //                   || [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, *FIGHTER_STATUS_KIND_FURAFURA, *FIGHTER_STATUS_KIND_FURAFURA_STAND, *FIGHTER_STATUS_KIND_SLEEP, *FIGHTER_STATUS_KIND_BIND, *FIGHTER_STATUS_KIND_DOWN, *FIGHTER_STATUS_KIND_DOWN_CONTINUE, *FIGHTER_STATUS_KIND_DOWN_WAIT, *FIGHTER_STATUS_KIND_DOWN_WAIT_CONTINUE, *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_TURN].contains(&status_kind2)
-            //                   || [hash40("attack11"), hash40("attack_100_start"), hash40("attack100"), hash40("attack_100_end"), hash40("attack12"), hash40("attack13"), hash40("attacks3"), hash40("attacks3hi"), hash40("attacks3lw"), hash40("attacks32"), hash40("attacks33"), hash40("attackdash")].contains(&curr_motion_kind1)
-            //                   || [hash40("attack11"), hash40("attack_100_start"), hash40("attack100"), hash40("attack_100_end"), hash40("attack12"), hash40("attack13"), hash40("attacks3"), hash40("attacks3hi"), hash40("attacks3lw"), hash40("attacks32"), hash40("attacks33"), hash40("attackdash")].contains(&curr_motion_kind2)
-            //                   || [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KOOPA, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_SNAKE].contains(&fighter_kind1) 
-            //                   || [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KOOPA, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_SNAKE].contains(&fighter_kind2) {
-            //                     jostle_on = true;
-            //                 }
-            //                 if jostle_on {
-            //                     if (PostureModule::pos_x(fighter1_boma) - PostureModule::pos_x(fighter2_boma)).abs() < 14.0 && (PostureModule::pos_y(fighter1_boma) - PostureModule::pos_y(fighter2_boma)).abs() < 20.0 {
-            //                         JostleModule::set_team(fighter1_boma,  fighter1 + 1);
-            //                         JostleModule::set_team(fighter2_boma,  fighter2 + 1);
-            //                     }
-            //                 }
-            //                 else {
-            //                     JostleModule::set_team(fighter1_boma, 0);
-            //                     JostleModule::set_team(fighter2_boma, 0);
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
         }
     }
 }
@@ -106,6 +87,30 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
 
                 let owner_object_id = owner_boma.battle_object_id;
                 let owner_object = get_battle_object_from_id(owner_object_id);
+
+                //duck!
+                if weapon_kind == *WEAPON_KIND_DUCKHUNT_GUNMAN {
+                    //check if dh has their GA
+                    if StatusModule::status_kind(fighter_base.module_accessor) == *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY {
+                        if VarModule::is_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                            StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
+                            //gunman is to the left of dh
+                            if PostureModule::pos_x(fighter_base.module_accessor) < PostureModule::pos_x(owner_boma) {
+                                PostureModule::set_lr(fighter_base.module_accessor, 1.0);
+                            }
+                            //gunman is to the right of dh
+                            else {
+                                PostureModule::set_lr(fighter_base.module_accessor, -1.0);
+                            }
+                            PostureModule::update_rot_y_lr(fighter_base.module_accessor);
+                            VarModule::off_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                        }
+                        if VarModule::is_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE) {
+                            StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
+                            VarModule::off_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE);
+                        }
+                    }
+                }
 
                 //rosalina
                 if weapon_kind == *WEAPON_KIND_ROSETTA_TICO {

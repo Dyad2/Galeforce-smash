@@ -427,6 +427,7 @@ unsafe fn effectattackdash(fighter: &mut L2CAgentBase) {
     }
 }
 
+//air
 #[acmd_script( agent = "bayonetta", script = "effect_attackairf", category = ACMD_EFFECT, low_priority)]
 unsafe fn effectattackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -489,6 +490,34 @@ unsafe fn effectattackairf(fighter: &mut L2CAgentBase) {
                 sv_animcmd::EFFECT_FOLLOW_WORK(fighter.lua_state_agent);
                 macros::LAST_EFFECT_SET_RATE(fighter, 1.2);
             }
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "effect_attackairb", category = ACMD_EFFECT, low_priority )]
+unsafe fn effect_attackairb(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 8.0);
+    if macros::is_excute(fighter) {
+        macros::EFFECT_FOLLOW_WORK(fighter, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_ARC2, Hash40::new("top"), 2, 14, 0, 0, 170, 120, 1.1, true);
+        macros::LAST_EFFECT_SET_RATE(fighter, 1.1);
+    }
+    frame(fighter.lua_state_agent, 18.0);
+    if macros::is_excute(fighter) {
+        let effect_kind = WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_ARC2);
+        fighter.clear_lua_stack();
+        smash_script::lua_args!(fighter, Hash40::new_raw(effect_kind), -1);
+        sv_animcmd::EFFECT_DETACH_KIND_WORK(fighter.lua_state_agent);
+    }
+}
+
+#[acmd_script( agent = "bayonetta", script = "expression_attackairb", category = ACMD_EXPRESSION, low_priority )]
+unsafe fn expression_attackairb(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
+    }
+    frame(fighter.lua_state_agent, 15.0);
+    if macros::is_excute(fighter) {
+        macros::RUMBLE_HIT(fighter, Hash40::new("rbkind_attackm"), 0);
     }
 }
 
@@ -1146,6 +1175,8 @@ pub fn install() {
         effectattackdash,
         //effectattackairhi,
         effectattackairf,
+        effect_attackairb,
+        expression_attackairb,
         effectattackairlw,
         effectlandingairlw,
         effectspecialhi,

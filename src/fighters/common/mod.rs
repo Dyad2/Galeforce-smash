@@ -33,7 +33,6 @@ use {
         },
         lib:: {
             L2CValue,
-            L2CAgent,
             lua_const::*
         }
     },

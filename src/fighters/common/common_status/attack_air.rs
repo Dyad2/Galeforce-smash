@@ -41,7 +41,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon33bind_address_call_attack_air_uniqEPN3lib8L2CAgentENS1_8L2CValueE")]
 // unsafe fn bac_attackair_uniq(fighter: &mut L2CFighterCommon, _param1: L2CAgent, param2: L2CValue) {
-//     println!("attackair_uniq");
 //     if is_training_mode() {
 //         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING) {
 //             let cmb_vec1 = Vector4f{x: 0.35, y: 0.35, z: 0.66, w: 1.0};
@@ -58,7 +57,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon16status_AttackAirEv")]
 // unsafe fn status_attackair(fighter: &mut L2CFighterCommon) {
-//     println!("attack_air");
 //     if is_training_mode() {
 //         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING) {
 //             let cmb_vec1 = Vector4f{x: 0.35, y: 0.35, z: 0.66, w: 1.0};
@@ -87,16 +85,13 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 //         }
 //     }
 //     //vanilla
-//     println!("attack_air_main_common");
 //     if !fighter.attack_air_common_strans().get_bool() {
-//         println!("attack_air_common_strans is false");
 //         if CancelModule::is_enable_cancel(fighter.module_accessor) {
 //             if !fighter.sub_wait_ground_check_common(false.into()).get_bool() {
 //                 if !fighter.sub_air_check_fall_common().get_bool() {
 //                     if !MotionModule::is_end(fighter.module_accessor) {
 //                         return false.into();
 //                     }
-//                     println!("motion ends");
 //                     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
 //                     fighter.change_status(FIGHTER_STATUS_KIND_FALL.into(), true.into());
 //                 }
@@ -111,22 +106,17 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon24attack_air_common_stransEv")]
 // unsafe fn status_attackair_common_strans(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     println!("attack_air_common_strans");
 //     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_KEEP_AIR) {
-//         println!("keep air");
 //         return false.into()
 //     }
 //     else {
 //         if !fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
-//             println!("ground");
 //             if !fighter.sub_transition_group_check_air_landing().get_bool() {
-//                 println!("sub_transition_group_check_air_landing");
 //                 return false.into()
 //             }
 //         }
 //         else {
 //             ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
-//             println!("check autocancel");
 //             if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING) {
 //                 fighter.change_status(FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR.into(), false.into());
 //             }
@@ -167,7 +157,6 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 // #[common_status_script(status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
 //     symbol = "_ZN7lua2cpp16L2CFighterCommon21status_AttackAir_MainEv")]
 // unsafe fn status_attackair_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-//     println!("attack_air_main");
 //     if !fighter.status_AttackAir_Main_common().get_bool() {
 //         fighter.sub_air_check_superleaf_fall_slowly(); 
 //         if !fighter.global_table[IN_HITLAG].get_bool() {

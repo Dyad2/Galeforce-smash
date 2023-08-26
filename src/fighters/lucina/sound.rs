@@ -23,22 +23,24 @@ unsafe fn soundspecialhi(_fighter: &mut L2CAgentBase) {
 unsafe fn soundspecialhi2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 15.);
+    frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             macros::PLAY_SE(fighter,Hash40::new("se_lucina_special_h01"));
+            macros::PLAY_SE(fighter, Hash40::new("vc_lucina_attack07")); //down smash sound
             macros::PLAY_SEQUENCE(fighter,Hash40::new("seq_lucina_rnd_special_h"));
         }
-    frame(lua_state, 39.);
+    // frame(lua_state, 39.);
+    //     if macros::is_excute(fighter)
+    //     {
+    //         macros::PLAY_SE(fighter,Hash40::new("se_lucina_jump01"));
+    //         macros::PLAY_SEQUENCE(fighter,Hash40::new("seq_lucina_rnd_jump"));
+    //     }
+    frame(lua_state, 46.);
         if macros::is_excute(fighter)
         {
-            macros::PLAY_SE(fighter,Hash40::new("se_lucina_jump01"));
-            macros::PLAY_SEQUENCE(fighter,Hash40::new("seq_lucina_rnd_jump"));
-        }
-    frame(lua_state, 45.);
-        if macros::is_excute(fighter)
-        {
-            //macros::PLAY_SE(fighter,Hash40::new("se_lucina_special_s04l"));
+            macros::PLAY_SE(fighter,Hash40::new("se_lucina_special_s04l"));
+            //macros::PLAY_SE(agent, Hash40::new("vc_lucina_attack06"));
         }
 }
 
@@ -68,6 +70,7 @@ unsafe fn soundspecialhi4(fighter: &mut L2CAgentBase) {
             macros::PLAY_SE(fighter, Hash40::new("se_lucina_step_left_m"));
         }
 }
+
 pub fn install() {
     smashline::install_acmd_scripts!(
         soundattacks3,

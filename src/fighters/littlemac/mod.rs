@@ -130,6 +130,7 @@ unsafe fn attack13(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }

@@ -1,7 +1,7 @@
 use smash::phx::Hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
-use smash::lua2cpp::L2CAgentBase;
+use smash::lua2cpp::{L2CAgentBase, L2CFighterCommon};
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
@@ -9,6 +9,22 @@ use smash_script::*;
 use galeforce_utils::vars::*;
 use custom_var::*;
 
+#[fighter_frame( agent = FIGHTER_KIND_DONKEY )]
+fn ohbanana_frame(fighter: &mut L2CFighterCommon) {
+    unsafe {
+        //dash attack to neutral air when diddy falls offstage
+        if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_S &&
+         StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND &&
+         VarModule::is_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL) {
+            VarModule::off_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL);
+            fighter.change_status(FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP.into(), false.into());
+            ItemModule::have_item(fighter.module_accessor, smash::app::ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
+        }
+        // else {
+
+        // }
+    }
+}
 //global edits
 #[acmd_script( agent = "donkey", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
@@ -41,20 +57,22 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    frame(lua_state, 5.);
+    frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
+            MotionModule::set_rate(fighter.module_accessor, 1.25);
             macros::HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_XLU);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("shoulderr"), 8.0, 100, 115, 0, 40, 4.8, 2.7, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 10.0, 100, 115, 0, 40, 4.0, 3.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            macros::ATTACK(fighter, 2, 0, Hash40::new("handr"), 10.0, 100, 115, 0, 40, 5.3, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 5.0, false);
-            AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 5.0, false);
-            AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 5.0, false);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("shoulderr"), 8.0, 100, 75, 0, 70, 4.8, 2.7, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 1, 0, Hash40::new("armr"), 10.0, 100, 85, 0, 70, 4.0, 3.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            macros::ATTACK(fighter, 2, 0, Hash40::new("handr"), 10.0, 100, 85, 0, 70, 5.3, 1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 0, 3.0, false);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 1, 3.0, false);
+            AttackModule::set_add_reaction_frame(fighter.module_accessor, 2, 3.0, false);
         }
     frame(lua_state, 13.);
         if macros::is_excute(fighter)
         {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             AttackModule::clear_all(fighter.module_accessor);
             macros::HIT_NODE(fighter, Hash40::new("armr"), *HIT_STATUS_NORMAL);
         }
@@ -84,6 +102,33 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
         {
             AttackModule::clear_all(fighter.module_accessor);
             HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL as i32), 0);
+        }
+}
+
+//air
+#[acmd_script( agent = "donkey", script = "game_attackairhi", category = ACMD_GAME, low_priority )]
+unsafe fn attackairhi(agent: &mut L2CAgentBase) {
+
+    frame(agent.lua_state_agent, 6.0);
+        if macros::is_excute(agent)
+        {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+            macros::ATTACK(agent, 0, 0, Hash40::new("head"), 13.0, 90, 90, 0, 32, 7.5, 2.5, 2.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
+        }
+    wait(agent.lua_state_agent, 4.0);
+        if macros::is_excute(agent)
+        {
+            macros::ATTACK(agent, 0, 0, Hash40::new("head"), 9.0, 85, 90, 0, 45, 7.0, 2.5, 2.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_HEAD);
+        }
+    wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent)
+        {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+    frame(agent.lua_state_agent, 26.0);
+        if macros::is_excute(agent)
+        {
+            WorkModule::off_flag(agent.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
         }
 }
 
@@ -214,6 +259,66 @@ unsafe fn specialairn(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script(agent = "donkey", script = "game_specialairs", category = ACMD_GAME, low_priority )]
+unsafe fn specialairs(agent: &mut L2CAgentBase) {
+
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+    }
+    frame(agent.lua_state_agent, 15.0);
+    if macros::is_excute(agent) {
+        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+    }
+    frame(agent.lua_state_agent, 20.0);
+    if macros::is_excute(agent) {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_S_FLAG_FALL_START);
+        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 270, 40, 0, 30, 6.5, 0.0, 5.0, 9.5, Some(0.0), Some(5.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_bury"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        macros::ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 70, 40, 0, 15, 10.0, 0.0, 11.0, 14.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+    }
+    wait(agent.lua_state_agent, 2.0);
+    if macros::is_excute(agent) {
+        AttackModule::clear_all(agent.module_accessor);
+    }
+}
+
+#[acmd_script(agent = "donkey", script = "game_specials", category = ACMD_GAME, low_priority)]
+unsafe fn specials(fighter: &mut L2CAgentBase) {
+    
+    frame(fighter.lua_state_agent, 1.0);
+        if macros::is_excute(fighter)
+        {
+            VarModule::on_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL);
+        }
+    //frame(fighter.lua_state_agent, 33.0);
+    //    if macros::is_excute(fighter)
+    //    {
+    //        ItemModule::throw_item(fighter.module_accessor, 22.5, 4.0, 1.0, 0, true, 0.0);
+    //    } 
+    // frame(fighter.lua_state_agent, 35.0);
+    //     if macros::is_excute(fighter)
+    //     {
+    //         IS_DK_START_ITEM_CHUCK[ENTRY_ID] = false;
+    //     }
+}
+
+#[acmd_script(agent = "donkey", script = "effect_specials", category = ACMD_EFFECT, low_priority)]
+unsafe fn fx_specials(_fighter: &mut L2CAgentBase) {
+
+    //leave empty
+}
+
+#[acmd_script(agent = "donkey", script =  "sound_specials", category = ACMD_SOUND, low_priority)]
+unsafe fn sound_specials(_fighter: &mut L2CAgentBase) {
+    
+    //leave empty
+}
+#[acmd_script(agent = "donkey", script =  "expression_specials", category = ACMD_EXPRESSION, low_priority)]
+unsafe fn expression_specials(_fighter: &mut L2CAgentBase) {
+    
+    //leave empty
+}
+
 //grabs
 #[acmd_script( agent = "donkey", script = "game_catch", category = ACMD_GAME, low_priority)]
 unsafe fn catch(fighter: &mut L2CAgentBase) {
@@ -325,14 +430,23 @@ unsafe fn expression_landingheavy(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
+    smashline::install_agent_frames!(
+        ohbanana_frame
+    );
     smashline::install_acmd_scripts!(
         dash,
         turndash,
         attackhi3,
         attacklw3,
+        attackairhi,
         specialhi,
         specialn,
         specialairn,
+        specialairs,
+        specials,
+        fx_specials,
+        sound_specials,
+        expression_specials,
         catch,
         catchdash,
         catchturn,

@@ -9,11 +9,8 @@ unsafe fn bac_status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
 
 #[skyline::hook(replace = L2CFighterCommon_status_Landing)]
 unsafe fn status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
-    //println!("status_landing");
-
     //clears damage speed when using wavedash/land
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
-        //println!("clear damage speed!");
         fighter.clear_lua_stack();
         smash_script::lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_DAMAGE, 0.0, 0.0);
         smash::app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
@@ -36,7 +33,6 @@ unsafe fn status_LandingMain(fighter: &mut L2CFighterCommon) -> L2CValue {
     //checks if fighter is using wavedash, and enables some statuses accordingly
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
         if fighter.global_table[MOTION_FRAME].get_i32() >= 12 {
-            //println!("wavedash cancel");
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD);
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_GUARD_ON);
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
@@ -58,7 +54,6 @@ unsafe fn bac_status_landing_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 unsafe fn status_LandingEnd(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     fighter.sub_landing_cancel_damage_face();
-    //println!("delet wavedash");
     VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
         
     return 0.into()
@@ -72,7 +67,6 @@ unsafe fn bac_status_LandingEndFallSpecial(fighter: &mut L2CFighterCommon) -> L2
 #[skyline::hook(replace = L2CFighterCommon_status_end_landing_fall_special)]
 unsafe fn status_LandingEndFallSpecial(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    println!("delet wavedash");
     VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
         
     return 0.into()

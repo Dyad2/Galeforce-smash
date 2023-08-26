@@ -81,6 +81,7 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
@@ -137,13 +138,6 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-        }
-    frame(lua_state, 18.);
-        if macros::is_excute(fighter)
-        {
-            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                CancelModule::enable_cancel(fighter.module_accessor);
-            }
         }
 }
 

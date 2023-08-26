@@ -109,6 +109,56 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
             AttackModule::clear_all(fighter.module_accessor);
         }
 }
+#[acmd_script( agent = "samus", script = "game_attacks3hi", category = ACMD_GAME, low_priority )]
+unsafe fn attacks3hi(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+        if macros::is_excute(agent)
+        {
+            macros::ATTACK(agent, 0, 0, Hash40::new("hip"), 9.0, 361, 80, 0, 30, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 1, 0, Hash40::new("kneer"), 9.0, 361, 100, 0, 30, 3.0, 0.6, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 2, 0, Hash40::new("kneer"), 11.0, 361, 100, 0, 30, 3.0, 6.0, -0.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            AttackModule::set_attack_height_all(agent.module_accessor, smash::app::AttackHeight(*ATTACK_HEIGHT_HIGH), false);
+            macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 2, 1.66);
+        }
+    wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent)
+        {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+}
+#[acmd_script( agent = "samus", script = "game_attacks3", category = ACMD_GAME, low_priority )]
+unsafe fn attacks3(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+        if macros::is_excute(agent)
+        {
+            macros::ATTACK(agent, 0, 0, Hash40::new("hip"), 9.0, 361, 80, 0, 30, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 1, 0, Hash40::new("kneer"), 9.0, 361, 100, 0, 30, 3.0, 0.6, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 2, 0, Hash40::new("kneer"), 11.0, 361, 100, 0, 30, 3.0, 6.0, -0.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 2, 1.66);
+        }
+    wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent)
+        {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+}
+#[acmd_script( agent = "samus", script = "game_attacks3lw", category = ACMD_GAME, low_priority )]
+unsafe fn attacks3lw(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 8.0);
+        if macros::is_excute(agent)
+        {
+            macros::ATTACK(agent, 0, 0, Hash40::new("hip"), 9.0, 361, 80, 0, 30, 3.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 1, 0, Hash40::new("kneer"), 9.0, 361, 100, 0, 30, 3.0, 0.6, 0.5, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            macros::ATTACK(agent, 2, 0, Hash40::new("kneer"), 11.0, 361, 100, 0, 30, 3.0, 6.0, -0.5, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+            AttackModule::set_attack_height_all(agent.module_accessor, smash::app::AttackHeight(*ATTACK_HEIGHT_LOW), false);
+            macros::ATK_SET_SHIELD_SETOFF_MUL(agent, 2, 1.66);
+        }
+    wait(agent.lua_state_agent, 3.0);
+        if macros::is_excute(agent)
+        {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+}
 
 #[acmd_script( agent = "samus", script = "game_attackhi4", category = ACMD_GAME, low_priority)]
 unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
@@ -541,6 +591,9 @@ pub fn install() {
         missilehoming,
         jab1,
         attackhi3,
+        attacks3hi,
+        attacks3,
+        attacks3lw,
         attackhi4,
         attacks4hi,
         attacks4s,

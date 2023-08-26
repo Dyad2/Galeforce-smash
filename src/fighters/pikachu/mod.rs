@@ -1,5 +1,4 @@
 use smash::phx::Hash40;
-use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
@@ -9,7 +8,7 @@ use smashline::*;
 use smash_script::*;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*, table_const::*};
+use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_PIKACHU )]
@@ -191,8 +190,9 @@ unsafe fn game_attackairn(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-            MotionModule::set_rate(fighter.module_accessor, 1.3);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 8.0, 361, 90, 0, 55, 7.0, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 4.0, 70, 35, 0, 60, 6.5, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, 4.0, false);
+            MotionModule::set_rate(fighter.module_accessor, 1.55);
         }
     wait(fighter.lua_state_agent, 6.0);
         if macros::is_excute(fighter)
@@ -212,13 +212,13 @@ unsafe fn game_attackairn(fighter: &mut L2CAgentBase) {
     wait(fighter.lua_state_agent, 10.0);
         if macros::is_excute(fighter)
         {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 5.0, 80, 80, 0, 55, 6.5, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+            MotionModule::set_rate(fighter.module_accessor, 0.95);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 8.0, 361, 133, 0, 20, 7.5, 0.0, 5.0, 1.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
     wait(fighter.lua_state_agent, 6.0);
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            MotionModule::set_rate(fighter.module_accessor, 0.95);
         }
     frame(fighter.lua_state_agent, 37.0);
         if macros::is_excute(fighter)
@@ -303,9 +303,8 @@ unsafe fn specialhi2(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
-        println!("woah");
         VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-        macros::ATTACK(fighter, 0, 0, Hash40::new("neck"), 3.0, 70, 150, 0, 20, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("neck"), 3.0, 70, 50, 0, 80, 1.6, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 5, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         JostleModule::set_status(fighter.module_accessor, false);
     }
 }

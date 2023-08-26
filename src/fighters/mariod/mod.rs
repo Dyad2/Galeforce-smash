@@ -13,47 +13,52 @@ use crate::fighters::common::galeforce::*;
 use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
 
-pub static mut MARIOD_NAIR_SOUND: [LuaConst; 9] = [ATTACK_SOUND_LEVEL_S; 9];
+//pub static mut MARIOD_NAIR_SOUND: [LuaConst; 9] = [ATTACK_SOUND_LEVEL_S; 9];
 
 #[fighter_frame( agent = FIGHTER_KIND_MARIOD )]
 fn dr_frame(fighter: &mut L2CFighterCommon) {
     unsafe {
         let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-        let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-
-        let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-        let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL);
-
-        let damage_calc = if speed_x.abs() > speed_y.abs() {
-           4.0 + (3.3 * speed_x.abs())
-        }
-        else {
-           4.0 + (3.3 * speed_y.abs())
-        };
-
-        VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, damage_calc);
-
-        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) > 10. && !(VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0) {
-            VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, 10.0);
-        }
-        if  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) > 12. && VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
-           VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE, 12.0);
-        }
-        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) < 7. {
-           MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_S;
-        }
-        if VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) >= 7. &&  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) < 10. {
-           MARIOD_NAIR_SOUND[entry_id as usize]= ATTACK_SOUND_LEVEL_M;
-        }
-        if  VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE) >= 10. {
-           MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_L;
-        }
+        //let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
 
         if curr_motion_kind == hash40("attack_air_n") {
+            let speed_x = KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).round();
+            let speed_y = KineticModule::get_sum_speed_y(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_ALL).round();
+            println!("mariod speed_x {}", speed_x);
+            println!("mariod speed_y {}", speed_y);
+
+            let damage_calc = if speed_x.abs() > speed_y.abs() {
+               5.0 + (4.0 * speed_x.abs())
+            }
+            else {
+               5.0 + (4.0 * speed_y.abs())
+            };
+
+            if VarModule::get_int(fighter.battle_object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
+                VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE, damage_calc.clamp(1.0, 13.0));
+            }
+            else {
+                VarModule::set_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE, damage_calc.clamp(1.0, 11.0));
+            }
+            
+            let damage_total = VarModule::get_float(fighter.battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE);
+            if damage_total < 7. {
+                //MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_S;
+                VarModule::set_int(fighter.battle_object, mariod::instance::int::ATTACK_AIR_N_SOUND_LEVEL, *ATTACK_SOUND_LEVEL_S);
+            }
+            if damage_total >= 7. && damage_total < 11. {
+                //MARIOD_NAIR_SOUND[entry_id as usize]= ATTACK_SOUND_LEVEL_M;
+                VarModule::set_int(fighter.battle_object, mariod::instance::int::ATTACK_AIR_N_SOUND_LEVEL, *ATTACK_SOUND_LEVEL_M);
+            }
+            if damage_total >= 11. {
+                //MARIOD_NAIR_SOUND[entry_id as usize] = ATTACK_SOUND_LEVEL_L;
+                VarModule::set_int(fighter.battle_object, mariod::instance::int::ATTACK_AIR_N_SOUND_LEVEL, *ATTACK_SOUND_LEVEL_L);
+            }
+
             if MotionModule::frame(fighter.module_accessor) >= 3. && MotionModule::frame(fighter.module_accessor) < 27. {
                 let battle_object = fighter.battle_object;
-                macros::ATTACK(fighter, 0, 0, Hash40::new("kneer"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
-                macros::ATTACK(fighter, 1, 0, Hash40::new("kneel"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE_BASE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *MARIOD_NAIR_SOUND[entry_id as usize], *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
+                macros::ATTACK(fighter, 0, 0, Hash40::new("kneer"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), VarModule::get_int(battle_object, mariod::instance::int::ATTACK_AIR_N_SOUND_LEVEL), *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
+                macros::ATTACK(fighter, 1, 0, Hash40::new("kneel"), VarModule::get_float(battle_object, mariod::instance::float::ATTACK_AIR_N_DAMAGE), 361, 93, 0, 20, 4.0, 0.8, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), VarModule::get_int(battle_object, mariod::instance::int::ATTACK_AIR_N_SOUND_LEVEL), *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_KICK);
             }
         }
 

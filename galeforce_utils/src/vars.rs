@@ -89,19 +89,21 @@ pub mod commons {
             pub const ALLOW_PERFECT_PIVOT : i32 = 0x000F;
             pub const SMASH_TURN : i32 = 0x0010;
             pub const MEWTWO_PRESSURED : i32 = 0x0011;
+            pub const HIT_CANCEL: i32 = 0x0012;
             //hdr
             pub const BEFORE_GROUND_COLLISION : i32 = 0x0012;
             pub const CHECK_CHANGE_MOTION_ONLY : i32 = 0x0013;
             //end hdr
         }
         pub mod int {
-            pub const FRAME_COUNTER : i32 = 0x0000;
+            pub const FRAME_COUNTER : i32 = 0x0000; //make this sure is used for only one thing per character or it'll break
             pub const AIR_TURN_INITIATE_METHOD : i32 = 0x0001; //0 == off, 1 == stick, 2 == taunt
             pub const AIR_TURN_INPUT_FRAME : i32 = 0x0002;
             pub const AIR_TURN_COUNT : i32 = 0x0003;
             pub const SUBSTICK_AIR_ATTACK : i32 = 0x0004;
             pub const PURIN_MARK_DURATION : i32 = 0x0005;
             pub const KAMUI_DRAGON_HEX_DURATION : i32 = 0x0006;
+            pub const HIT_CANCEL_FRAME_COUNTER : i32 = 0x0007; 
         }
         pub mod float {
             pub const STICK_X : i32 = 0x0000;
@@ -155,10 +157,24 @@ pub mod captain {
         }
     }
 }
+pub mod donkey {
+    pub mod instance {
+        pub mod flag {
+            pub const GET_BARREL : i32 = 0x0100;
+        }
+    }
+}
 pub mod dolly { //terry
     pub mod instance {
         pub mod float {
             pub const SPECIAL_N_CHARGE : i32 = 0x0100;
+        }
+    }
+}
+pub mod duckhunt {
+    pub mod instance {
+        pub mod flag {
+            pub const GUNMAN_REACTIVATE : i32 = 0x0100;
         }
     }
 }
@@ -238,7 +254,20 @@ pub mod link {
             pub const DAMAGE_STORAGE : i32 = 0x0100;
         }
         pub mod flag {
-            pub const RESTORE_DAMAGE : i32 = 0x0101;
+            pub const RESTORE_DAMAGE : i32 = 0x0100;
+        }
+    }
+}
+pub mod luigi {
+    pub mod instance {
+        pub mod int {
+            pub const ELEC_CHARGE : i32 = 0x0100;
+        }
+    }
+    pub mod status {
+        pub mod flag {
+            pub const SPECIAL_S_SPECIAL_BUTTON_RELEASED : i32 = 0x1100;
+            pub const SPECIAL_S_CHARGE_USED : i32 = 0x1101;
         }
     }
 }
@@ -246,9 +275,10 @@ pub mod mariod {
     pub mod instance {
         pub mod int {
             pub const GA_MEDECINE_TIMER : i32 = 0x0100;
+            pub const ATTACK_AIR_N_SOUND_LEVEL : i32 = 0x0101;
         }
         pub mod float {
-            pub const ATTACK_AIR_N_DAMAGE_BASE : i32 = 0x0100;
+            pub const ATTACK_AIR_N_DAMAGE : i32 = 0x0100;
         }
     }
 }
@@ -270,6 +300,13 @@ pub mod metaknight {
     pub mod instance {
         pub mod flag {
             pub const MACH_TORNADO_HIT : i32 = 0x0100;
+        }
+    }
+}
+pub mod peach {
+    pub mod instance {
+        pub mod flag {
+            pub const ALLOW_FLOAT : i32 = 0x0100;
         }
     }
 }

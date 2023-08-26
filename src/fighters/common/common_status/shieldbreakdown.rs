@@ -59,12 +59,6 @@ unsafe fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
     fighter.sub_shift_status_main(L2CValue::Ptr(status_ShieldBreakDown_main as *const () as _));
 }
 
-// #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon45bind_address_call_status_ShieldBreakDown_MainEPN3lib8L2CAgentE")]
-// unsafe fn bac_status_ShieldBreakDown_Main(fighter: &mut L2CFighterCommon) {
-//     println!("bac_status_ShieldBreakDown_Main");
-//     fighter.status_ShieldBreakDown_Main();
-// }
-
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon27status_ShieldBreakDown_MainEv")]
 unsafe fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValue {
    

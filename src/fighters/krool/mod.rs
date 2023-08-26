@@ -195,6 +195,59 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
 }
 
 //air
+#[acmd_script( agent = "krool", script = "game_attackairhi", category = ACMD_GAME, low_priority)]
+unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+
+    frame(lua_state, 3.);
+        if macros::is_excute(fighter)
+        {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        }
+    frame(lua_state, 7.);
+        if macros::is_excute(fighter)
+        {
+            macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_XLU);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_ON);
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_DROP_CROWN) {
+                macros::SET_SPEED_EX(fighter, 0, 2.1, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
+                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 14.5, 85, 60, 0, 84, 8.6, 0.0, 22.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+            }
+            else {
+                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 11.5, 85, 60, 0, 84, 8.6, 0.0, 22.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+            }
+        }
+    frame(lua_state, 14.);
+        if macros::is_excute(fighter)
+        {
+            HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
+            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_DROP_CROWN) {
+                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 11.5, 85, 52, 0, 85, 6.2, 0.0, 22.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
+            }
+            else {
+                AttackModule::clear_all(fighter.module_accessor);
+                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_OFF);
+            }
+        }
+    frame(lua_state, 20.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_OFF);
+        }
+    frame(lua_state, 55.);
+        if macros::is_excute(fighter)
+        {
+            CancelModule::enable_cancel(fighter.module_accessor);
+            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
+        }
+    frame(lua_state, 65.);
+        if macros::is_excute(fighter)
+        {
+            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        }
+}
+
 #[acmd_script( agent = "krool", script = "game_attackairn", category = ACMD_GAME, low_priority)]
 unsafe fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -229,70 +282,6 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        }
-}
-
-#[acmd_script( agent = "krool", script = "game_attackairhi", category = ACMD_GAME, low_priority)]
-unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 3.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        }
-    frame(lua_state, 7.);
-        if macros::is_excute(fighter)
-        {
-            macros::HIT_NODE(fighter, Hash40::new("head"), *HIT_STATUS_XLU);
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_ON);
-            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_DROP_CROWN) {
-                macros::SET_SPEED_EX(fighter, 0, 2.1, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 14.5, 85, 60, 0, 84, 8.6, 0.0, 22.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
-            }
-            else {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 11.5, 85, 60, 0, 84, 8.6, 0.0, 22.0, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
-            }
-        }
-    frame(lua_state, 14.);
-        if macros::is_excute(fighter)
-        {
-            HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
-            if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_DROP_CROWN) {
-                macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 11.5, 85, 52, 0, 85, 6.2, 0.0, 22.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_HEAD);
-            }
-            else {
-                AttackModule::clear_all(fighter.module_accessor);
-            }
-        }
-    frame(lua_state, 20.);
-        if macros::is_excute(fighter)
-        {
-            AttackModule::clear_all(fighter.module_accessor);
-        }
-    frame(lua_state, 21.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_REQUEST_WAIST_SHIELD_OFF);
-        }
-    frame(lua_state, 45.);
-        if macros::is_excute(fighter)
-        {
-            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_KROOL_INSTANCE_WORK_ID_FLAG_DROP_CROWN) {
-                CancelModule::enable_cancel(fighter.module_accessor);
-                WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-            }
-        }
-    frame(lua_state, 55.);
-        if macros::is_excute(fighter)
-        {
-            CancelModule::enable_cancel(fighter.module_accessor);
-            WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
-        }
-    frame(lua_state, 65.);
-        if macros::is_excute(fighter)
-        {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 

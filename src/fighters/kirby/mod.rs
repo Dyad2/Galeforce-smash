@@ -46,8 +46,11 @@ fn kirby_frame(fighter: &mut L2CFighterCommon) {
         if [hash40("win_1"), hash40("win_2"), hash40("win_3")].contains(&curr_motion_kind) && fighter.global_table[MOTION_FRAME].get_i32() == 1 {
             //let last_hat = VarModule::get_int(fighter.battle_object, kirby::instance::int::LAST_HAT);
             WorkModule::set_int(fighter.module_accessor, LAST_HAT[entry_id as usize], *FIGHTER_KIRBY_INSTANCE_WORK_ID_INT_COPY_CHARA);
-            FighterSpecializer_Kirby::get_copy_setup();
-            FighterSpecializer_Kirby::copy_setup(instance_boma, 0, smash::app::FighterKind(LAST_HAT[entry_id as usize]), false, false);
+            let copy_kind = FighterSpecializer_Kirby::get_copy_kind(instance_boma) as i32;
+            if copy_kind != *FIGHTER_KIND_NONE {
+                let copy_slot = FighterSpecializer_Kirby::get_copy_slot_no(instance_boma) as i32;
+                FighterSpecializer_Kirby::copy_setup(instance_boma, copy_slot, smash::app::FighterKind(LAST_HAT[entry_id as usize]), false, false);
+            }
         }
     }
 }

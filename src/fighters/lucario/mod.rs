@@ -9,7 +9,7 @@ use smash_script::*;
 use std::mem;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*};
+use galeforce_utils::{vars::*, utils::*, table_const::*};
 use custom_var::*;
 
 static mut STICK_DIR : [i32; 9] = [0; 9];
@@ -53,33 +53,53 @@ fn lucario_frame(fighter: &mut L2CFighterCommon) {
 
         //aura charge taunt
         if MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_r") || MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_l") {
-            if MotionModule::frame(fighter.module_accessor) >= 75. && MotionModule::frame(fighter.module_accessor) <= 76. {
+            if fighter.global_table[MOTION_FRAME].get_i32() == 36 {
+                if PostureModule::lr(fighter.module_accessor) == -1.0 { //posture check to get the correct motion below
+                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                        DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 17.0, 1.1, 0.0, true, false);
+                    }
+                    else {
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 81.0, 1.0, 0.0, true, false);
+                    }
+                }
+                else {
+                    if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+                        DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 17.0, 1.1, 0.0, true, false);
+                    }
+                    else {
+                        MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 81.0, 1.0, 0.0, true, false);
+                    }
+                }
+            }
+            if fighter.global_table[MOTION_FRAME].get_i32() == 75 {
                 StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
             }
         }
 
-        if MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_r") {
-            if MotionModule::frame(fighter.module_accessor) >= 35. && MotionModule::frame(fighter.module_accessor) <= 40. {
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 17.0, 1.1, 0.0, true, false);
-                }
-                if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 81.0, 1.0, 0.0, true, false);
-                }
-            }
-        }
-        if MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_l") {
-            if MotionModule::frame(fighter.module_accessor) >= 35. && MotionModule::frame(fighter.module_accessor) <= 40. {
-                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 17.0, 1.1, 0.0, true, false);
-                }
-                if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
-                    MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 81.0, 1.0, 0.0, true, false);
-                }
-            }
-        }
+        // if MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_r") {
+        //     if MotionModule::frame(fighter.module_accessor) >= 35. && MotionModule::frame(fighter.module_accessor) <= 40. {
+        //         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+        //             DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
+        //             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 17.0, 1.1, 0.0, true, false);
+        //         }
+        //         if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+        //             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_r")}, 81.0, 1.0, 0.0, true, false);
+        //         }
+        //     }
+        // }
+        // if MotionModule::motion_kind(fighter.module_accessor) == hash40("appeal_hi_l") {
+        //     if MotionModule::frame(fighter.module_accessor) >= 35. && MotionModule::frame(fighter.module_accessor) <= 40. {
+        //         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+        //             DamageModule::add_damage(fighter.module_accessor, 5.0, 0);
+        //             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 17.0, 1.1, 0.0, true, false);
+        //         }
+        //         if !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_HI) {
+        //             MotionModule::change_motion_inherit_frame(fighter.module_accessor, Hash40{hash: hash40("appeal_hi_l")}, 81.0, 1.0, 0.0, true, false);
+        //         }
+        //     }
+        // }
 
         //rewriting aura. this is necessary because the params needed for the GA aren't read mid match :(
         // if WorkModule::get_int(fighter.module_accessor, FIGHTER_LUCARIO_INSTANCE_WORK_ID_INT_MAX_AURA_TIMER) {
@@ -263,6 +283,7 @@ unsafe fn attack13(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }

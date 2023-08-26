@@ -7,7 +7,7 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::{vars::*, table_const::*};
+use galeforce_utils::vars::*;
 
 mod status;
 mod acmd;

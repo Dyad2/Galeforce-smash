@@ -109,7 +109,6 @@ unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommo
             let stick = smash::app::sv_math::vec2_length(fighter.global_table[STICK_X].get_f32(), fighter.global_table[STICK_Y].get_f32());
             if stick >= 0.66 && fighter.global_table[STICK_Y].get_f32() <= 0.2
             {
-                println!("bayo? uniq_process_JumpSquat_exec_status_param");
                 VarModule::on_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
                 //GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_NONE));
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_ESCAPE);

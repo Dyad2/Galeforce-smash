@@ -28,8 +28,7 @@ fn metaknight_frame(fighter: &mut L2CFighterCommon) {
             StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL_AERIAL, false);
             galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);
         }
-        if [hash40("special_air_s_end"), hash40("special_air_s_finish"), hash40("special_s_drill"),
-            hash40("special_air_n_end"), hash40("special_n_spin"),
+        if [hash40("special_air_n_end"), hash40("special_n_spin"),
             hash40("special_air_lw"), hash40("special_air_lw_f"), hash40("special_air_lw_b"),
             hash40("special_hi_loop")].contains(&curr_motion_kind) {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
@@ -182,6 +181,7 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {   
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
@@ -423,6 +423,50 @@ unsafe fn specialairnend(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "metaknight", script = "game_specialsdrill", category = ACMD_GAME, low_priority )]
+unsafe fn specialsdrill(agent: &mut L2CAgentBase) {
+
+        if macros::is_excute(agent)
+        {
+            JostleModule::set_status(agent.module_accessor, false);
+            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 1.1, 368, 100, 45, 0, 3.0, 0.0, 12.5, 6.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 1, 0, Hash40::new("top"), 1.1, 368, 100, 45, 0, 3.0, 0.0, 2.0, 6.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 1.1, 30, 50, 45, 50, 3.0, 0.0, 12.5, 6.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 3, 0, Hash40::new("top"), 1.1, 30, 50, 45, 80, 3.0, 0.0, 2.0, 6.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 4, 0, Hash40::new("haver"), 1.1, 367, 50, 0, 25, 3.5, 0.0, 10.0, 0.0, None, None, None, 0.6, 0.5, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 5, 0, Hash40::new("haver"), 1.1, 365, 50, 0, 25, 4.0, 0.0, 5.0, 0.0, None, None, None, 0.6, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 4, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            AttackModule::set_no_damage_fly_smoke_all(agent.module_accessor, true, false);
+            let attack_pos = smash::phx::Vector2f {x: 0., y: 0.};
+            AttackModule::set_vec_target_pos(agent.module_accessor, 0, Hash40{hash: hash40("haver")}, &attack_pos, 5, false);
+            AttackModule::set_vec_target_pos(agent.module_accessor, 1, Hash40{hash: hash40("haver")}, &attack_pos, 5, false);
+        }
+    frame(agent.lua_state_agent, 21.0);
+        if macros::is_excute(agent)
+        {
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+        }
+}
+
+#[acmd_script( agent = "metaknight", script = "game_specialsend", category = ACMD_GAME, low_priority )]
+unsafe fn specialsend(agent: &mut L2CAgentBase) {
+        if macros::is_excute(agent)
+        {
+            JostleModule::set_status(agent.module_accessor, true);
+        }
+    frame(agent.lua_state_agent, 1.0);
+        if macros::is_excute(agent)
+        {
+            macros::ATTACK(agent, 0, 0, Hash40::new("haver"), 3.0, 40, 185, 0, 40, 6.0, 0.0, 10.0, 0.0, None, None, None, 3.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 1, 0, Hash40::new("haver"), 3.0, 40, 185, 0, 40, 7.0, 0.0, 4.0, 0.0, None, None, None, 3.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 3.0, 40, 185, 0, 40, 8.0, 0.0, 7.0, 0.0, None, None, None, 3.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
+        }
+    wait(agent.lua_state_agent, 2.0);
+        if macros::is_excute(agent)
+        {
+            AttackModule::clear_all(agent.module_accessor);
+        }
+}
+
 //Grabs
 #[acmd_script( agent = "metaknight", script = "game_catch", category = ACMD_GAME, low_priority)]
 unsafe fn catch(fighter: &mut L2CAgentBase) {
@@ -533,6 +577,8 @@ pub fn install() {
         specialnspin,
         specialnend,
         specialairnend,
+        specialsdrill,
+        specialsend,
         catch,
         catchdash,
         catchturn,

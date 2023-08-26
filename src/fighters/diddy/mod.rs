@@ -8,7 +8,8 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::{utils::*};
+use galeforce_utils::{vars::*, utils::*};
+use custom_var::*;
 
 #[fighter_frame( agent = FIGHTER_KIND_DIDDY )]
 fn diddy_frame(fighter: &mut L2CFighterCommon) {
@@ -209,6 +210,7 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }

@@ -12,53 +12,11 @@ use {
     galeforce_utils::vars::*,
 };
 
-// unsafe fn check_attach_wavedash_to_ground(fighter : &mut L2CFighterCommon, _test: bool) -> bool {
-//     //would check for FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE, but it's not turned on by the status yet if entering from pre?
-//     let stick = smash::app::sv_math::vec2_length(fighter.global_table[STICK_X].get_f32(), fighter.global_table[STICK_Y].get_f32());
-//     if stick <= WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("escape_air_slide_stick")) {
-//         return false;
-//     }
-//     // if test {
-//     //     println!("check_attach from escape_air_pre");
-//     // }
-//     // else {
-//     //     println!("check_attach from sub_escape_air_common_strans_main");
-//     // }
-//     let shift = VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y);
-//     let ecb_bottom = *GroundModule::get_rhombus(fighter.module_accessor, true).add(1); //add1 gives the ecb we want, here it's ecb.bottom    
-//     let pos = *PostureModule::pos(fighter.module_accessor);
-//     let snap_leniency = if WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) <= 0.0 {
-//             // For a downwards/horizontal airdodge, waveland snap threshold = the distance from your ECB bottom to your Top bone
-//             shift
-//         } else {
-//             // For an upwards airdodge, waveland snap threshold = 5 units below ECB bottom, if the distance from your ECB bottom to your Top bone is < 5
-//             (shift).max(6.0)
-//         };
-//     let line_bottom = Vector2f{x: ecb_bottom.x, y: pos.y + shift - snap_leniency /*waveland_threshold*/};
-//     let mut ground_pos_any = Vector2f{ x: 0.0, y:0.0};
-//     let mut ground_pos_stage = Vector2f{ x: 0.0, y:0.0};
-//     GroundModule::line_segment_check(fighter.module_accessor, &Vector2f{x: ecb_bottom.x, y: ecb_bottom.y}, &line_bottom, &Vector2f{x: 0.0, y:0.0}, &mut ground_pos_any, true);
-//     GroundModule::line_segment_check(fighter.module_accessor, &Vector2f{x: ecb_bottom.x, y: ecb_bottom.y}, &line_bottom, &Vector2f{x: 0.0, y:0.0}, &mut ground_pos_stage, false);
-//     let can_snap = ground_pos_any != Vector2f{ x: 0.0, y:0.0} && (ground_pos_stage == Vector2f{x: 0.0, y:0.0}
-//         || WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_FLOAT_DIR_Y) <= 0.0);
-//     if can_snap {
-//         //println!("can snap");
-//         VarModule::on_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
-//         PostureModule::set_pos(fighter.module_accessor, &Vector3f{x: pos.x, y: ground_pos_any.y + 0.01, z: pos.z});
-//         GroundModule::attach_ground(fighter.module_accessor, true);
-//         true
-//     }
-//     else {
-//         false
-//     }
-// }
-
 #[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
     symbol = "_ZN7lua2cpp16L2CFighterCommon20status_pre_EscapeAirEv")]
 pub unsafe fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
-        println!("bayo what are u doing honey");
         GroundModule::attach_ground(fighter.module_accessor, true);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
         return 0.into();
@@ -184,7 +142,6 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
         }
         //new
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-            println!("bayo? sub_escape_air_common_strans_main");
             VarModule::on_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
         }
         fighter.set_situation(SITUATION_KIND_GROUND.into());
@@ -233,7 +190,6 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
 unsafe fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING {
-        //println!("delet wavedash");
         VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
     }
     call_original!(fighter)

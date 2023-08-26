@@ -53,7 +53,6 @@ unsafe fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
 
 // #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon34sub_status_shield_break_fly_commonEN3lib8L2CValueE")]
 // unsafe fn substatus_shield_break_fly_common(fighter: &mut L2CFighterCommon, param1: bool) {
-//     println!("substatus_shield_break_fly_common");
 //     let shield_reset_hp = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("shield_reset")); //
 //     WorkModule::set_float(fighter.module_accessor, shield_reset_hp, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);
 //     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_CHECK_DEAD_AREA_FORCE);

@@ -49,6 +49,20 @@ use super::*;
 // }
 // }
 
+//air
+#[acmd_script( agent = "bayonetta", script = "sound_attackairb", category = ACMD_SOUND, low_priority )]
+unsafe fn sound_attackairb(fighter: &mut L2CAgentBase) {
+    frame(fighter.lua_state_agent, 9.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_bayonetta_rnd_attack_air_fb"));
+    }
+    frame(fighter.lua_state_agent, 11.0);
+    if macros::is_excute(fighter) {
+        macros::PLAY_SE(fighter, Hash40::new("se_bayonetta_attackair_b01"));
+    }
+}
+
+//others
 #[acmd_script( agent = "bayonetta", script = "sound_throwf", category = ACMD_SOUND, low_priority)]
 unsafe fn soundthrowf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -78,6 +92,7 @@ unsafe fn soundthrowf(fighter: &mut L2CAgentBase) {
 
 pub fn install() {
     smashline::install_acmd_scripts!(
+        sound_attackairb,
         soundthrowf,
     );
 }

@@ -24,6 +24,21 @@ pub unsafe fn galeforce_apply_effect(boma : &mut BattleObjectModuleAccessor, siz
     flash_eye_info(boma);
 }
 
+pub unsafe fn luigi_charge_effect(boma : &mut BattleObjectModuleAccessor, size : f32) {
+    let pos = Vector3f  {x : 0., y : 4., z : 0.};
+    let rot = Vector3f  {x : 0., y : 90., z : 0.};
+
+    let handle = EffectModule::req_follow(boma,
+        smash::phx::Hash40{hash: hash40("sys_sp_flash")},
+        smash::phx::Hash40{hash: hash40("handl")}, 
+        &pos, &rot, size, false, 0, 
+        0, 0, 0, 0, false, false) as u32;
+        
+    EffectModule::detach_kind(boma, Hash40::new("sys_sp_flash"), -1);
+    EffectModule::set_rgb(boma, handle, 1.0, 1.0, 1.5);
+    flash_eye_info(boma);
+}
+
 pub unsafe fn robin_ignis_effect(fighter: &mut L2CFighterCommon) {
     
     let pos = Vector3f  {x : 1.5, y : 0.0, z : 0.0};
@@ -160,7 +175,7 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
     //Puff (purin)
         // when rest is used vs an opponent without the mark, reduces endlag on rest and heals
         //gives opponent the mark when hit by up special
-    if StopModule::is_hit(fighter.module_accessor) && attacker_number < 8 {
+    if status_kind == *FIGHTER_STATUS_KIND_DAMAGE_SLEEP_START && StopModule::is_hit(fighter.module_accessor) && attacker_number < 8 {
         let puff_curr_motion = MotionModule::motion_kind(&mut *get_boma(attacker_number as i32));
         if smash::app::utility::get_kind(&mut *get_boma(attacker_number as i32)) == *FIGHTER_KIND_PURIN &&
          [hash40("special_hi_r"), hash40("special_hi_l"), hash40("special_air_hi_r"), hash40("special_air_hi_l")].contains(&puff_curr_motion) &&

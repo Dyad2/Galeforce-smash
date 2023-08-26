@@ -43,8 +43,8 @@ unsafe fn attack_air_custom(fighter: &mut L2CFighterCommon) {
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
         }
     }
-    //after frame 5, thunder_sword is on
     if fighter.global_table[MOTION_FRAME].get_i32() == 6 {
+        //after frame 5, thunder_sword is on
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON) {
             FighterSpecializer_Reflet::change_hud_kind(instance_bo, *FIGHTER_REFLET_MAGIC_KIND_SWORD);
             VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_thunder") as i64);

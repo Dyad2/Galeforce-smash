@@ -80,6 +80,30 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "fox", script = "game_attackhi3", category = ACMD_GAME, low_priority )]
+unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+    
+    frame(fighter.lua_state_agent, 1.0);
+    if macros::is_excute(fighter)
+    {
+        MotionModule::set_rate(fighter.module_accessor, 0.5);
+    }
+    frame(fighter.lua_state_agent, 3.0);
+    if macros::is_excute(fighter)
+    {
+        MotionModule::set_rate(fighter.module_accessor, 1.33);
+        macros::ATTACK(fighter, 0, 0, Hash40::new("legr"), 6.0, 100, 125, 0, 20, 3.5, -1.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(fighter, 1, 0, Hash40::new("kneer"), 6.0, 100, 125, 0, 20, 4.5, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+        macros::ATTACK(fighter, 3, 0, Hash40::new("kneer"), 8.0, 100, 110, 0, 20, 6.0, 3.9, -0.6, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
+    }
+    wait(fighter.lua_state_agent, 7.0);
+    if macros::is_excute(fighter)
+    {
+        MotionModule::set_rate(fighter.module_accessor, 1.1);
+        AttackModule::clear_all(fighter.module_accessor);
+    }
+}
+
 #[acmd_script( agent = "fox", script = "game_attacks3", category = ACMD_GAME, low_priority)]
 unsafe fn attacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
@@ -118,13 +142,10 @@ unsafe fn attacks3lw(fighter: &mut L2CAgentBase) {
 unsafe fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING)
-        }
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
         {
+            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
             macros::ATTACK(fighter, 0, 0, Hash40::new("kneer"), 1.8, 367, 100, 120, 0, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.66,  1.3, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F,  false, 0,  0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL,  false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             macros::ATTACK(fighter, 1, 0, Hash40::new("kneer"), 1.8, 367, 100, 120, 0, 3.5, 5.1, -0.8, 1.2, None, None, None, 0.66,  1.3, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F,  false, 0,  0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL,  false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             macros::ATTACK(fighter, 2, 0, Hash40::new("kneer"), 1.8, 75, 110, 0, 50, 4.0, 0.0, 0.0, 0.0, None, None, None, 0.66,  1.3, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F,  false, 0,  0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL,  false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
@@ -365,6 +386,7 @@ pub fn install() {
         dash,
         turndash,
         attack11,
+        attackhi3,
         attacks3lw,
         attacks3,
         attackairf,

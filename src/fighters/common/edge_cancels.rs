@@ -38,9 +38,9 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon, status_kind: i32, situation_k
     else if fighter_kind == *FIGHTER_KIND_MASTER && [*FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_LANDING, *FIGHTER_MASTER_STATUS_KIND_SPECIAL_S_FRONT_DASH].contains(&status_kind) {
         GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
-    else if fighter_kind == *FIGHTER_KIND_SZEROSUIT && status_kind == *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_START {
-        GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
-    }
+    // else if fighter_kind == *FIGHTER_KIND_SZEROSUIT && status_kind == *FIGHTER_SZEROSUIT_STATUS_KIND_SPECIAL_LW_START {
+    //     GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
+    // }
     //breaks specialhi2. try status instead
     // else if fighter_kind == *FIGHTER_KIND_PIKACHU && *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END == status_kind { // && fighter.global_table[MOTION_FRAME].get_f32() > 42.0 { MotionModule::end_frame(fighter.module_accessor) -10.0
     //     GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));

@@ -1,3 +1,4 @@
+use std::mem;
 use smash::phx::Vector4f;
 
 use {
@@ -10,8 +11,9 @@ use {
     },
     smash::{
         hash40,
+        lua2cpp::L2CFighterBase,
         app::{lua_bind::*, FighterManager, *},
-        lib::lua_const::*,
+        lib::{lua_const::*, L2CValue},
         phx::{Vector3f, Hash40},
     },
     galeforce_utils::{
@@ -19,9 +21,90 @@ use {
         utils::get_battle_object_from_id,
         vars,
         vars::*,
+        table_const::*
     },
 };
 
+// #[skyline::hook( replace = L2CFighterBase::change_status)]
+// pub unsafe fn change_status_replace(
+// fighter: L2CFighterBase,
+// status: L2CValue,
+// flag: L2CValue) {
+//     println!("in change_status");
+
+//     if fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PEACH && !VarModule::is_flag(fighter.battle_object, peach::instance::flag::ALLOW_FLOAT) {
+//         let status_i32 = status.get_i32();
+//         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status_i32) {
+//             return;
+//         }
+//         else {
+//             call_original!(fighter.clone(), status.clone(), flag.clone());
+//         }
+//     }
+//     call_original!(fighter.clone(), status.clone(), flag.clone());
+// }
+
+#[skyline::hook( replace = StatusModule::change_status_request_from_script)]
+pub unsafe fn change_status_request_replace(
+boma: &mut smash::app::BattleObjectModuleAccessor,
+status: i32,
+flag: i32) {
+    println!("in change_status_request");
+    let fighter_kind = smash::app::utility::get_kind(boma);
+    let object_id = boma.battle_object_id;
+    let object = get_battle_object_from_id(object_id);
+
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+        if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
+            return;
+        }
+        else {
+            call_original!(boma, status, flag);
+        }
+    }
+    call_original!(boma, status, flag);
+}
+
+#[skyline::hook( replace = StatusModule::change_status_force)]
+pub unsafe fn change_status_force_replace(
+boma: &mut smash::app::BattleObjectModuleAccessor,
+status: i32,
+flag: i32) {
+    println!("in change_status_force");
+    let fighter_kind = smash::app::utility::get_kind(boma);
+    let object_id = boma.battle_object_id;
+    let object = get_battle_object_from_id(object_id);
+
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+        if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
+            return;
+        }
+        else {
+            call_original!(boma, status, flag);
+        }
+    }
+    call_original!(boma, status, flag);
+}
+
+#[skyline::hook( replace = StatusModule::set_status_kind_interrupt)]
+pub unsafe fn set_status_interrupt_replace(
+boma: &mut smash::app::BattleObjectModuleAccessor,
+status: i32) {
+    println!("in set_status_interrupt");
+    let fighter_kind = smash::app::utility::get_kind(boma);
+    let object_id = boma.battle_object_id;
+    let object = get_battle_object_from_id(object_id);
+
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+        if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
+            return;
+        }
+        else {
+            call_original!(boma, status);
+        }
+    }
+    call_original!(boma, status);
+}
 //author: 
 // var reset code: wuboy! custom_var stuff. resets status vars when status changes.
 // ecb teleport: hdr code adapted for my needs
@@ -101,6 +184,7 @@ pub unsafe fn init_settings_replace(
 pub unsafe fn is_flag_replace(
 boma: &mut smash::app::BattleObjectModuleAccessor,
 flag: i32) -> bool {
+    
     if is_training_mode() {
         if StatusModule::status_kind(boma) == *FIGHTER_STATUS_KIND_ATTACK_AIR {
             let kind = smash::app::utility::get_kind(boma);
@@ -130,21 +214,20 @@ flag: i32) -> bool {
 #[skyline::hook(replace = smash::app::lua_bind::WorkModule::get_float)]
 pub unsafe fn get_float_replace(
 boma: &mut smash::app::BattleObjectModuleAccessor,
-flag: i32) -> f32 {
+float: i32) -> f32 {
     let object_id = boma.battle_object_id;
     let object = get_battle_object_from_id(object_id);
-    let fighter_kind = smash::app::utility::get_kind(boma);
 
-    if fighter_kind == *FIGHTER_KIND_LUCARIO {
-        if VarModule::get_int(object, lucario::instance::int::MAX_AURA_TIMER) > 0 && [*FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_DEBUG_AURAPOWER, /* *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_AURA_EFFECT_SCALE, */*FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_PREV_AURAPOWER, *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_CURR_AURAPOWER].contains(&flag) {
+    if smash::app::utility::get_kind(boma) == *FIGHTER_KIND_LUCARIO
+      && VarModule::get_int(object, lucario::instance::int::MAX_AURA_TIMER) > 0 
+      && [*FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_DEBUG_AURAPOWER,
+          /* *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_AURA_EFFECT_SCALE, */
+          *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_PREV_AURAPOWER, 
+          *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_CURR_AURAPOWER].contains(&float) {
             return 1.33
-        }
-        else {
-            original!()(boma, flag)
-        }
     }
     else {
-        original!()(boma, flag)
+        original!()(boma, float)
     }
 }
 
@@ -154,7 +237,6 @@ boma: &mut smash::app::BattleObjectModuleAccessor,
 term: i32
 ) -> bool {
     let fighter_kind = smash::app::utility::get_kind(boma);
-    let ret = original!()(boma, term);
     let object_id = boma.battle_object_id;
     let object = get_battle_object_from_id(object_id);
     let module_accessor = (*object).module_accessor;
@@ -180,7 +262,7 @@ term: i32
             }
             //allow characters to land :)
             else {
-                return ret;
+                return original!()(boma, term);
             }
         }
     }
@@ -231,7 +313,7 @@ term: i32
             }
             if !VarModule::is_flag(object, falco::instance::flag::AIRDASH) {
                 if VarModule::is_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF) {
-                    return ret;
+                    return original!()(boma, term);
                 }
                 else {
                     if [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL,
@@ -383,7 +465,6 @@ defender_object_id: u32,
 move_type: f32,
 arg5: i32,
 move_type_again: bool) -> u64 {
-    //println!("inside notify_log_event_collision_hit_replace");
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
     let attacker_object = get_battle_object_from_id(attacker_object_id);
     let attacker_cat = utility::get_category(&mut *attacker_boma);
@@ -397,7 +478,6 @@ move_type_again: bool) -> u64 {
     if attacker_cat == *BATTLE_OBJECT_CATEGORY_WEAPON {
         if defender_cat == *BATTLE_OBJECT_CATEGORY_FIGHTER {
             let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-            //println!("owner_id: {}", owner_id);
             let owner_object = get_battle_object_from_id(owner_id);
             let owner_boma = get_boma_from_id(owner_id);
 
@@ -440,7 +520,6 @@ move_type_again: bool) -> u64 {
 
             //pikachu: for some reason is_infliction_status doesnt work. trying here
             if attacker_kind == *FIGHTER_KIND_PIKACHU && attacker_status == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP {
-                println!("attacker is pika");
                 VarModule::on_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
 
@@ -470,7 +549,6 @@ move_type_again: bool) -> u64 {
             //         *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_S4].contains(&defender_status) {
             //     //palu GA
             //     if attacker_kind == *FIGHTER_KIND_PALUTENA {
-            //         println!("palu");
             //         if attacker_motion == hash40("attack_dash") {
             //             VarModule::on_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
             //         }
@@ -485,7 +563,6 @@ move_type_again: bool) -> u64 {
             // when rest is used vs an opponent without the mark, reduces endlag on rest and heals
             //gives opponent the mark when hit by up special
             // if attacker_kind == *FIGHTER_KIND_PURIN {
-            //     println!("puff");
             //     if [hash40("special_hi_r"), hash40("special_hi_l"), hash40("special_air_hi_r"), hash40("special_air_hi_l")].contains(&attacker_motion) && !VarModule::is_flag(defender_object, commons::instance::flag::PURIN_MARK) {
             //         VarModule::on_flag(defender_object, commons::instance::flag::PURIN_MARK);
             //         VarModule::set_int(defender_object, commons::instance::int::PURIN_MARK_DURATION, 420);
@@ -538,7 +615,7 @@ param_hash : u64) -> f32 {
     let object_id = module_accessor.battle_object_id;
     let object = get_battle_object_from_id(object_id);
     let status_kind = StatusModule::status_kind(module_accessor);
-    let fighter_kind = smash::app::utility::get_kind(&mut *module_accessor);
+    let kind = smash::app::utility::get_kind(&mut *module_accessor);
     let prev_status_kind = StatusModule::prev_status_kind(module_accessor, 0);
 
     let ret = original!()(boma, param_type, param_hash);
@@ -562,13 +639,13 @@ param_hash : u64) -> f32 {
             }
         }
 
-        // if [*FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA].contains(&fighter_kind) && (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
+        // if [*FIGHTER_KIND_POPO, *FIGHTER_KIND_NANA].contains(&kind) && (ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
         //     //let partner_object = get_battle_object_from_id(*FIGHTER_POPO_INSTANCE_WORK_ID_INT_PARTNER_OBJECT_ID);
         //     if param_hash == hash40("nana_opt_dst") {
         //         return 999.0;
         //     }
         // }
-        // if fighter_kind == *FIGHTER_KIND_BAYONETTA {
+        // if kind == *FIGHTER_KIND_BAYONETTA {
         //     if param_hash == hash40("ab_u_rotate") {
         //         if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 7 {
         //             return -21.0;
@@ -579,17 +656,24 @@ param_hash : u64) -> f32 {
         //     }
         // }
 
-        //slows down dash speed for characters faster than steve, who has the worst dash speed. faster characters receive a bigger penalty
-        //move this to status when u know how :) or calc manually and edit the prc file. lmao
-        if param_type == hash40("dash_speed") {
-            let dash_speed = ret;
-            let reduce = dash_speed - 1.45;
-            let slower_dash = 1.45 + (reduce * 0.67);
-
-            return slower_dash;
+        if kind == *FIGHTER_KIND_LUIGI {
+            if param_hash == hash40("charge_bonus") { //normally this gives 20 bonus frames when side b is smash inputted, but in vl the param is 0, and then the value is set down here for the GA.
+                let mul = VarModule::get_int(object, luigi::instance::int::ELEC_CHARGE) as f32;
+                return 20.0 * mul;
+            }
         }
 
-        if fighter_kind == *FIGHTER_KIND_PURIN && param_hash == 0 && param_type == hash40("weight") {
+        //slows down dash speed for characters faster than steve, who has the worst dash speed. faster characters receive a bigger penalty
+        //now written in prcxml file
+        // if param_type == hash40("dash_speed") {
+        //     let dash_speed = ret;
+        //     let reduce = dash_speed - 1.45;
+        //     let slower_dash = 1.45 + (reduce * 0.67);
+
+        //     return slower_dash;
+        // }
+
+        if kind == *FIGHTER_KIND_PURIN && param_hash == 0 && param_type == hash40("weight") {
             if [*FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_END, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HIT_END, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HOLD, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HOLD_MAX,
                 *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_ROLL, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_ROLL_AIR, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_TURN].contains(&status_kind) {
                 return ret * 2.0;
@@ -599,21 +683,32 @@ param_hash : u64) -> f32 {
             }
         }
         //add up b landing lag to other stuff
-        else if [*FIGHTER_KIND_SIMON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_GAMEWATCH].contains(&fighter_kind) {
+        else if [*FIGHTER_KIND_SIMON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_GAMEWATCH].contains(&kind) {
             if VarModule::is_flag(object, commons::instance::flag::DISABLE_SPECIAL_HI) {
                 if [hash40("landing_attack_air_frame_hi"), hash40("landing_attack_air_frame_b"), hash40("landing_attack_air_frame_n"), hash40("landing_attack_air_frame_f"), hash40("landing_attack_air_frame_lw"), hash40("landing_frame"), hash40("landing_frame_light")].contains(&param_type) {
                     return ret + 20.0;
                 }
             }
         }
-        else if fighter_kind == *FIGHTER_KIND_SHEIK {
+        else if kind == *FIGHTER_KIND_SHEIK {
             if VarModule::is_flag(object, sheik::instance::flag::ATTACK_AIR_LW_W) && param_type == hash40("landing_attack_air_frame_lw") {
                 return 13.0;
             }
         }
-        else if fighter_kind == *FIGHTER_KIND_MARIOD && VarModule::get_int(object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
+        else if kind == *FIGHTER_KIND_MARIOD && VarModule::get_int(object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
             if [hash40("air_accel_x_mul"), hash40("air_speed_x_stable"), hash40("air_brake_x"), hash40("walk_speed_max"), hash40("run_speed_max"), hash40("dash_speed")].contains(&param_type) {
                 return ret * 1.66;
+            }
+        }
+    }
+    else {
+        let owner_id = WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
+        let owner_object = get_battle_object_from_id(owner_id);
+        //let owner_boma = get_boma_from_id(owner_id);
+
+        if kind == *WEAPON_KIND_DUCKHUNT_GUNMAN && (VarModule::is_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON) || VarModule::is_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE)) {
+            if [hash40("ready_minutes_hige"), hash40("ready_minutes_noppo"), hash40("ready_minutes_kurofuku"), hash40("ready_minutes_sonburero"), hash40("ready_minutes_boss")].contains(&param_hash) {
+                return 0.1;
             }
         }
     }
@@ -641,6 +736,10 @@ pub fn install() {
         }
     }
     skyline::install_hooks!(
+        //change_status_replace,
+        change_status_request_replace,
+        change_status_force_replace,
+        set_status_interrupt_replace,
         init_settings_replace,
         is_enable_transition_term_replace, //many GAs, some special moves disabling
         is_flag_replace, //training mode overlay

@@ -17,8 +17,8 @@ pub fn run(fighter : &mut L2CFighterCommon) {
         }
         if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_CSTICK_ON) { //don't clear if c stick is held
             if situation_kind == *SITUATION_KIND_GROUND {
-                if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4,*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR,
-                *FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_JUMP, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_RV, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_WAIT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WAIT].contains(&status_kind)
+                if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_DASH, *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_LW4,*FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_LANDING_LIGHT, *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR].contains(&status_kind)
+                || (fighter_kind == FIGHTER_KIND_TANTAN && [*FIGHTER_TANTAN_STATUS_KIND_ATTACK_COMBO, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_JUMP, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_RV, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_SQUAT_WAIT, *FIGHTER_TANTAN_STATUS_KIND_ATTACK_WAIT].contains(&status_kind))
                   && (fighter.global_table[MOTION_FRAME].get_i32() >= 4 /*reset if it's not attack canceled and we're not near endlag*/ && FighterMotionModuleImpl::get_cancel_frame(fighter.module_accessor, Hash40::new_raw(curr_motion_kind), false) - MotionModule::frame(fighter.module_accessor) >= 6.0) {
                     VarModule::set_int(fighter.battle_object, commons::instance::int::SUBSTICK_AIR_ATTACK, 0);
                 }
@@ -29,7 +29,11 @@ pub fn run(fighter : &mut L2CFighterCommon) {
             if situation_kind == *SITUATION_KIND_AIR {
                 //if AttackModule::is_attack( fighter.module_accessor, 0, false) || AttackModule::is_attack( fighter.module_accessor, 1, false) //snake back air doesn't have a hitbox id 0, so checking 1 is necessary in case this also affects other characters
                 //  || (MotionModule::frame(fighter.module_accessor) < 20.0 && [*FIGHTER_KIND_SHIZUE, *FIGHTER_KIND_MURABITO, *FIGHTER_KIND_MIIGUNNER, *FIGHTER_KIND_TANTAN].contains(&fighter_kind)) {
-                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
+                if status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR || 
+                fighter_kind == *FIGHTER_KIND_PEACH && status_kind == *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT ||
+                fighter_kind == *FIGHTER_KIND_BAYONETTA && status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_ATTACK_AIR_F ||
+                fighter_kind == *FIGHTER_KIND_TRAIL && [*FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_F, *FIGHTER_TRAIL_STATUS_KIND_ATTACK_AIR_N].contains(&status_kind) ||
+                fighter_kind == *FIGHTER_KIND_PICKEL && status_kind == *FIGHTER_PICKEL_STATUS_KIND_ATTACK_AIR_LW_START {
                     VarModule::set_int(fighter.battle_object, commons::instance::int::SUBSTICK_AIR_ATTACK, 0);
                 }
             }
@@ -60,8 +64,6 @@ pub fn run(fighter : &mut L2CFighterCommon) {
         // could still be simplified, but the current implementation seems mostly bug free.
         if situation_kind == SITUATION_KIND_AIR {
             let stick_x = fighter.global_table[STICK_X].get_f32();
-            // println!("air_turn_invalid?: {}", VarModule::is_flag(fighter.battle_object, commons::instance::flag::AIR_TURN_INVALID));
-            // println!("aerial_turn_input_method?: {}", VarModule::get_int(fighter.battle_object, commons::instance::int::AIR_TURN_INITIATE_METHOD));
 
             //this block is just for clarity. air_turn_invalid is in theory not necessary but it makes the code more readable
             if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) > 12 //because get_stick_flick runs when fighters are on the ground (of course) we don't want to forbid aerial turn if a player does a rar or something

@@ -3,9 +3,34 @@ use smash::phx::Hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
+use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
+
+use crate::fighters::common::galeforce::*;
+use galeforce_utils::{vars::*};
+use custom_var::*;
+
+#[fighter_frame( agent = FIGHTER_KIND_DUCKHUNT )]
+fn laughing_dog_frame(fighter: &mut L2CFighterCommon) {
+    unsafe {
+        let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
+
+        //GA: Shoot the duck!
+        // When hitting an opponent, DuckHunt can command the gunman to shoot towards the duck. Foes should be careful, the gunman's aim is dodgy
+        // part of the code is in weapon's opff, another in function_hooks (get_param_float)
+        if ArticleModule::is_exist(fighter.module_accessor, *FIGHTER_DUCKHUNT_GENERATE_ARTICLE_GUNMAN) && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+            if (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_SPECIAL_LW) != 0 && !VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
+            }
+        }
+        else {
+            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        }
+    }
+}
 
 //global edits
 #[acmd_script( agent = "duckhunt", script = "game_dash", category = ACMD_GAME, low_priority)]
@@ -320,6 +345,23 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
+#[acmd_script( agent = "duckhunt", scripts = ["game_specialairlw", "game_speciallw"], category = ACMD_GAME, low_priority )]
+unsafe fn speciallw(agent: &mut L2CAgentBase) {
+
+    frame(agent.lua_state_agent, 1.0);
+        if macros::is_excute(agent)
+        {
+            macros::FT_MOTION_RATE(agent, 1.5);
+            if ArticleModule::is_exist(agent.module_accessor, *FIGHTER_DUCKHUNT_GENERATE_ARTICLE_GUNMAN) {
+                VarModule::on_flag(agent.battle_object, duckhunt::instance::flag::GUNMAN_REACTIVATE);
+            }
+        }
+    frame(agent.lua_state_agent, 4.0);
+        if macros::is_excute(agent)
+        {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_DUCKHUNT_STATUS_SPECIAL_LW_FLAG_CALL_TRIGGER);
+        }
+}
 
 //other
 #[acmd_script( agent = "duckhunt", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
@@ -340,6 +382,9 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install() {
+    smashline::install_agent_frames!(
+        laughing_dog_frame
+    );
     smashline::install_acmd_scripts!(
         dash,
         turndash,
@@ -350,6 +395,7 @@ pub fn install() {
         attackairn,
         specialhi,
         specialairhi,
+        speciallw,
         escapeairslide
     );
 }

@@ -6,6 +6,9 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+use galeforce_utils::{vars::*, utils::*};
+use custom_var::*;
+
 //global edits
 #[acmd_script( agent = "ridley", script = "game_dash", category = ACMD_GAME, low_priority)]
 unsafe fn dash(fighter: &mut L2CAgentBase) {
@@ -72,6 +75,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
