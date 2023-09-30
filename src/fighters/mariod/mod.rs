@@ -7,13 +7,10 @@ use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
-use smash::lib::LuaConst;
 
 use crate::fighters::common::galeforce::*;
 use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
-
-//pub static mut MARIOD_NAIR_SOUND: [LuaConst; 9] = [ATTACK_SOUND_LEVEL_S; 9];
 
 #[fighter_frame( agent = FIGHTER_KIND_MARIOD )]
 fn dr_frame(fighter: &mut L2CFighterCommon) {

@@ -11,9 +11,8 @@ use {
     },
     smash::{
         hash40,
-        lua2cpp::L2CFighterBase,
         app::{lua_bind::*, FighterManager, *},
-        lib::{lua_const::*, L2CValue},
+        lib::{lua_const::*},
         phx::{Vector3f, Hash40},
     },
     galeforce_utils::{
@@ -21,7 +20,6 @@ use {
         utils::get_battle_object_from_id,
         vars,
         vars::*,
-        table_const::*
     },
 };
 
@@ -248,6 +246,7 @@ term: i32
 
     //falling from platforms
     //when hit, check if character is falling off
+    //this should be in general status but uh
     if ![*FIGHTER_STATUS_KIND_CATCHED_CUT_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_FALL_GANON].contains(&prev_status_kind_1) {
         if is_hitlag(module_accessor) && situation_kind == *SITUATION_KIND_GROUND {
             VarModule::on_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
@@ -256,12 +255,15 @@ term: i32
             VarModule::off_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
         }
         if curr_motion_kind == 50017544460 { //0xBA547290C
-            //there's a better way to do this, this will look silly on very low plats
             if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 30 && situation_kind != *SITUATION_KIND_GROUND {
                 return false;
             }
             //allow characters to land :)
             else {
+                //fix for ai
+                if situation_kind != *SITUATION_KIND_GROUND {
+                    StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
+                }
                 return original!()(boma, term);
             }
         }

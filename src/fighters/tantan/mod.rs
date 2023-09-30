@@ -272,21 +272,44 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
         }
 }
 
-//special
+//specials
+#[acmd_script( agent = "tantan", script = "game_specialhistart", category = ACMD_GAME, low_priority )]
+unsafe fn specialhistart(agent: &mut L2CAgentBase) {
+
+    frame(agent.lua_state_agent, 1.0);
+    if macros::is_excute(agent)
+    {
+        WorkModule::on_flag(agent.module_accessor, *FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_CAN_INPUT_GROUND_ANGLE);
+    }
+    // frame(agent.lua_state_agent, 8.0);
+    // if macros::is_excute(agent) {
+    //     macros::HIT_NODE(agent, Hash40::new("handr"), *HIT_STATUS_XLU);
+    //     macros::HIT_NODE(agent, Hash40::new("armr5"), *HIT_STATUS_XLU);
+    //     macros::HIT_NODE(agent, Hash40::new("armr4"), *HIT_STATUS_XLU);
+    //     macros::HIT_NODE(agent, Hash40::new("handl"), *HIT_STATUS_XLU);
+    //     macros::HIT_NODE(agent, Hash40::new("arml5"), *HIT_STATUS_XLU);
+    //     macros::HIT_NODE(agent, Hash40::new("arml4"), *HIT_STATUS_XLU);
+    // }
+    frame(agent.lua_state_agent, 8.0);
+    if macros::is_excute(agent)
+    {
+        WorkModule::off_flag(agent.module_accessor, *FIGHTER_TANTAN_STATUS_SPECIAL_HI_FLAG_CAN_INPUT_GROUND_ANGLE);
+    }
+}
 #[acmd_script( agent = "tantan", script = "game_specialhishort", category = ACMD_GAME, low_priority)]
 unsafe fn specialhishort(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-        frame(lua_state, 1.);
-            if macros::is_excute(fighter)
-            {
-               macros::HIT_NODE(fighter, Hash40::new("handr"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("armr5"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("armr4"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("handl"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("arml5"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("arml4"), *HIT_STATUS_XLU);
-            }
+        // frame(lua_state, 1.);
+        //     if macros::is_excute(fighter)
+        //     {
+        //        macros::HIT_NODE(fighter, Hash40::new("handr"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("armr5"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("armr4"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("handl"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("arml5"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("arml4"), *HIT_STATUS_XLU);
+        //     }
         frame(lua_state, 4.);
             if macros::is_excute(fighter)
             {
@@ -317,16 +340,16 @@ unsafe fn specialhishort(fighter: &mut L2CAgentBase) {
 unsafe fn specialhilong(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-        frame(lua_state, 1.);
-            if macros::is_excute(fighter)
-            {
-               macros::HIT_NODE(fighter, Hash40::new("handr"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("armr5"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("armr4"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("handl"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("arml5"), *HIT_STATUS_XLU);
-               macros::HIT_NODE(fighter, Hash40::new("arml4"), *HIT_STATUS_XLU);
-            }
+        // frame(lua_state, 1.);
+        //     if macros::is_excute(fighter)
+        //     {
+        //        macros::HIT_NODE(fighter, Hash40::new("handr"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("armr5"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("armr4"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("handl"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("arml5"), *HIT_STATUS_XLU);
+        //        macros::HIT_NODE(fighter, Hash40::new("arml4"), *HIT_STATUS_XLU);
+        //     }
         frame(lua_state, 4.);
             if macros::is_excute(fighter)
             {
@@ -383,6 +406,7 @@ pub fn install() {
         attack13,
         attackdash,
         attackhi4,
+        specialhistart,
         specialhishort,
         specialhilong,
         escapeairslide

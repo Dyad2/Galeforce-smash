@@ -11,6 +11,21 @@ pub fn run(fighter : &mut L2CFighterCommon) {
         let cat1 = ControlModule::get_command_flag_cat(fighter.module_accessor, 0);
         let cat2 = ControlModule::get_command_flag_cat(fighter.module_accessor, 1);
         
+        //TESTS! :)
+
+        //air taunts
+        // if situation_kind == *SITUATION_KIND_AIR && CancelModule::is_enable_cancel(fighter.module_accessor) {
+        //     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U);
+        //     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S);
+        //     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW);
+        // }
+        // //air grab
+        // if situation_kind == *SITUATION_KIND_AIR && CancelModule::is_enable_cancel(fighter.module_accessor) {
+        //     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH);
+        // }
+
+        //end tests
+
         //C stick fixes cleanup, must be here because is_attack won't run in get_atack_air_kind at the correct time
         if is_status_damage(&mut *fighter.module_accessor) {
             VarModule::set_int(fighter.battle_object, commons::instance::int::SUBSTICK_AIR_ATTACK, 0);

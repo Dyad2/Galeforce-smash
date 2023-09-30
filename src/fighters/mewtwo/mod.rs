@@ -6,7 +6,7 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-use galeforce_utils::{vars::*, utils::*};
+use galeforce_utils::{vars::*};
 use custom_var::*;
 
 //global edits

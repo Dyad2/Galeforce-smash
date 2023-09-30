@@ -484,7 +484,7 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(fighter.module_accessor, 1.5); //TODO: doesn't work?
+            MotionModule::set_rate(fighter.module_accessor, 1.5); //TODO: doesn't work? overriden by vl.prc maybe
         }
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
