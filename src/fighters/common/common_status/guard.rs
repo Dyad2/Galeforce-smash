@@ -1,6 +1,5 @@
 use super::*;
 
-//this and sub_guard_on_uniq are from hdr, but should be a 1/1 copy from vanilla
 #[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon42FighterStatusGuard__landing_effect_controlEv")]
 pub unsafe fn landing_effect_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_LANDING_EFFECT_FRAME);

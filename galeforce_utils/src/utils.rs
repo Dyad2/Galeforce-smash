@@ -6,7 +6,6 @@ use smash::*;
 
 use crate::vars::*;
 
-//HDR code
 extern "C"{
     // gets whether we are in training mode
     #[link_name = "\u{1}_ZN3app9smashball16is_training_modeEv"]
@@ -19,7 +18,6 @@ extern "C"{
 //     }
 // }
 
-//end hdr code
 
 pub unsafe fn is_hitlag(module_accessor: *mut smash::app::BattleObjectModuleAccessor) -> bool { //this might be offensive hitlag only? 
     if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_HIT_STOP_ATTACK_SUSPEND_FRAME) > 0 {

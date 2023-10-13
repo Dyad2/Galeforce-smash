@@ -90,14 +90,10 @@ pub mod commons {
             pub const SMASH_TURN : i32 = 0x0010;
             pub const MEWTWO_PRESSURED : i32 = 0x0011;
             pub const HIT_CANCEL: i32 = 0x0012;
-            //hdr
-            pub const BEFORE_GROUND_COLLISION : i32 = 0x0012;
-            pub const CHECK_CHANGE_MOTION_ONLY : i32 = 0x0013;
-            //end hdr
         }
         pub mod int {
             pub const FRAME_COUNTER : i32 = 0x0000; //make this sure is used for only one thing per character or it'll break
-            pub const AIR_TURN_INITIATE_METHOD : i32 = 0x0001; //0 == off, 1 == stick, 2 == taunt
+            pub const AIR_TURN_INITIATE_METHOD : i32 = 0x0001;
             pub const AIR_TURN_INPUT_FRAME : i32 = 0x0002;
             pub const AIR_TURN_COUNT : i32 = 0x0003;
             pub const SUBSTICK_AIR_ATTACK : i32 = 0x0004;

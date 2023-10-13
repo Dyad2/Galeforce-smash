@@ -31,8 +31,8 @@ pub unsafe fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     symbol = "_ZN7lua2cpp16L2CFighterCommon16status_EscapeAirEv")]
 unsafe fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    //TODO: re-check vanilla script for identical behavior. this script has been partially rewritten by looking at hdr code. 
-    ControlModule::reset_trigger(fighter.module_accessor); //what does this do?
+    //TODO: re-check vanilla script for identical behavior.
+    ControlModule::reset_trigger(fighter.module_accessor);
     fighter.sub_escape_air_common();
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air_slide"), 0.0, 1.0, false, 0.0, false, false);
@@ -40,7 +40,7 @@ unsafe fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
     else {
         MotionModule::change_motion(fighter.module_accessor, Hash40::new("escape_air"), 0.0, 1.0, false, 0.0, false, false);
     }
-    //airdodge staling? nobody has time for that
+    //airdodge staling? 
     // let mut motion_rate = WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_FLOAT_MOTION_RATE_PENALTY);
     // let start_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_ADD_XLU_START_FRAME);
     // if 0 < start_frame {

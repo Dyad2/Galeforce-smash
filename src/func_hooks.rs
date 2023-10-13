@@ -105,7 +105,7 @@ status: i32) {
 }
 //author: 
 // var reset code: wuboy! custom_var stuff. resets status vars when status changes.
-// ecb teleport: hdr code adapted for my needs
+// ecb teleport is adapted from hdr code
 #[skyline::hook( replace = StatusModule::init_settings )]
 pub unsafe fn init_settings_replace(
     boma: *mut BattleObjectModuleAccessor,
