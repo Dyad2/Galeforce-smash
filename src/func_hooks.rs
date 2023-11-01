@@ -1,4 +1,3 @@
-use std::mem;
 use smash::phx::Vector4f;
 
 use {
@@ -246,7 +245,6 @@ term: i32
 
     //falling from platforms
     //when hit, check if character is falling off
-    //this should be in general status but uh
     if ![*FIGHTER_STATUS_KIND_CATCHED_CUT_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_FALL_GANON].contains(&prev_status_kind_1) {
         if is_hitlag(module_accessor) && situation_kind == *SITUATION_KIND_GROUND {
             VarModule::on_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
@@ -254,16 +252,17 @@ term: i32
         if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_DAMAGE].contains(&prev_status_kind) && situation_kind == *SITUATION_KIND_AIR && VarModule::is_flag(object,commons::instance::flag::PLATFORM_FALL_STUN) {
             VarModule::off_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
         }
-        if curr_motion_kind == 50017544460 { //0xBA547290C
+        if curr_motion_kind == hash40("fall_damage") {
             if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 30 && situation_kind != *SITUATION_KIND_GROUND {
                 return false;
             }
             //allow characters to land :)
             else {
                 //fix for ai
-                if situation_kind != *SITUATION_KIND_GROUND {
-                    StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
-                }
+                // FIXME causes fighters to never enter tumble
+                // if situation_kind != *SITUATION_KIND_GROUND {
+                //     StatusModule::change_status_request(module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
+                // }
                 return original!()(boma, term);
             }
         }
