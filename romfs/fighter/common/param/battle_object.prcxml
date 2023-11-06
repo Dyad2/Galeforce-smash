@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<struct>
+  <float hash="stick_neutral">0.15</float>
+  <float hash="damage_frame_mul">0.42</float>
+  <float hash="damage_frame_min">10</float>
+  <float hash="slip_damage_reaction">999</float>
+  <float hash="hitstop_frame_add">5</float>
+  <float hash="hitstop_frame_mul">0.55</float>
+  <int hash="just_shield_hitstop_frame_add">20</int>
+  <int hash="0x323a6f8f63">-999</int>
+  <int hash="just_shield_hitstop_frame_max">20</int>
+  <float hash="rebound_reaction_mul">1.2</float>
+  <float hash="rebound_reaction_add">5</float>
+  <int hash="rebound_reaction_max">45</int>
+  <float hash="rebound_speed_add">1</float>
+  <float hash="rebound_speed_mul">0.05</float>
+</struct>

@@ -2,6 +2,7 @@ use smash::{
     hash40,
     phx::{
         Hash40, 
+        Vector2f,
         Vector3f
     },
     app::{

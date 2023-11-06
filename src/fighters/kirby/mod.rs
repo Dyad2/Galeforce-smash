@@ -109,37 +109,32 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-        frame(lua_state, 6.);
-            if macros::is_excute(fighter)
-            {
-                JostleModule::set_status(fighter.module_accessor, false);
-                MotionModule::set_rate(fighter.module_accessor, 1.2);
-                macros::ATTACK(fighter, 0, 0, Hash40::new("toel"), 7.5, 90, 12, 0, 75, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+    frame(lua_state, 6.);
+        if macros::is_excute(fighter)
+        {
+            JostleModule::set_status(fighter.module_accessor, false);
+            MotionModule::set_rate(fighter.module_accessor, 1.2);
+            macros::ATTACK(fighter, 0, 0, Hash40::new("toel"), 7.5, 90, 12, 0, 75, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        }
+    frame(lua_state, 18.);
+        if macros::is_excute(fighter)
+        {
+            macros::ATTACK(fighter, 1, 0, Hash40::new("toel"), 5.0, 361, 7, 0, 50, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
+        }
+    frame(lua_state, 27.);
+        if macros::is_excute(fighter)
+        {
+            AttackModule::clear_all(fighter.module_accessor);
+            JostleModule::set_status(fighter.module_accessor, true);
+            MotionModule::set_rate(fighter.module_accessor, 0.6);
+        }
+    frame(lua_state, 29.);
+        if macros::is_excute(fighter)
+        {
+            if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
+                CancelModule::enable_cancel(fighter.module_accessor);
             }
-        frame(lua_state, 18.);
-            if macros::is_excute(fighter)
-            {
-                macros::ATTACK(fighter, 1, 0, Hash40::new("toel"), 5.0, 361, 7, 0, 50, 4.0, 3.0, 1.0, 0.0, Some(-3.0), Some(1.0), Some(0.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 1.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_BODY);
-            }
-        frame(lua_state, 27.);
-            if macros::is_excute(fighter)
-            {
-                AttackModule::clear_all(fighter.module_accessor);
-                JostleModule::set_status(fighter.module_accessor, true);
-                MotionModule::set_rate(fighter.module_accessor, 0.6);
-            }
-        frame(lua_state, 28.);
-            if macros::is_excute(fighter)
-            {
-                if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                    CancelModule::enable_cancel(fighter.module_accessor);
-                }
-            }
-        // frame(lua_state, 34.);
-        //     if macros::is_excute(fighter)
-        //     {
-        //         MotionModule::set_rate(fighter.module_accessor, 1.0);
-        //     }
+        }
 }
 
 #[acmd_script( agent = "kirby", script = "game_attackdash", category = ACMD_GAME, low_priority)]

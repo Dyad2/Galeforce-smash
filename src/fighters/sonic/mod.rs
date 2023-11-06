@@ -17,7 +17,7 @@ use smashline::*;
 use smash_script::*;
 
 use crate::fighters::common::galeforce::*;
-use galeforce_utils::{utils::*};
+use galeforce_utils::{utils::*, vars::*};
 
 mod opff;
 mod acmd;
