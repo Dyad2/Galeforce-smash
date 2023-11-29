@@ -1,6 +1,6 @@
 use super::*;
 
-pub unsafe fn galeforce_apply_effect(boma : &mut BattleObjectModuleAccessor, size : f32) {
+pub unsafe extern "C" fn galeforce_apply_effect(boma : &mut BattleObjectModuleAccessor, size : f32) {
     let pos = Vector3f  {x : 0., y : 4., z : 0.};
     let rot = Vector3f  {x : 0., y : 90., z : 0.};
     
@@ -24,7 +24,7 @@ pub unsafe fn galeforce_apply_effect(boma : &mut BattleObjectModuleAccessor, siz
     flash_eye_info(boma);
 }
 
-pub unsafe fn luigi_charge_effect(boma : &mut BattleObjectModuleAccessor, size : f32) {
+pub unsafe extern "C"  fn luigi_charge_effect(boma : &mut BattleObjectModuleAccessor, size : f32) {
     let pos = Vector3f  {x : 0., y : 4., z : 0.};
     let rot = Vector3f  {x : 0., y : 90., z : 0.};
 
@@ -39,7 +39,7 @@ pub unsafe fn luigi_charge_effect(boma : &mut BattleObjectModuleAccessor, size :
     flash_eye_info(boma);
 }
 
-pub unsafe fn robin_ignis_effect(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn robin_ignis_effect(fighter: &mut L2CFighterCommon) {
     
     let pos = Vector3f  {x : 1.5, y : 0.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
@@ -59,7 +59,7 @@ pub unsafe fn robin_ignis_effect(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn zelda_buff_effect(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn zelda_buff_effect(fighter: &mut L2CFighterCommon) {
     let pos = Vector3f  {x : 1.5, y : 0.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
 
@@ -74,7 +74,7 @@ pub unsafe fn zelda_buff_effect(fighter: &mut L2CFighterCommon) {
     EffectModule::kill_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("sys_damage_aura")}, false, true);
 }
 
-pub unsafe fn kamui_debuff_effect(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn kamui_debuff_effect(fighter: &mut L2CFighterCommon) {
     let pos = Vector3f  {x : 0.0, y : 0.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
 
@@ -93,7 +93,7 @@ pub unsafe fn kamui_debuff_effect(fighter: &mut L2CFighterCommon) {
     // }
 }
 
-pub unsafe fn chrom_disable_dance_effect(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn chrom_disable_dance_effect(fighter: &mut L2CFighterCommon) {
     let pos = Vector3f  {x : 0.0, y : 0.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
 
@@ -111,7 +111,7 @@ pub unsafe fn chrom_disable_dance_effect(fighter: &mut L2CFighterCommon) {
     // }
 }
 
-pub unsafe fn sheik_ga_buff(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn sheik_ga_buff(fighter: &mut L2CFighterCommon) {
     let pos = Vector3f  {x : 0.0, y : 0.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
 
@@ -131,7 +131,7 @@ pub unsafe fn sheik_ga_buff(fighter: &mut L2CFighterCommon) {
     }
 }
 
-pub unsafe fn mariod_buff_effect(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn mariod_buff_effect(fighter: &mut L2CFighterCommon) {
     let pos = Vector3f  {x : 0.0, y : 5.0, z : 0.0};
     let rot = Vector3f  {x : 0.0, y : 90.0, z : 0.0};
 
@@ -151,7 +151,7 @@ pub unsafe fn mariod_buff_effect(fighter: &mut L2CFighterCommon) {
 }
 
 //Some of them might be in acmd files instead!
-pub unsafe fn run(fighter : &mut L2CFighterCommon) {
+pub unsafe extern "C" fn run(fighter : &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
     let attacker_number = get_attacker_number(&mut *fighter.module_accessor);
 

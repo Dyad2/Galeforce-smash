@@ -8,9 +8,11 @@ use smash_script::*;
 
 mod acmd;
 mod specials;
+mod opff;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("brave");
     acmd::install(agent);
     specials::install(agent);
+    opff::install(agent);
 }

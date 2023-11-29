@@ -11,9 +11,7 @@ use smash::{
         sv_animcmd::*,
         sv_animcmd,
     },
-    lib::{
-        lua_const::*,
-    },
+    lib::lua_const::*,
     lua2cpp::{
         L2CFighterCommon, 
         L2CAgentBase

@@ -1,7 +1,6 @@
 use super::*;
 
-pub unsafe fn cancel_effect(fighter : &mut L2CFighterCommon) {
-    
+pub unsafe extern "C" fn cancel_effect(fighter : &mut L2CFighterCommon) {    
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL) {
         let frame = VarModule::get_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER);
         if frame < 24 {
@@ -21,55 +20,43 @@ pub unsafe fn cancel_effect(fighter : &mut L2CFighterCommon) {
     }
 }
 
-#[smashline::fighter_frame_callback]
-fn global_fighter_frame(fighter : &mut L2CFighterCommon) {
-    unsafe {
-        if smash::app::utility::get_category(&mut *fighter.module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
-            let status_kind = StatusModule::status_kind(fighter.module_accessor);
-            let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
-            let fighter_kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);
-            TOTAL_FIGHTER = FighterManager::total_fighter_num(singletons::FighterManager());
-
-            //resetting vars. in theory this should be done individually for each var, not here in opff
-            if status_kind == *FIGHTER_STATUS_KIND_DEAD || KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_RESET_NORMAL {
-                CustomVarManager::reset_var_module(fighter.battle_object);
-            }
-
-            edge_cancels::run(fighter, status_kind, situation_kind);
-            ecb_shifts::run(fighter);
-            controls::run(fighter);
-            galeforce::run(fighter);
-
-            cancel_effect(fighter);
-
-            //Custom Jostling.
-            //  Jostling is enabled depending on fighter status. some fighters always have jostling enabled.
-            // it works because fighters who do not fulfill the requirement are all in the same jostling "team"
-            if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, 
-                *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, 
-                *FIGHTER_STATUS_KIND_FURAFURA,*FIGHTER_STATUS_KIND_FURAFURA_STAND, 
-                *FIGHTER_STATUS_KIND_SLEEP,*FIGHTER_STATUS_KIND_BIND, 
-                *FIGHTER_STATUS_KIND_DOWN, *FIGHTER_STATUS_KIND_DOWN_CONTINUE, 
-                *FIGHTER_STATUS_KIND_DOWN_WAIT, *FIGHTER_STATUS_KIND_DOWN_WAIT_CONTINUE, 
-                *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_TURN, 
-                *FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, *FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, 
-                *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK, 
-                *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_ATTACK_DASH, 
-                *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, 
-                *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
-                *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4_START, 
-                *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S].contains(&status_kind)
-            || [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KOOPA, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_SNAKE].contains(&fighter_kind) {
-                JostleModule::set_team(fighter.module_accessor, WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) + 1);
-            }
-            else {
-                JostleModule::set_team(fighter.module_accessor, 0);
-            }
-        }
+unsafe extern "C" fn fighter_reset(fighter : &mut L2CFighterCommon) {    
+    if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_DEAD ||
+      KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_RESET_NORMAL {
+        CustomVarManager::reset_var_module(fighter.battle_object);
     }
 }
 
-#[weapon_frame_callback]
+//Custom Jostling.
+//  Jostling is enabled depending on fighter status. some fighters always have jostling enabled.
+// it works because fighters who do not fulfill the requirement are all in the same jostling "team"
+unsafe extern "C" fn Jostling(fighter : &mut L2CFighterCommon) {
+    let status_kind = StatusModule::status_kind(fighter.module_accessor);
+    let fighter_kind = smash::app::utility::get_kind(&mut *fighter.module_accessor);    
+    
+    if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_DAMAGE_AIR, 
+        *FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_DAMAGE, 
+        *FIGHTER_STATUS_KIND_FURAFURA,*FIGHTER_STATUS_KIND_FURAFURA_STAND, 
+        *FIGHTER_STATUS_KIND_SLEEP,*FIGHTER_STATUS_KIND_BIND, 
+        *FIGHTER_STATUS_KIND_DOWN, *FIGHTER_STATUS_KIND_DOWN_CONTINUE, 
+        *FIGHTER_STATUS_KIND_DOWN_WAIT, *FIGHTER_STATUS_KIND_DOWN_WAIT_CONTINUE, 
+        *FIGHTER_STATUS_KIND_CATCH_DASH, *FIGHTER_STATUS_KIND_CATCH, *FIGHTER_STATUS_KIND_CATCH_TURN, 
+        *FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, *FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, 
+        *FIGHTER_STATUS_KIND_SLIP_STAND_ATTACK, 
+        *FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_100, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_ATTACK_DASH, 
+        *FIGHTER_STATUS_KIND_ATTACK_HI3, *FIGHTER_STATUS_KIND_ATTACK_HI4, *FIGHTER_STATUS_KIND_ATTACK_HI4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_HI4_START, 
+        *FIGHTER_STATUS_KIND_ATTACK_LW3, *FIGHTER_STATUS_KIND_ATTACK_LW4, *FIGHTER_STATUS_KIND_ATTACK_LW4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_LW4_START, 
+        *FIGHTER_STATUS_KIND_ATTACK_S3, *FIGHTER_STATUS_KIND_ATTACK_S4, *FIGHTER_STATUS_KIND_ATTACK_S4_HOLD, *FIGHTER_STATUS_KIND_ATTACK_S4_START, 
+        *FIGHTER_STATUS_KIND_SPECIAL_HI, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_N, *FIGHTER_STATUS_KIND_SPECIAL_S].contains(&status_kind)
+    || [*FIGHTER_KIND_BUDDY, *FIGHTER_KIND_DEDEDE, *FIGHTER_KIND_DEMON, *FIGHTER_KIND_DONKEY, *FIGHTER_KIND_GAOGAEN, *FIGHTER_KIND_GANON, *FIGHTER_KIND_KOOPA, *FIGHTER_KIND_KOOPAJR, *FIGHTER_KIND_KROOL, *FIGHTER_KIND_PACKUN, *FIGHTER_KIND_RIDLEY, *FIGHTER_KIND_ROBOT, *FIGHTER_KIND_SNAKE].contains(&fighter_kind) {
+        JostleModule::set_team(fighter.module_accessor, WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID) + 1);
+    }
+    else {
+        JostleModule::set_team(fighter.module_accessor, 0);
+    }
+}
+
+//this probably doesnt make sense in smashline2 idk
 fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
     unsafe {
         if smash::app::utility::get_category(&mut *fighter_base.module_accessor) == *BATTLE_OBJECT_CATEGORY_WEAPON {
@@ -161,12 +148,17 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
     }
 }
 
-pub fn install() {
-    
-    smashline::install_agent_frame_callback!(
-        global_fighter_frame
-    );
-    smashline::install_agent_frame_callback!(
-        global_weapon_frame
-    );
+// Use this for general per-frame fighter-level hooks
+pub unsafe extern "C" fn common_fighter_frame(fighter: &mut L2CFighterCommon) {
+    if utility::get_category(&mut *fighter.module_accessor) == *BATTLE_OBJECT_CATEGORY_FIGHTER {
+        cancel_effect(fighter);
+        fighter_reset(fighter);
+        Jostling(fighter);
+        ecb_shifts::run(fighter);
+        controls::run(fighter);
+        galeforce::run(fighter);
+    }
+    else if utility::get_category(&mut *fighter.module_accessor) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+        global_weapon_frame(fighter);
+    }
 }

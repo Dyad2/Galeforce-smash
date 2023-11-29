@@ -14,9 +14,11 @@ use galeforce_utils::vars::*;
 
 mod acmd;
 mod specials;
+mod opff;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("buddy");
     acmd::install(agent);
     specials::install(agent);
+    opff::install(agent);
 }
