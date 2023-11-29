@@ -1,7 +1,6 @@
 use super::*;
 
-#[acmd_script( agent = "captain", script = "effect_attacks4hi", category = ACMD_EFFECT, low_priority )]
-unsafe fn effect_attacks4hi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_attacks4hi(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -16,8 +15,7 @@ unsafe fn effect_attacks4hi(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "captain", script = "effect_attacks4", category = ACMD_EFFECT, low_priority )]
-unsafe fn effect_attacks4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_attacks4(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("arml"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -32,8 +30,7 @@ unsafe fn effect_attacks4(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "captain", script = "effect_attacks4lw", category = ACMD_EFFECT, low_priority )]
-unsafe fn effect_attacks4lw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effect_attacks4lw(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 3.0);
     if macros::is_excute(fighter) {
         macros::EFFECT(fighter, Hash40::new("sys_smash_flash"), Hash40::new("havel"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, true);
@@ -49,8 +46,7 @@ unsafe fn effect_attacks4lw(fighter: &mut L2CAgentBase) {
 }
 
 //sound
-#[acmd_script( agent = "captain", scripts = ["sound_specialn", "sound_specialairn"], category = ACMD_SOUND, low_priority)]
-unsafe fn sound_specialn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn sound_specialn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.0);
@@ -77,11 +73,9 @@ unsafe fn sound_specialn(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effect_attacks4hi,
-        effect_attacks4,
-        effect_attacks4lw,
-        sound_specialn
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("effect_attacks4hi", effect_attacks4hi,);
+    agent.game_acmd("effect_attacks4", effect_attacks4,);
+    agent.game_acmd("effect_attacks4lw", effect_attacks4lw);
+    agent.game_acmd("sound_specialn", sound_specialn);
 }

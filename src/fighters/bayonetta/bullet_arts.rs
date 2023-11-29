@@ -1,8 +1,7 @@
 use super::*;
 
 //attacks
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkon_attack11", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarml_atkon_attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootingarml_atkon_attack11(fighter: &mut L2CAgentBase) {
     let _boma = fighter.module_accessor; //the smash script line needs this or else it doesn't compile. immutable borrow stuff
 
     if macros::is_excute(fighter)
@@ -15,8 +14,7 @@ unsafe fn shootingarml_atkon_attack11(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkoff_attack11", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarml_atkoff_attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootingarml_atkoff_attack11(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -28,8 +26,7 @@ unsafe fn shootingarml_atkoff_attack11(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegr_atkon_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootinglegr_atkon_attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootinglegr_atkon_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_02), 0, Hash40::new("top"), 0.5, 250, 100, 0, 10, 2.5, 0.0, 2.0, -3.0, Some(0.0), Some(-1.8), Some(-4.4), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -41,8 +38,8 @@ unsafe fn game_shootinglegr_atkon_attackairb(fighter: &mut L2CAgentBase) {
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x36db1a34c9), FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_03, 10, 4.05);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegr_atkoff_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootinglegr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootinglegr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             AttackModule::clear(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_02, false);
@@ -52,8 +49,8 @@ unsafe fn game_shootinglegr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
         AttackModule::clear(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_03, false);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarmr_atkon_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootingarmr_atkon_attackairb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarmr_atkon_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 0, Hash40::new("top"), 0.5, 12, 100, 0, 10, 2.5, 0.0, 14.0, -13.0, Some(0.0), Some(14.8), Some(-16.9), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -64,8 +61,8 @@ unsafe fn game_shootingarmr_atkon_attackairb(fighter: &mut L2CAgentBase) {
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x36db1a34c9), FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01, 10, 4);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarmr_atkoff_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootingarmr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarmr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             AttackModule::clear(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00, false);
@@ -75,8 +72,8 @@ unsafe fn game_shootingarmr_atkoff_attackairb(fighter: &mut L2CAgentBase) {
         AttackModule::clear(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01, false);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkon_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootingarml_atkon_attackairb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarml_atkon_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 0, Hash40::new("top"), 0.5, 12, 100, 0, 10, 2.5, 0.0, 14.0, -13.0, Some(0.0), Some(14.8), Some(-16.9), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_B, false, 0, 0.0, 0, false, false, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -88,8 +85,8 @@ unsafe fn game_shootingarml_atkon_attackairb(fighter: &mut L2CAgentBase) {
         notify_event_msc_cmd!(fighter, Hash40::new_raw(0x36db1a34c9), FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01, 18, 3.981);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkoff_attackairb", category = ACMD_GAME, low_priority )]
-unsafe fn game_shootingarml_atkoff_attackairb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarml_atkoff_attackairb(fighter: &mut L2CAgentBase) {
     if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_DISABLE_ROOT_ATTACK) {
         if macros::is_excute(fighter) {
             AttackModule::clear(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00, false);
@@ -101,8 +98,7 @@ unsafe fn game_shootingarml_atkoff_attackairb(fighter: &mut L2CAgentBase) {
 }
 
 //specials
-#[acmd_script( agent = "bayonetta", scripts = ["game_shootingarml_atkon_specialhi", "game_shootingarml_atkon_specialairhi"], category = ACMD_GAME, low_priority)]
-unsafe fn shooting_on_specialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shooting_on_specialhi(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -110,8 +106,8 @@ unsafe fn shooting_on_specialhi(fighter: &mut L2CAgentBase) {
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 1, Hash40::new("top"), 0.5, 361, 0, 0, 0, 11.0, 0.0, 11.0, 0.0, Some(0.0), Some(11.0), Some(0.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
     }
 }
-#[acmd_script( agent = "bayonetta", scripts = ["game_shootingarml_atkoff_specialhi", "game_shootingarml_atkoff_specialairhi"], category = ACMD_GAME, low_priority)]
-unsafe fn shooting_off_specialhi(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shooting_off_specialhi(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -120,8 +116,7 @@ unsafe fn shooting_off_specialhi(fighter: &mut L2CAgentBase) {
 }
 
 //other
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegl_atkon_escapeb", category = ACMD_GAME, low_priority)]
-unsafe fn shootinglegl_on_escapeb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootinglegl_on_escapeb(fighter: &mut L2CAgentBase) {
     let boma = fighter.module_accessor;
 
     if macros::is_excute(fighter)
@@ -130,8 +125,8 @@ unsafe fn shootinglegl_on_escapeb(fighter: &mut L2CAgentBase) {
         smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 8, 4);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegl_atkoff_escapeb", category = ACMD_GAME, low_priority)]
-unsafe fn shootinglegl_off_escapeb(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootinglegl_off_escapeb(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -139,8 +134,7 @@ unsafe fn shootinglegl_off_escapeb(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegr_atkon_escapeb", category = ACMD_GAME, low_priority)]
-unsafe fn shootinglegr_on_escapeb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootinglegr_on_escapeb(fighter: &mut L2CAgentBase) {
     let boma = fighter.module_accessor; //the smash script line needs this or else it doesn't compile. immutable borrow stuff
 
     if macros::is_excute(fighter)
@@ -149,17 +143,15 @@ unsafe fn shootinglegr_on_escapeb(fighter: &mut L2CAgentBase) {
         smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootinglegr_atkoff_escapeb", category = ACMD_GAME, low_priority)]
-unsafe fn shootinglegr_off_escapeb(fighter: &mut L2CAgentBase) {
 
+unsafe extern "C" fn shootinglegr_off_escapeb(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
     {
         AttackModule::clear(fighter.module_accessor, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00) as i32, false);
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkon_escapef", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarml_on_escapef(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootingarml_on_escapef(fighter: &mut L2CAgentBase) {
     let boma = fighter.module_accessor; //the smash script line needs this or else it doesn't compile. immutable borrow stuff
 
     if macros::is_excute(fighter)
@@ -168,8 +160,8 @@ unsafe fn shootingarml_on_escapef(fighter: &mut L2CAgentBase) {
         smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 16, 4);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarml_atkoff_escapef", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarml_off_escapef(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarml_off_escapef(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -177,8 +169,7 @@ unsafe fn shootingarml_off_escapef(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "game_shootingarmr_atkon_escapef", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarmr_on_escapef(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn shootingarmr_on_escapef(fighter: &mut L2CAgentBase) {
     let boma = fighter.module_accessor; //the smash script line needs this or else it doesn't compile. immutable borrow stuff
 
     if macros::is_excute(fighter)
@@ -187,8 +178,8 @@ unsafe fn shootingarmr_on_escapef(fighter: &mut L2CAgentBase) {
         smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
     }
 }
-#[acmd_script( agent = "bayonetta", script = "game_shootingarmr_atkoff_escapef", category = ACMD_GAME, low_priority)]
-unsafe fn shootingarmr_off_escapef(fighter: &mut L2CAgentBase) {
+
+unsafe extern "C" fn shootingarmr_off_escapef(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -196,20 +187,31 @@ unsafe fn shootingarmr_off_escapef(fighter: &mut L2CAgentBase) {
     }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        shootingarml_atkon_attack11, shootingarml_atkoff_attack11,
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_specialhi", shootingarml_atkon_attack11,);
+    agent.game_acmd("game_specialhi", shootingarml_atkoff_attack11,);
+    
+    agent.game_acmd("game_specialairhi", shootinglegr_atkon_attackairb);
+    agent.game_acmd("game_specialairhi", shootinglegr_atkoff_attackairb);
 
-        game_shootinglegr_atkon_attackairb, game_shootinglegr_atkoff_attackairb,
-        game_shootingarmr_atkon_attackairb, game_shootingarmr_atkoff_attackairb,
-        game_shootingarml_atkon_attackairb, game_shootingarml_atkoff_attackairb,
+    agent.game_acmd("game_specialairhi", shootingarmr_atkon_attackairb);
+    agent.game_acmd("game_specialairhi", shootingarmr_atkoff_attackairb);
 
-        shooting_on_specialhi, shooting_off_specialhi,
+    agent.game_acmd("game_specialairhi", shootingarml_atkon_attackairb);
+    agent.game_acmd("game_specialairhi", shootingarml_atkoff_attackairb);
 
-        shootinglegl_on_escapeb, shootinglegl_off_escapeb,
-        shootinglegr_on_escapeb, shootinglegr_off_escapeb,
+    agent.game_acmd("game_specialairhi", shooting_on_specialhi);
+    agent.game_acmd("game_specialairhi", shooting_off_specialhi);
 
-        shootingarml_on_escapef, shootingarml_off_escapef,
-        shootingarmr_on_escapef, shootingarmr_off_escapef,
-    );
+    agent.game_acmd("game_specialairsu", shootinglegl_on_escapeb);
+    agent.game_acmd("game_specialairsu", shootinglegl_off_escapeb);
+
+    agent.game_acmd("game_specialairsu", shootinglegr_on_escapeb);
+    agent.game_acmd("game_specialairsu", shootinglegr_off_escapeb);
+
+    agent.game_acmd("game_specialairsu", shootingarml_on_escapef);
+    agent.game_acmd("game_specialairsu", shootingarml_off_escapef);
+
+    agent.game_acmd("game_specialairsu", shootingarmr_on_escapef);
+    agent.game_acmd("game_specialairsu", shootingarmr_off_escapef);
 }

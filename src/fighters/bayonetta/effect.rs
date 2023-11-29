@@ -1,7 +1,6 @@
 use super::*;
 
-#[acmd_script( agent = "bayonetta", script = "effect_attack11", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 7.);
@@ -52,8 +51,7 @@ unsafe fn effectattack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attack12", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack12(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack12(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -109,8 +107,7 @@ unsafe fn effectattack12(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attack13", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack13(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack13(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
             if macros::is_excute(fighter)
@@ -189,8 +186,7 @@ unsafe fn effectattack13(fighter: &mut L2CAgentBase) {
             }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attack100end", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack100end(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack100end(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -244,8 +240,7 @@ unsafe fn effectattack100end(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attackhi3", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 6.);
@@ -291,8 +286,7 @@ unsafe fn effectattackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attackdash", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_COSTUME_KIND) != *FIGHTER_BAYONETTA_COSTUME_KIND_BAYONETTA_1 { //blue
@@ -428,8 +422,7 @@ unsafe fn effectattackdash(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "bayonetta", script = "effect_attackairf", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_COSTUME_KIND) != *FIGHTER_BAYONETTA_COSTUME_KIND_BAYONETTA_1 //blue
@@ -493,8 +486,7 @@ unsafe fn effectattackairf(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attackairb", category = ACMD_EFFECT, low_priority )]
-unsafe fn effect_attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackairb(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 8.0);
     if macros::is_excute(fighter) {
         macros::EFFECT_FOLLOW_WORK(fighter, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_EFFECT_KIND_BAYONETTA_ATTACK_ARC2, Hash40::new("top"), 2, 14, 0, 0, 170, 120, 1.1, true);
@@ -509,8 +501,7 @@ unsafe fn effect_attackairb(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "expression_attackairb", category = ACMD_EXPRESSION, low_priority )]
-unsafe fn expression_attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn expressionattackairb(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 11.0);
     if macros::is_excute(fighter) {
         ControlModule::set_rumble(fighter.module_accessor, Hash40::new("rbkind_nohitm"), 0, false, *BATTLE_OBJECT_ID_INVALID as u32);
@@ -521,8 +512,7 @@ unsafe fn expression_attackairb(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_attackairlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 24.);
@@ -548,8 +538,7 @@ unsafe fn effectattackairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_landingairlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectlandingairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectlandingairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -575,8 +564,7 @@ unsafe fn effectlandingairlw(fighter: &mut L2CAgentBase) {
 }
 
 //specials
-#[acmd_script( agent = "bayonetta", script = "effect_specialhi", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -613,8 +601,7 @@ unsafe fn effectspecialhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_specialairhi", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialairhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -653,8 +640,7 @@ unsafe fn effectspecialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_specials", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecials(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecials(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 9.);
@@ -782,8 +768,7 @@ unsafe fn effectspecials(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_specialairsdlanding", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialairsdlanding(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialairsdlanding(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -809,8 +794,7 @@ unsafe fn effectspecialairsdlanding(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_throwf", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectthrowf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectthrowf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 13.);
@@ -842,8 +826,7 @@ unsafe fn effectthrowf(fighter: &mut L2CAgentBase) {
     //     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_throwlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectthrowlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectthrowlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 9.);
@@ -901,8 +884,7 @@ unsafe fn effectthrowlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_walkfast", category = ACMD_EFFECT, low_priority)]
-unsafe fn walkfast(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn walkfast(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -940,8 +922,7 @@ unsafe fn walkfast(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_walkmiddle", category = ACMD_EFFECT, low_priority)]
-unsafe fn walkmiddle(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn walkmiddle(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -979,8 +960,7 @@ unsafe fn walkmiddle(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_walkslow", category = ACMD_EFFECT, low_priority)]
-unsafe fn walkslow(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn walkslow(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -1018,8 +998,7 @@ unsafe fn walkslow(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_run", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_run(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxrun(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -1050,8 +1029,7 @@ unsafe fn fx_run(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_dash", category = ACMD_EFFECT, low_priority)]
-unsafe fn fxdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -1068,8 +1046,7 @@ unsafe fn fxdash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_runbrake", category = ACMD_EFFECT, low_priority)]
-unsafe fn fxrunbrake(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxrunbrake(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -1087,8 +1064,7 @@ unsafe fn fxrunbrake(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_runbrakel", category = ACMD_EFFECT, low_priority)]
-unsafe fn fxrunbrakel(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxrunbrakel(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -1106,8 +1082,7 @@ unsafe fn fxrunbrakel(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_runbraker", category = ACMD_EFFECT, low_priority)]
-unsafe fn fxrunbraker(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxrunbraker(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -1125,8 +1100,7 @@ unsafe fn fxrunbraker(fighter: &mut L2CAgentBase) {
     wait(lua_state, 4.);
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_landingheavy", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_landingheavy(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxlandingheavy(fighter: &mut L2CAgentBase) {
     
         if macros::is_excute(fighter)
         {
@@ -1135,8 +1109,7 @@ unsafe fn fx_landingheavy(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_landinglight", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_landinglight(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxlandinglight(fighter: &mut L2CAgentBase) {
     
         if macros::is_excute(fighter)
         {
@@ -1145,8 +1118,7 @@ unsafe fn fx_landinglight(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", script = "effect_landingfallspecial", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_landingfallspecial(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fxlandingfallspecial(fighter: &mut L2CAgentBase) {
     
         if macros::is_excute(fighter)
         {
@@ -1155,8 +1127,7 @@ unsafe fn fx_landingfallspecial(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta", scripts = ["effect_landingairn", "effect_landingairhi", "effect_landingairf", "effect_landingairf2", "effect_landingairf3", "effect_landingairb"], category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_landingairall(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fx_landingairall(fighter: &mut L2CAgentBase) {
     
         if macros::is_excute(fighter)
         {
@@ -1165,37 +1136,44 @@ unsafe fn fx_landingairall(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effectattack11,
-        effectattack12,
-        effectattack13,
-        effectattack100end,
-        effectattackhi3,
-        effectattackdash,
-        //effectattackairhi,
-        effectattackairf,
-        effect_attackairb,
-        expression_attackairb,
-        effectattackairlw,
-        effectlandingairlw,
-        effectspecialhi,
-        effectspecialairhi,
-        effectspecials,
-        effectspecialairsdlanding,
-        effectthrowlw,
-        effectthrowf,
-        walkfast,
-        walkmiddle,
-        walkslow,
-        fxdash,
-        fx_run,
-        fxrunbrake,
-        fxrunbrakel,
-        fxrunbraker,
-        fx_landingheavy,
-        fx_landinglight,
-        fx_landingfallspecial,
-        fx_landingairall,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.effect_acmd("effect_attack11", effectattack11,);
+    agent.effect_acmd("effect_attack12", effectattack12,);
+    agent.effect_acmd("effect_attack13", effectattack13,);
+    agent.effect_acmd("effect_attack100end", effectattack100end,);
+    agent.effect_acmd("effect_attackhi3", effectattackhi3,);
+    agent.effect_acmd("effect_attackdash", effectattackdash,);
+
+    agent.effect_acmd("effect_attackairf", effectattackairf,);
+    agent.effect_acmd("effect_attackairb", effectattackairb,);
+    agent.expression_acmd("expression_attackairb", expressionattackairb,);
+    agent.effect_acmd("effect_attackairlw", effectattackairlw,);
+    agent.effect_acmd("effect_attacklandingairlw", effectlandingairlw,);
+
+    agent.effect_acmd("effect_specialhi", effectspecialhi,);
+    agent.effect_acmd("effect_specialairhi", effectspecialairhi,);
+    agent.effect_acmd("effect_specials", effectspecials,);
+    agent.effect_acmd("effect_specialairsdlanding", effectspecialairsdlanding,);
+
+    agent.effect_acmd("effect_throwf", effectthrowf);
+    agent.effect_acmd("effect_throwlw", effectthrowlw);
+    
+    agent.effect_acmd("effect_walkfast", walkfast,);
+    agent.effect_acmd("effect_walkmiddle", walkmiddle,);
+    agent.effect_acmd("effect_walkslow", walkslow,);
+    agent.effect_acmd("effect_fun", fxrun,);
+    agent.effect_acmd("effect_dash", fxdash,);
+    agent.effect_acmd("effect_brake", fxrunbrake,);
+    agent.effect_acmd("effect_brakel", fxrunbrakel,);
+    agent.effect_acmd("effect_braker", fxrunbraker,);
+    agent.effect_acmd("effect_landingheavy", fxlandingheavy,);
+    agent.effect_acmd("effect_landinglight", fxlandinglight,);
+    agent.effect_acmd("effect_landingfallspecial", fxlandingfallspecial,);
+
+    agent.effect_acmd("effect_landingairn", fx_landingairall,);
+    agent.effect_acmd("effect_landingairhi", fx_landingairall,);
+    agent.effect_acmd("effect_landingairf", fx_landingairall,);
+    agent.effect_acmd("effect_landingairf2", fx_landingairall,);
+    agent.effect_acmd("effect_landingairf3", fx_landingairall,);
+    agent.effect_acmd("effect_landingairb", fx_landingairall,);
 }

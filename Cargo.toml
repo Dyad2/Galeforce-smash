@@ -1,6 +1,6 @@
 [package]
 name = "galeforce"
-version = "0.11.35"
+version = "0.11.36"
 authors = ["Dyad/"]
 edition = "2018"
 
@@ -8,7 +8,7 @@ edition = "2018"
 titleid = "01006A800016E000"
 plugin-dependencies = [
     { name = "libnro_hook.nro", url = "https://github.com/ultimate-research/nro-hook-plugin/releases/download/master/libnro_hook.nro" },
-    { name = "libsmashline_hook.nro", url = "https://github.com/blu-dev/smashline_hook/releases/download/master/libsmashline_hook.nro" },
+    { name = "libsmashline_plugin.nro", url = "https://github.com/HDR-Development/smashline/releases/download/v1.1.0/libsmashline_plugin.nro" },
 ]
 
 [lib]
@@ -17,9 +17,9 @@ crate-type = ["cdylib"]
 [dependencies]
 skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
 
-skyline_smash = { git = "https://github.com/Dyad2/skyline-smash", features = ["weak_l2cvalue"] }
-smashline = { path = "D:/Documents/GitHub/smashline-development"}
-smash_script = { path = "D:/Documents/GitHub/smash-script-development"}
+skyline_smash = { git = "https://github.com/blu-dev/skyline-smash.git", features = ["weak_l2cvalue"] }
+smash_script = { git = "https://github.com/blu-dev/smash-script", branch = "development" }
+smashline = { git = "https://github.com/HDR-Development/smashline"}
 
 custom_var = { path = "./custom-var" }
 galeforce_utils = { path = "./galeforce_utils"}

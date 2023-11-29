@@ -1,8 +1,6 @@
 use super::*;
 
-//weapon
-#[acmd_script( agent = "bayonetta_wickedweavearm", script = "game_attackhi4", category = ACMD_GAME)]
-unsafe fn attackhi4wwa(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi4wwa(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
 
         if macros::is_excute(weapon)
@@ -51,8 +49,7 @@ unsafe fn attackhi4wwa(weapon: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta_wickedweavearm", script = "game_attacks4hi", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4hiwwa(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks4hiwwa(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
 
         if macros::is_excute(weapon)
@@ -105,8 +102,7 @@ unsafe fn attacks4hiwwa(weapon: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta_wickedweavearm", script = "game_attacks4", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4wwa(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks4wwa(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
 
@@ -230,8 +226,7 @@ unsafe fn attacks4wwa(weapon: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "bayonetta_wickedweavearm", script = "game_attacks4lw", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4lwwwa(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks4lwwwa(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
 
         if macros::is_excute(weapon)
@@ -284,8 +279,7 @@ unsafe fn attacks4lwwwa(weapon: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "bayonetta_wickedweaveleg", script = "game_attacklw4", category = ACMD_GAME, low_priority)]
-unsafe fn attacklw4wwl(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn attacklw4wwl(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
 
         if macros::is_excute(weapon)
@@ -328,12 +322,13 @@ unsafe fn attacklw4wwl(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        attackhi4wwa,
-        attacks4wwa,
-        attacks4hiwwa, 
-        attacks4lwwwa,
-        attacklw4wwl,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    let wickedweavearm = &mut smashline::Agent::new("bayonetta_wickedweavearm");
+    let wickedweaveleg = &mut smashline::Agent::new("bayonetta_wickedweaveleg");
+
+    wickedweavearm.game_acmd("game_attackhi4", attackhi4wwa,);
+    wickedweavearm.game_acmd("game_attacks4hi", attacks4wwa);
+    wickedweavearm.game_acmd("game_attacks4", attacks4hiwwa);
+    wickedweavearm.game_acmd("game_attacks4lw", attacks4lwwwa);
+    wickedweaveleg.game_acmd("game_attacklw4", attacklw4wwl);
 }

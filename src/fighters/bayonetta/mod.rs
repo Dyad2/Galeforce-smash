@@ -20,8 +20,8 @@ use smash::{
     }
 };
 
-use smashline::*;
 use smash_script::*;
+use smashline::*;
 
 use crate::fighters::common::galeforce::*;
 use galeforce_utils::{vars::*, table_const::*, utils::*};
@@ -37,12 +37,13 @@ mod special;
 mod weapon;
 
 pub fn install() {
-    acmd::install();
-    bullet_arts::install();
-    effect::install();
-    opff::install();
-    sound::install();
-    special::install();
+    let agent = &mut smashline::Agent::new("bayonetta");
+    acmd::install(agent);
+    bullet_arts::install(agent);
+    effect::install(agent);
+    opff::install(agent);
+    sound::install(agent);
+    special::install(agent);
     //status::install();
-    weapon::install();
+    weapon::install(agent);
 }

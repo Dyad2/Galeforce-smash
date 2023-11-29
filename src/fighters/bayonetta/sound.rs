@@ -1,57 +1,7 @@
 use super::*;
 
-//that one is weeeeeird
-// #[acmd_script( agent = "bayonetta", script = "sound_attack100end_default", category = ACMD_SOUND, low_priority)]
-// unsafe fn soundthrowf(fighter: &mut L2CAgentBase) {
-//     let lua_state = fighter.lua_state_agent;
-
-// if(0x1cb400(FIGHTER_BAYONETTA_INSTANCE_WORK_ID_INT_COSTUME_KIND, FIGHTER_BAYONETTA_COSTUME_KIND_BAYONETTA_1)){
-// 	frame(Frame=1)
-// 	if(is_excute){
-// 		sound(MA_MSC_CMD_SOUND_STOP_SE_STATUS)
-// 	}
-// }
-// frame(Frame=8)
-// if(is_excute){
-// 	PLAY_SEQUENCE(hash40("seq_bayonetta_rnd_attack_smash_s01_jp"))
-// }
-// frame(Frame=10)
-// if(is_excute){
-// 	PLAY_SE(hash40("se_bayonetta_attack100_02"))
-// }
-// frame(Frame=22)
-// if(is_excute){
-// 	PLAY_SE(hash40("se_bayonetta_loveisblue_spin"))
-// }
-// frame(Frame=55)
-// if(is_excute){
-// 	PLAY_STEP(hash40("se_bayonetta_step_right_s"))
-// }
-// frame(0, 1)
-// if(is_excute){
-// 	sound(MA_MSC_CMD_SOUND_STOP_SE_STATUS)
-// }
-// frame(Frame=8)
-// if(is_excute){
-// 	PLAY_SEQUENCE(hash40("seq_bayonetta_rnd_attack_smash_s01_en"))
-// }
-// frame(Frame=10)
-// if(is_excute){
-// 	PLAY_SE(hash40("se_bayonetta_attack100_02"))
-// }
-// frame(Frame=22)
-// if(is_excute){
-// 	PLAY_SE(hash40("se_bayonetta_loveisblue_spin"))
-// }
-// frame(Frame=55)
-// if(is_excute){
-// 	PLAY_STEP(hash40("se_bayonetta_step_right_s"))
-// }
-// }
-
 //air
-#[acmd_script( agent = "bayonetta", script = "sound_attackairb", category = ACMD_SOUND, low_priority )]
-unsafe fn sound_attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 9.0);
     if macros::is_excute(fighter) {
         macros::PLAY_SEQUENCE(fighter, Hash40::new("seq_bayonetta_rnd_attack_air_fb"));
@@ -63,8 +13,7 @@ unsafe fn sound_attackairb(fighter: &mut L2CAgentBase) {
 }
 
 //others
-#[acmd_script( agent = "bayonetta", script = "sound_throwf", category = ACMD_SOUND, low_priority)]
-unsafe fn soundthrowf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn throwf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -90,9 +39,7 @@ unsafe fn soundthrowf(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        sound_attackairb,
-        soundthrowf,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.sound_acmd("sound_attackairb", attackairb,);
+    agent.sound_acmd("sound_throwf", throwf);
 }
