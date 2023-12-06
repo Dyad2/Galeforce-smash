@@ -26,7 +26,6 @@ unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
         }
 }
 
-//others
 unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 

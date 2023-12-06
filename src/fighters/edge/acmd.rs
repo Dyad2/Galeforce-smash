@@ -1,8 +1,7 @@
 use super::*;
 
 //global edits
-#[acmd_script( agent = "edge", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -12,8 +11,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "edge", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -28,8 +26,8 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "edge", script = "game_attackhi4", category = ACMD_GAME, low_priority)]
-unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
+//ground
+unsafe extern "C" fn attackhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         frame(lua_state, 13.);
@@ -92,8 +90,7 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
             }
 }
 
-#[acmd_script( agent = "edge", script = "game_attacks4", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
@@ -138,8 +135,7 @@ unsafe fn attacks4(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "edge", script = "game_attackairf", category = ACMD_GAME, low_priority)]
-unsafe fn attackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -190,8 +186,7 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
 }
 
 //other
-#[acmd_script( agent = "edge", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -207,13 +202,11 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        dash,
-        turndash,
-        attackhi4,
-        attacks4,
-        attackairf,
-        escapeairslide
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_dash", dash,);
+    agent.game_acmd("game_turndash", turndash,);
+    agent.game_acmd("game_attackhi4", attackhi4,);
+    agent.game_acmd("game_attacks4", attacks4,);
+    agent.game_acmd("game_attackairf", attackairf,);
+    agent.game_acmd("game_escapeairslide", escapeairslide,);
 }

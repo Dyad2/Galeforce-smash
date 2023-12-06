@@ -22,6 +22,7 @@ mod acmd;
 mod opff;
 
 pub fn install() {
-    acmd::install();
-    opff::install();
+    let agent = &mut smashline::Agent::new("edge");
+    acmd::install(agent);
+    opff::install(agent);
 }

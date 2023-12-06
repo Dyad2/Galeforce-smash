@@ -1,24 +1,7 @@
 use super::*;
 
-//weapon
-#[acmd_script( agent = "fox_blasterbullet", script = "game_fly", category = ACMD_GAME, low_priority)]
-unsafe fn laserfly(weapon: &mut L2CAgentBase) {
-    let lua_state = weapon.lua_state_agent;
-
-        if macros::is_excute(weapon)
-        {
-            macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 3.0, 361, 0, 0, 0, 1.44, 0.0, 0.0, 0.8, Some(0.0), Some(0.0), Some(9.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_SPEED, false, 0, 0.0, 0, true, true, false, false, false, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_blaster_throw_down"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_FOX_BLASTER, *ATTACK_REGION_ENERGY);
-        }
-    wait(lua_state, 4.);
-        if macros::is_excute(weapon)
-        {
-            macros::ATK_POWER(weapon, 0, 2);
-        }
-}
-
 //global edits
-#[acmd_script( agent = "fox", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -28,8 +11,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -45,8 +27,7 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
-#[acmd_script( agent = "fox", script = "game_attack11", category = ACMD_GAME, low_priority)]
-unsafe fn attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -80,8 +61,7 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_attackhi3", category = ACMD_GAME, low_priority )]
-unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
     
     frame(fighter.lua_state_agent, 1.0);
     if macros::is_excute(fighter)
@@ -104,8 +84,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "fox", script = "game_attacks3", category = ACMD_GAME, low_priority)]
-unsafe fn attacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -120,8 +99,7 @@ unsafe fn attacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_attacks3lw", category = ACMD_GAME, low_priority)]
-unsafe fn attacks3lw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks3lw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -138,8 +116,7 @@ unsafe fn attacks3lw(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "fox", script = "game_attackairf", category = ACMD_GAME, low_priority)]
-unsafe fn attackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 7.);
@@ -227,8 +204,7 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_attackairn", category = ACMD_GAME, low_priority)]
-unsafe fn attackairn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 4.);
@@ -262,8 +238,7 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_attackairb", category = ACMD_GAME, low_priority)]
-unsafe fn attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 4.);
@@ -295,8 +270,7 @@ unsafe fn attackairb(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "fox", script = "game_attackairlw", category = ACMD_GAME, low_priority)]
-unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 4.);
@@ -336,35 +310,8 @@ unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-//specials
-#[acmd_script( agent = "fox", scripts = ["game_specialairlwstart", "game_speciallwstart"], category = ACMD_GAME, low_priority)]
-unsafe fn speciallwstart(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 0.75);
-        }
-    frame(lua_state, 3.);
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 1.0);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.0, 361, 100, 80, 0, 8.0, 0.0, 6.5, 0.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_G, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 2.0, 20, 100, 80, 0, 8.0, 0.0, 6.5, 0.0, None, None, None, 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, true, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_ENERGY);
-        }
-}
-
-#[acmd_script( agent = "fox", scripts = ["game_speciallwend", "game_speciallwairend"], category = ACMD_GAME, low_priority)]
-unsafe fn speciallwend(fighter: &mut L2CAgentBase) {
-
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 1.5);
-        }
-}
-
-#[acmd_script( agent = "fox", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
+//other
+unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -380,21 +327,16 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        laserfly,
-        dash,
-        turndash,
-        attack11,
-        attackhi3,
-        attacks3lw,
-        attacks3,
-        attackairf,
-        attackairn,
-        attackairb,
-        attackairlw,
-        speciallwstart,
-        speciallwend,
-        escapeairslide
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_dash", dash,);
+    agent.game_acmd("game_turndash", turndash,);
+    agent.game_acmd("game_attack11", attack11,);
+    agent.game_acmd("game_attackhi3", attackhi3,);
+    agent.game_acmd("game_attacks3", attacks3,);
+    agent.game_acmd("game_attacks3lw", attacks3lw,);
+    agent.game_acmd("game_attackairf", attackairf,);
+    agent.game_acmd("game_attackairn", attackairn,);
+    agent.game_acmd("game_attackairb", attackairb,);
+    agent.game_acmd("game_attackairlw", attackairlw,);
+    agent.game_acmd("game_escapeairslide", escapeairslide,);
 }

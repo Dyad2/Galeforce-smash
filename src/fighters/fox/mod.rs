@@ -13,8 +13,10 @@ use custom_var::*;
 
 mod acmd;
 mod opff;
+mod weapon;
 
 pub fn install() {
     acmd::install();
     opff::install();
+    weapon::install();
 }
