@@ -40,12 +40,12 @@ unsafe extern "C" fn ganon_speciallw_breverse(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe extern "C" fn gameWatch_frame(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn ganon_frame(fighter: &mut L2CFighterCommon) {
     common_fighter_frame(fighter);
     ganon_galeforce_attack(fighter);
     ganon_speciallw_breverse(fighter);
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.on_line(smashline::Main, gameWatch_frame);
+    agent.on_line(smashline::Main, ganon_frame);
 }
