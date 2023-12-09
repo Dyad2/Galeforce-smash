@@ -16,7 +16,8 @@ mod opff;
 mod weapon;
 
 pub fn install() {
-    acmd::install();
-    opff::install();
-    weapon::install();
+    let agent = &mut smashline::Agent::new("fox");
+    acmd::install(agent);
+    opff::install(agent);
+    weapon::install(agent);
 }

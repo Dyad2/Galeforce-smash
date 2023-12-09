@@ -26,8 +26,8 @@ unsafe extern "C" fn speciallwend(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialairlwstart", speciallwstart,);
     agent.game_acmd("game_speciallwstart", speciallwstart,);
+    agent.game_acmd("game_specialairlwstart", speciallwstart,);
     agent.game_acmd("game_speciallwend", speciallwend,);
-    agent.game_acmd("game_speciallwairend", speciallwend,);
+    agent.game_acmd("game_specialairlwend", speciallwend,); //was game_speciallwairend before.
 }
