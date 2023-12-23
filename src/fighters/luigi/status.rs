@@ -1,7 +1,6 @@
 use super::*;
 
-#[status_script(agent="luigi", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn luigi_specials_main(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn luigi_specials_main(fighter: &mut L2CFighterCommon) {
 
     handle_situation(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(luigi_specials_main_loop as *const () as _));
@@ -54,7 +53,6 @@ unsafe extern "C" fn luigi_specials_main_loop(fighter: &mut L2CFighterCommon) ->
 }
 
 pub unsafe fn handle_situation(fighter: &mut L2CFighterCommon) {
-
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_LUIGI_SPECIAL_S);
         GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -81,8 +79,7 @@ pub unsafe fn handle_situation(fighter: &mut L2CFighterCommon) {
     }
 }
 
-#[status_script(agent="luigi", status = FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_CHARGE, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn luigi_specialscharge_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn luigi_specialscharge_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) >= 4 && VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_CHARGE_FLAG_DISCHARGE);
@@ -94,8 +91,7 @@ unsafe fn luigi_specialscharge_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-#[status_script(agent="luigi", status = FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END)]
-unsafe fn luigi_specialsram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn luigi_specialsram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
         VarModule::set_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE, 0);
@@ -103,8 +99,7 @@ unsafe fn luigi_specialsram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-#[status_script(agent="luigi", status = FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn luigi_specialsram_init(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn luigi_specialsram_init(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
         galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
@@ -113,11 +108,9 @@ unsafe fn luigi_specialsram_init(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-pub fn install() {
-    install_status_scripts!(
-        luigi_specials_main,
-        luigi_specialscharge_end,
-        luigi_specialsram_init,
-        luigi_specialsram_end
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Main, *FIGHTER_STATUS_KIND_SPECIAL_S, luigi_specials_main);
+    agent.status(smashline::End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_CHARGE, luigi_specialscharge_end);
+    agent.status(smashline::End, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, luigi_specialsram_end);
+    agent.status(smashline::Init, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, luigi_specialsram_init);
 }

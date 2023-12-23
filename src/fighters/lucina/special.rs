@@ -1,7 +1,6 @@
 use super::*;
 
-#[acmd_script( agent = "lucina", script = "game_specials1", category = ACMD_GAME, low_priority)]
-unsafe fn specials1(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials1(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -35,8 +34,7 @@ unsafe fn specials1(fighter: &mut L2CAgentBase) {
 }
 
 //special case, because of the momentum
-#[acmd_script( agent = "lucina", script = "game_specialairs1", category = ACMD_GAME, low_priority)]
-unsafe fn specialairs1(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialairs1(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -76,8 +74,7 @@ unsafe fn specialairs1(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", scripts = ["game_specials2hi", "game_specialairs2hi"], category = ACMD_GAME, low_priority)]
-unsafe fn specials2hi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials2hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -108,8 +105,7 @@ unsafe fn specials2hi(fighter: &mut L2CAgentBase) {
 }
 
 //s2lw is s2s, there is no s2lw actually. don't know why the script is lw
-#[acmd_script( agent = "lucina", scripts = ["game_specials2lw", "game_specialairs2lw"], category = ACMD_GAME, low_priority)]
-unsafe fn specials2lw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials2lw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -142,8 +138,7 @@ unsafe fn specials2lw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", scripts = ["game_specials3s", "game_specialairs3s"], category = ACMD_GAME, low_priority)]
-unsafe fn specials3s(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials3s(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -176,8 +171,7 @@ unsafe fn specials3s(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", scripts = ["game_specials3hi", "game_specialairs3hi"], category = ACMD_GAME, low_priority)]
-unsafe fn specials3hi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials3hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -210,8 +204,7 @@ unsafe fn specials3hi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", scripts = ["game_specials3lw", "game_specialairs3lw"], category = ACMD_GAME, low_priority)]
-unsafe fn specials3lw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials3lw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -244,8 +237,7 @@ unsafe fn specials3lw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "game_specials4hi", category = ACMD_GAME, low_priority)]
-unsafe fn specials4hi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials4hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.);
@@ -264,8 +256,7 @@ unsafe fn specials4hi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "game_specialairs4hi", category = ACMD_GAME, low_priority)]
-unsafe fn specialairs4hi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialairs4hi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.);
@@ -284,8 +275,7 @@ unsafe fn specialairs4hi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "game_specialhi", category = ACMD_GAME, low_priority)]
-unsafe fn specialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -301,8 +291,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "game_specialhi2", category = ACMD_GAME, low_priority)]
-unsafe fn specialhi2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 16.);
@@ -372,8 +361,7 @@ unsafe fn specialhi2(fighter: &mut L2CAgentBase) {
     //     }
 }
 
-#[acmd_script( agent = "lucina", script = "game_specialhi3", category = ACMD_GAME, low_priority)]
-unsafe fn specialhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 63.);
@@ -392,8 +380,7 @@ unsafe fn specialhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "game_landingaether", category = ACMD_GAME, low_priority)]
-unsafe fn landspecial(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn landspecial(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -413,8 +400,7 @@ unsafe fn landspecial(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME, low_priority)]
-unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -431,21 +417,25 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        specials1,
-        specialairs1,
-        specials2hi,
-        specials2lw,
-        specials3hi,
-        specials3s,
-        specials3lw,
-        specialairs4hi,
-        specials4hi,
-        specialhi,
-        specialhi2,
-        specialhi3,
-        landspecial,
-        speciallw,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_specials1", specials1,);
+    agent.game_acmd("game_specialairs1", specialairs1,);
+    agent.game_acmd("game_specials2hi", specials2hi,);
+    agent.game_acmd("game_specialairs2hi", specials2hi,);
+    agent.game_acmd("game_specials2lw", specials2lw,);
+    agent.game_acmd("game_specialairs2lw", specials2lw,);
+    agent.game_acmd("game_specialairs3s", specials3s,);
+    agent.game_acmd("game_specials3s", specials3s,);
+    agent.game_acmd("game_specialairs3hi", specials3hi,);
+    agent.game_acmd("game_specials3hi", specials3hi,);
+    agent.game_acmd("game_specialairs3lw", specials3lw,);
+    agent.game_acmd("game_specials3lw", specials3lw,);
+    agent.game_acmd("game_specials4hi", specials4hi,);
+    agent.game_acmd("game_specialairs4hi", specialairs4hi,);
+    agent.game_acmd("game_specialhi", specialhi,);
+    agent.game_acmd("game_specialhi2", specialhi2,);
+    agent.game_acmd("game_specialhi3", specialhi3,);
+    agent.game_acmd("game_landingaether", landspecial,);
+    agent.game_acmd("game_specialairlw", speciallw,);
+    agent.game_acmd("game_speciallw", speciallw,);
 }

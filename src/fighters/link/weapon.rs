@@ -1,7 +1,6 @@
 use super::*;
 
-#[acmd_script( agent = "link_swordbeam", script = "game_fly", category = ACMD_GAME)]
-unsafe fn fly(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn fly(weapon: &mut L2CAgentBase) {
     //forward smash
     if macros::is_excute(weapon)
     {
@@ -9,8 +8,8 @@ unsafe fn fly(weapon: &mut L2CAgentBase) {
     }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        fly,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    let swordbeam = &mut smashline::Agent::new("link_swordbeam");
+
+    swordbeam.game_acmd("game_fly", fly,);
 }

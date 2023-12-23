@@ -16,8 +16,9 @@ pub mod opff;
 pub mod specials;
 
 pub fn install() {
-    acmd::install();
-    effects::install();
-    opff::install();
-    specials::install();
+    let agent = &mut smashline::Agent::new("marth");
+    acmd::install(agent);
+    effects::install(agent);
+    opff::install(agent);
+    specials::install(agent);
 }

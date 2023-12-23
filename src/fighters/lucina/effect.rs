@@ -1,8 +1,7 @@
 use super::*;
 
 //effects
-#[acmd_script( agent = "lucina", script = "effect_attacks3", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 2.);
@@ -24,8 +23,7 @@ unsafe fn effectattacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "effect_attackhi3", category = ACMD_EFFECT, low_priority)]
-unsafe fn effecthi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effecthi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.);
@@ -41,8 +39,7 @@ unsafe fn effecthi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "effect_specialhi", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 13.);
@@ -53,8 +50,7 @@ unsafe fn effectspecialhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "effect_specialhi2", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialhi2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialhi2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 20.);
@@ -104,8 +100,7 @@ unsafe fn effectspecialhi2(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "effect_specialhi3", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialhi3(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
@@ -113,8 +108,7 @@ unsafe fn effectspecialhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "effect_landingfallaether", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectspecialhi4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectspecialhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -127,13 +121,25 @@ unsafe fn effectspecialhi4(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effectattacks3,
-        effecthi3,
-        effectspecialhi,
-        effectspecialhi2,
-        effectspecialhi3,
-        effectspecialhi4,
-    );
+//expressions
+unsafe extern "C" fn expressionspecialhi4(fighter: &mut L2CAgentBase) {
+    let lua_state = fighter.lua_state_agent;
+    
+    frame(lua_state, 1.);
+        if macros::is_excute(fighter)
+        {
+            macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_M);
+            smash_script::slope!(fighter, MA_MSC_CMD_SLOPE_SLOPE, SLOPE_STATUS_LR);
+            ItemModule::set_have_item_visibility(fighter.module_accessor, true, 0);
+        }
+}
+
+pub fn install(agent: &mut smashline::Agent) {
+    agent.effect_acmd("effect_attacks3", effectattacks3,);
+    agent.effect_acmd("effect_attackhi3", effecthi3,);
+    agent.effect_acmd("effect_specialhi", effectspecialhi,);
+    agent.effect_acmd("effect_specialhi2", effectspecialhi2,);
+    agent.effect_acmd("effect_specialhi3", effectspecialhi3,);
+    agent.effect_acmd("effect_landingfallaether", effectspecialhi4,);
+    agent.expression_acmd("expression_landingfallaether", expressionspecialhi4,);
 }

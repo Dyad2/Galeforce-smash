@@ -1,8 +1,6 @@
-
 use super::*;
 
-#[acmd_script( agent = "lucina", script = "sound_attacks3", category = ACMD_SOUND, low_priority)]
-unsafe fn soundattacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundattacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 8.);
@@ -13,14 +11,12 @@ unsafe fn soundattacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "lucina", script = "sound_specialhi", category = ACMD_SOUND, low_priority)]
-unsafe fn soundspecialhi(_fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundspecialhi(_fighter: &mut L2CAgentBase) {
 
     //removes vanilla sound, moved to specialhi2
 }
 
-#[acmd_script( agent = "lucina", script = "sound_specialhi2", category = ACMD_SOUND, low_priority)]
-unsafe fn soundspecialhi2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundspecialhi2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -44,14 +40,7 @@ unsafe fn soundspecialhi2(fighter: &mut L2CAgentBase) {
         }
 }
 
-// #[acmd_script( agent = "lucina", script = "sound_specialhi3", category = ACMD_SOUND, low_priority)]
-// unsafe fn soundspecialhi3(fighter: &mut L2CAgentBase) {
-//     let lua_state = fighter.lua_state_agent;
-
-// }
-
-#[acmd_script( agent = "lucina", script = "sound_landingfallaether", category = ACMD_SOUND, low_priority)]
-unsafe fn soundspecialhi4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundspecialhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 4.);
@@ -71,12 +60,9 @@ unsafe fn soundspecialhi4(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        soundattacks3,
-        soundspecialhi,
-        soundspecialhi2,
-        //soundspecialhi3,
-        soundspecialhi4
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.sound_acmd("sound_attacks3", soundattacks3,);
+    agent.sound_acmd("sound_specialhi", soundspecialhi,);
+    agent.sound_acmd("sound_specialhi2", soundspecialhi2,);
+    agent.sound_acmd("sound_landingfallaether", soundspecialhi4,);
 }

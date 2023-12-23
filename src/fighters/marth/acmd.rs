@@ -1,7 +1,7 @@
 use super::*;
+
 //global edits
-#[acmd_script( agent = "marth", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -11,8 +11,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -28,8 +27,7 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
-#[acmd_script( agent = "marth", script = "game_attack11", category = ACMD_GAME, low_priority)]
-unsafe fn attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 7.);
@@ -57,8 +55,7 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attack12", category = ACMD_GAME, low_priority)]
-unsafe fn attack12(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attack12(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -87,8 +84,7 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
-unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -122,8 +118,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attacklw3", category = ACMD_GAME, low_priority)]
-unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacklw3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 7.);
@@ -141,8 +136,7 @@ unsafe fn attacklw3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attacks4", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -168,8 +162,7 @@ unsafe fn attacks4(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "marth", script = "game_attackairhi", category = ACMD_GAME, low_priority)]
-unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -197,8 +190,7 @@ unsafe fn attackairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attackairf", category = ACMD_GAME, low_priority)]
-unsafe fn attackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.);
@@ -230,8 +222,7 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attackairn", category = ACMD_GAME, low_priority)]
-unsafe fn attackairn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
 
@@ -273,8 +264,7 @@ unsafe fn attackairn(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attackairb", category = ACMD_GAME, low_priority)]
-unsafe fn attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -302,8 +292,7 @@ unsafe fn attackairb(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_attackairlw", category = ACMD_GAME, low_priority)]
-unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -347,8 +336,7 @@ unsafe fn attackairlw(fighter: &mut L2CAgentBase) {
 }
 
 //throws
-#[acmd_script( agent = "marth", script = "game_throwhi", category = ACMD_GAME, low_priority)]
-unsafe fn throwhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn throwhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -369,8 +357,7 @@ unsafe fn throwhi(fighter: &mut L2CAgentBase) {
 }
 
 //other
-#[acmd_script( agent = "marth", script = "game_appealhil", category = ACMD_GAME, low_priority)]
-unsafe fn falchionusel(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn falchionuse(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 36.0);
@@ -380,19 +367,7 @@ unsafe fn falchionusel(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "game_appealhir", category = ACMD_GAME, low_priority)]
-unsafe fn falchionuser(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 36.0);
-        if macros::is_excute(fighter)
-        {
-            DamageModule::heal(fighter.module_accessor, -2.0, 0);
-        }
-}
-
-#[acmd_script( agent = "marth", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -408,24 +383,21 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        dash,
-        turndash,
-        attack11,
-        attack12,
-        attackhi3,
-        attacklw3,
-        attacks4,
-        attackairhi,
-        attackairb,
-        attackairn,
-        attackairf,
-        attackairlw,
-        throwhi,
-        falchionusel,
-        falchionuser,
-        escapeairslide
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_dash", dash,);
+    agent.game_acmd("game_turndash", turndash,);
+    agent.game_acmd("game_attack11", attack11,);
+    agent.game_acmd("game_attack12", attack12,);
+    agent.game_acmd("game_attackhi3", attackhi3,);
+    agent.game_acmd("game_attacklw3", attacklw3,);
+    agent.game_acmd("game_attacks4", attacks4,);
+    agent.game_acmd("game_attackairhi", attackairhi,);
+    agent.game_acmd("game_attackairf", attackairf,);
+    agent.game_acmd("game_attackairn", attackairn,);
+    agent.game_acmd("game_attackairb", attackairb,);
+    agent.game_acmd("game_attackairlw", attackairlw,);
+    agent.game_acmd("game_throwhi", throwhi,);
+    agent.game_acmd("game_appealhil", falchionuse,);
+    agent.game_acmd("game_appealhir", falchionuse,);
+    agent.game_acmd("game_escapeairslide", escapeairslide,);
 }

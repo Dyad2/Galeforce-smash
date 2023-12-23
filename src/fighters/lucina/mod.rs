@@ -16,27 +16,11 @@ mod opff;
 mod sound;
 mod special;
 
-//expressions
-#[acmd_script( agent = "lucina", script = "expression_landingfallaether", category = ACMD_EXPRESSION, low_priority)]
-unsafe fn expressionspecialhi4(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-    
-    frame(lua_state, 1.);
-        if macros::is_excute(fighter)
-        {
-            macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_M);
-            smash_script::slope!(fighter, MA_MSC_CMD_SLOPE_SLOPE, SLOPE_STATUS_LR);
-            ItemModule::set_have_item_visibility(fighter.module_accessor, true, 0);
-        }
-}
-
 pub fn install() {
-    acmd::install();
-    effect::install();
-    opff::install();
-    sound::install();
-    special::install();
-    smashline::install_acmd_scripts!(
-        expressionspecialhi4,
-    );
+    let agent = &mut smashline::Agent::new("lucina");
+    acmd::install(agent);
+    effect::install(agent);
+    opff::install(agent);
+    sound::install(agent);
+    special::install(agent);
 }

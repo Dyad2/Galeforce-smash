@@ -4,7 +4,7 @@ use crate::fighters::common::opff::common_fighter_frame;
 //GA: The Melee Special tm
 // type: cancel
 //  on hit, cancel shine with jump!
-unsafe extern "C" fn space_furry_frame(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn fox_galeforce_attack(fighter: &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
     
     if !is_operation_cpu(fighter.module_accessor) {

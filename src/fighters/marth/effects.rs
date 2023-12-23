@@ -1,8 +1,7 @@
 use super::*;
 
 //effects
-#[acmd_script( agent = "marth", script = "effect_attack11", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -22,8 +21,7 @@ unsafe fn effectattack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "marth", script = "effect_attack12", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattack12(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattack12(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -42,9 +40,8 @@ unsafe fn effectattack12(fighter: &mut L2CAgentBase) {
         	macros::AFTER_IMAGE_OFF(fighter,2);
         }
 }
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effectattack11,
-        effectattack12,
-    );
+
+pub fn install(agent: &mut smashline::Agent) {
+    agent.effect_acmd("effect_attack11", effectattack11,);
+    agent.effect_acmd("effect_attack12", effectattack12,);
 }

@@ -8,6 +8,15 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+mod acmd;
+mod opff;
+
+pub fn install() {
+    let agent = &mut smashline::Agent::new("lucas");
+    acmd::install(agent);
+    opff::install(agent);
+}
+
 // #[status_script(agent = "lucas", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 // unsafe fn lucas_specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -41,135 +50,3 @@ use smash_script::*;
 //     }
 //     L2CValue::I32(0)
 // }
-
-//global edits
-#[acmd_script( agent = "lucas", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 15.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
-        }
-}
-
-#[acmd_script( agent = "lucas", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 1.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DASH_FLAG_TURN_DASH);
-        }
-    frame(lua_state, 16.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_DASH_TO_RUN);
-        }
-}
-
-//ground
-//TODO Check FAF
-#[acmd_script( agent = "lucas", scripts = [ "game_attacks3hi", "game_attacks3s","game_attacks3lw" ], category = ACMD_GAME, low_priority)]
-unsafe fn attacks3(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 1.);
-        if macros::is_excute(fighter)
-        {
-            FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 0., 3.);
-            MotionModule::set_rate(fighter.module_accessor, 0.75);
-        }
-    frame(lua_state, 7.);
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 1.0);
-            macros::ATTACK(fighter, 0, 0, Hash40::new("armr"), 3.0, 70, 10, 0, 20, 3.0, 0.0, 0.0, 0.0, Some(-0.7), Some(0.0), Some(0.0), 0.7, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 12.0, 361, 75, 0, 55, 5.5, 0.0, 5.0, 9.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-        }
-    frame(lua_state, 9.);
-        if macros::is_excute(fighter)
-        {
-            AttackModule::clear_all(fighter.module_accessor);
-        }
-    frame(lua_state, 10.);
-        if macros::is_excute(fighter)
-        {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 5.0, 40, 80, 0, 55, 5.5, 0.0, 5.0, 10.2, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_PSI);
-            FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 2.5, 3.);
-        }
-    frame(lua_state, 13.);
-        if macros::is_excute(fighter)
-        {
-            AttackModule::clear_all(fighter.module_accessor);
-        }
-}
-
-#[acmd_script( agent = "lucas", script = "game_attacks4", category = ACMD_GAME, low_priority)]
-unsafe fn attacks4(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-        if macros::is_excute(fighter)
-        {
-            VisibilityModule::set_int64(fighter.module_accessor, hash40("bat") as i64,hash40("bat_visible") as i64);
-        }
-    frame(lua_state, 8.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_FLAG_START_SMASH_HOLD);
-        }
-    frame(lua_state, 12.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUCAS_STATUS_ATTACK_S4_FLAG_REFLECT_START);
-        }
-    frame(lua_state, 13.);
-        if macros::is_excute(fighter)
-        {
-            macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 13.0, 361, 88, 0, 50, 3.7, 0.0, 5.6, 7.0, Some(0.0), Some(5.6), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_LUCAS_BAT, *ATTACK_REGION_OBJECT);
-            macros::ATTACK(fighter, 1, 0, Hash40::new("top"), 15.0, 361, 91, 0, 50, 3.7, 0.0, 5.6, 13.0, Some(0.0), Some(5.6), Some(7.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_LUCAS_BAT, *ATTACK_REGION_OBJECT);
-        }
-    frame(lua_state, 16.);
-        if macros::is_excute(fighter)
-        {
-            AttackModule::clear_all(fighter.module_accessor);
-        }
-    frame(lua_state, 17.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUCAS_STATUS_ATTACK_S4_FLAG_REFLECT_END);
-        }
-}
-
-//other
-#[acmd_script( agent = "lucas", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    frame(lua_state, 14.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
-        }
-    frame(lua_state, 24.);
-        if macros::is_excute(fighter)
-        {
-            WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_CONTROL);
-        }
-}
-
-pub fn install() {
-    // smashline::install_status_scripts!(
-    //     lucas_specials_main,
-    // );
-    smashline::install_acmd_scripts!(
-        dash,
-        turndash,
-        attacks3,
-        attacks4,
-        escapeairslide,
-    );
-}
