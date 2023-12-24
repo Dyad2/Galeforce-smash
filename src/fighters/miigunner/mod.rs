@@ -7,12 +7,15 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-mod acmd_fighter;
-//mod acmd_weapons;
+mod fighter;
 mod opff;
+mod specials;
+mod weapons;
 
 pub fn install() {
-    acmd_fighter::install();
-    //acmd_weapons::install();
-    opff::install();
+    let agent = &mut smashline::Agent::new("miigunner");
+    acmd::install(agent);
+    opff::install(agent);
+    weapon::install(agent);
+    specials::install(agent);
 }

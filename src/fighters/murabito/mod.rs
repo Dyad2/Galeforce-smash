@@ -6,13 +6,11 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-
-mod acmd_fighter;
-//mod acmd_weapons;
-//mod opff;
+mod acmd;
+mod opff;
 
 pub fn install() {
-    acmd_fighter::install();
-    //acmd_weapons::install();
-    //opff::install();
+    let agent = &mut smashline::Agent::new("murabito");
+    acmd::install(agent);
+    opff::install(agent);
 }
