@@ -254,7 +254,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(fighter.module_accessor, 1.1);
+            //MotionModule::set_rate(fighter.module_accessor, 1.1);
             AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 15.);

@@ -105,21 +105,21 @@ fn bayo_frame(fighter: &mut L2CFighterCommon) {
         }
         
         //abk drift
-        if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 7 { //purple only for now
-            if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U 
-              && fighter.global_table[MOTION_FRAME].get_i32() < 25
-              && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
-              && !is_hitlag(fighter.module_accessor) {
-                let stick_y = ControlModule::get_stick_y(fighter.module_accessor);
-                if stick_y != 0.0 {
-                    KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND, &Vector3f{ x: 0.0, y: 1.1125 * stick_y, z: 0.0});
-                }
-                let stick_x = ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor);
-                if stick_x != 0.0 {
-                    KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND, &Vector3f{ x: 1.11 * stick_x, y: 0.0, z: 0.0});
-                }
-            }
-        }
+        //if WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_COLOR) == 7 { //purple only for now
+        //    if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U 
+        //      && fighter.global_table[MOTION_FRAME].get_i32() < 25
+        //      && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
+        //      && !is_hitlag(fighter.module_accessor) {
+        //        let stick_y = ControlModule::get_stick_y(fighter.module_accessor);
+        //        if stick_y != 0.0 {
+        //            KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND, &Vector3f{ x: 0.0, y: 1.1125 * stick_y, z: 0.0});
+        //        }
+        //        let stick_x = ControlModule::get_stick_x(fighter.module_accessor) * PostureModule::lr(fighter.module_accessor);
+        //        if stick_x != 0.0 {
+        //            KineticModule::add_speed_outside(fighter.module_accessor, *KINETIC_OUTSIDE_ENERGY_TYPE_WIND, &Vector3f{ x: 1.11 * stick_x, y: 0.0, z: 0.0});
+        //        }
+        //    }
+        //}
     }
 }
 
