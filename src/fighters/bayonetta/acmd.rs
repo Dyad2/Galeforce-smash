@@ -950,12 +950,7 @@ unsafe fn catchdash(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(fighter.module_accessor, 0.75);
-        }
-    frame(lua_state, 6.);
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            MotionModule::set_rate(fighter.module_accessor, 0.9);
         }
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
@@ -967,6 +962,7 @@ unsafe fn catchdash(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             smash_script::grab!(fighter, *MA_MSC_CMD_GRAB_CLEAR_ALL);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_CATCH_FLAG_CATCH_WAIT);
             GrabModule::set_rebound(fighter.module_accessor, false);
@@ -980,16 +976,12 @@ unsafe fn catchturn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            MotionModule::set_rate(fighter.module_accessor, 0.75);
-        }
-    frame(lua_state, 6.);
-        if macros::is_excute(fighter)
-        {
-            MotionModule::set_rate(fighter.module_accessor, 1.0);
+            MotionModule::set_rate(fighter.module_accessor, 0.85);
         }
     frame(lua_state, 11.);
         if macros::is_excute(fighter)
         {
+            MotionModule::set_rate(fighter.module_accessor, 1.0);
             macros::CATCH(fighter, 0, Hash40::new("top"), 3.3, 0.0, 6.6, -4.0, Some(0.0), Some(6.6), Some(-15.5), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_G);
             macros::CATCH(fighter, 1, Hash40::new("top"), 1.65, 0.0, 6.6, -2.35, Some(0.0), Some(6.6), Some(-17.15), *FIGHTER_STATUS_KIND_CAPTURE_PULLED, *COLLISION_SITUATION_MASK_A);
         }
