@@ -13,11 +13,13 @@ use custom_var::*;
 
 mod acmd;
 mod opff;
+mod specials;
 mod weapon;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("fox");
     acmd::install(agent);
     opff::install(agent);
+    specials::install(agent);
     weapon::install(agent);
 }
