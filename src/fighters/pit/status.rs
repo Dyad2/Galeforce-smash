@@ -1,8 +1,6 @@
 use super::*;
 
-#[status_script(agent="pit", status = FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
-unsafe fn pitb_specialhirush_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-
+unsafe extern "C" fn pit_specialhirush_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor,
         smash::app::SituationKind(*SITUATION_KIND_NONE), 
@@ -30,8 +28,6 @@ unsafe fn pitb_specialhirush_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-pub fn install() {
-    install_status_scripts!(
-        pitb_specialhirush_pre,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Pre, *FIGHTER_PIT_STATUS_KIND_SPECIAL_HI_RUSH, pit_specialhirush_pre);
 }

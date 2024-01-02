@@ -19,15 +19,6 @@ unsafe extern "C" fn bayonetta_reset_witchtwist(fighter: &mut L2CFighterCommon) 
     WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SPECIAL_HI_AFTER_ACTION);
 }
 
-#[status_script(agent="bayonetta", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
-unsafe fn status_specialsmain(fighter: &mut L2CFighterCommon) -> L2CValue {
-
-    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_BAYONETTA_SPECIAL_S);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0x976c3b29b), 0.0, 1.0, false, 0.0, false, false);
-    bayonetta_reset_landing(fighter);
-    fighter.sub_shift_status_main(L2CValue::Ptr(bayo_specials_main_loop as *const () as _))
-}
-
 unsafe extern "C" fn bayo_specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR
       && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT)
@@ -68,13 +59,7 @@ unsafe extern "C" fn bayo_specials_main_loop(fighter: &mut L2CFighterCommon) -> 
     return 0.into();
 }
 
-pub fn install() {
-    install_status_scripts!(
-        status_specialsmain,
-    );
-}
-
-unsafe fn handle_special_s(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn handle_special_s(fighter: &mut L2CFighterCommon) {
     let status = StatusModule::status_kind(fighter.module_accessor);
 
     if status != *FIGHTER_STATUS_KIND_SPECIAL_S {
@@ -155,7 +140,7 @@ unsafe fn handle_special_s(fighter: &mut L2CFighterCommon) {
     }
 }
 
-unsafe fn somefunc(fighter: &mut L2CFighterCommon, check_cliff: bool) {
+unsafe extern "C" fn somefunc(fighter: &mut L2CFighterCommon, check_cliff: bool) {
     let pos = PostureModule::pos(fighter.module_accessor);
 
     //these are very likely not right idk ghidra is a fuck
@@ -188,4 +173,15 @@ unsafe fn somefunc(fighter: &mut L2CFighterCommon, check_cliff: bool) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_SHOOTING_SPEED_MUL);
     }
     return;
+}
+
+unsafe extern "C" fn status_specialsmain(fighter: &mut L2CFighterCommon) -> L2CValue {
+    KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_BAYONETTA_SPECIAL_S);
+    MotionModule::change_motion(fighter.module_accessor, Hash40::new_raw(0x976c3b29b), 0.0, 1.0, false, 0.0, false, false);
+    bayonetta_reset_landing(fighter);
+    fighter.sub_shift_status_main(L2CValue::Ptr(bayo_specials_main_loop as *const () as _))
+}
+
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Main, *FIGHTER_STATUS_KIND_SPECIAL_S, status_specialsmain);
 }

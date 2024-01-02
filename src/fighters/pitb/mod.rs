@@ -8,23 +8,12 @@ use smashline::*;
 use smash_script::*;
 
 mod acmd;
+mod opff;
 mod status;
 
-#[fighter_frame( agent = FIGHTER_KIND_PITB )]
-fn pitb_frame(fighter: &mut L2CFighterCommon) {
-    unsafe {
-        let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-
-        if curr_motion_kind != hash40("attack_air_n") {
-            EffectModule::kill_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("sys_blackball_attack")}, false, true);
-        }
-    }
-}
-
 pub fn install() {
-    smashline::install_agent_frames!(
-        pitb_frame
-    );
-    acmd::install();
-    status::install();
+    let agent = &mut smashline::Agent::new("pitb");
+    acmd::install(agent);
+    opff::install(agent);
+    status::install(agent);
 }
