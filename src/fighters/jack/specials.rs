@@ -1,4 +1,4 @@
-use super::*
+use super::*;
 
 //specials
 unsafe extern "C" fn specialairnshoot(fighter: &mut L2CAgentBase) {

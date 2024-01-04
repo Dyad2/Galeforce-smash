@@ -12,11 +12,14 @@ use galeforce_utils::{vars::*, utils::*, table_const::*};
 use custom_var::*;
 
 mod acmd;
+mod effects;
 mod opff;
 mod status;
 
 pub fn install() {
-    acmd::install();
-    opff::install();
-    status::install();
+    let agent = &mut smashline::Agent::new("rockman");
+    acmd::install(agent);
+    effects::install(agent);
+    opff::install(agent);
+    status::install(agent);
 }

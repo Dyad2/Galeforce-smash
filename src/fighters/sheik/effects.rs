@@ -1,8 +1,7 @@
 use super::*;
 
 //effect
-#[acmd_script( agent = "sheik", script = "effect_attackdash", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -31,8 +30,7 @@ unsafe fn effectattackdash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_attackairlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectattackairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectattackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 13.);
@@ -49,8 +47,7 @@ unsafe fn effectattackairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_escapeairslide", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectescapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectescapeair(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -72,8 +69,7 @@ unsafe fn effectescapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_escapeair", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectescapeair(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectescapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -95,8 +91,7 @@ unsafe fn effectescapeair(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_cliffcatch", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectcliffcatch(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectcliffcatch(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -111,8 +106,7 @@ unsafe fn effectcliffcatch(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_landingheavy", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectlandingheavy(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectlandingheavy(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
@@ -121,8 +115,7 @@ unsafe fn effectlandingheavy(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_escapef", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectescapef(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectescapef(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -152,8 +145,7 @@ unsafe fn effectescapef(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "sheik", script = "effect_escapeb", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectescapeb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectescapeb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -183,15 +175,13 @@ unsafe fn effectescapeb(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effectcliffcatch,
-        effectattackdash,
-        effectattackairlw,
-        effectescapeairslide,
-        effectescapeair,
-        effectlandingheavy,
-        effectescapef,
-        effectescapeb,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.effect_acmd("effect_attackdash", effectattackdash,);
+    agent.effect_acmd("effect_attackairlw", effectattackairlw,);
+    agent.effect_acmd("effect_escapeair", effectescapeair,);
+    agent.effect_acmd("effect_escapeairslide", effectescapeairslide,);
+    agent.effect_acmd("effect_cliffcatch", effectcliffcatch,);
+    agent.effect_acmd("effect_landingheavy", effectlandingheavy,);
+    agent.effect_acmd("effect_escapef", effectescapef,);
+    agent.effect_acmd("effect_escapeb", effectescapeb,);
 }

@@ -1,7 +1,6 @@
 use super::*;
 
-#[status_script(agent="zelda", status = FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn status_specialhi2exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_specialhi2exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
         VarModule::on_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL);
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), false.into());
@@ -9,10 +8,8 @@ unsafe fn status_specialhi2exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into()
 }
 
-pub fn install() {
-    install_status_scripts!(
-        status_specialhi2exec,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Exec, *FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_2, status_specialhi2exec);
 }
 
 // #[status_script(agent="zelda", status = FIGHTER_STATUS_KIND_SPECIAL_HI_2, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]

@@ -1,7 +1,7 @@
 use super::*;
 use crate::fighters::common::opff::common_fighter_frame;
 
-unsafe extern "C" fn kamui_galeforce_attack(fighter: &mut L2CFighterCommon) {     {
+unsafe extern "C" fn kamui_galeforce_attack(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     
     if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {

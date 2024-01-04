@@ -1,7 +1,6 @@
 use super::*;
 
-#[acmd_script( agent = "luigi", script = "game_specialhi", category = ACMD_GAME, low_priority)]
-unsafe fn specialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -48,8 +47,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", script = "game_specialairhi", category = ACMD_GAME, low_priority)]
-unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -96,9 +94,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", scripts = ["game_specialsstart", "game_specialairsstart"], category = ACMD_GAME, low_priority )]
-unsafe fn specialsstart(fighter: &mut L2CAgentBase) {
-
+unsafe extern "C" fn specialsstart(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 3.0);
         if macros::is_excute(fighter)
         {
@@ -136,9 +132,7 @@ unsafe fn specialsstart(fighter: &mut L2CAgentBase) {
     }
 }
 
-#[acmd_script( agent = "luigi", script = "game_specialsdischarge", category = ACMD_GAME, low_priority )]
-unsafe fn specialsdischarge(agent: &mut L2CAgentBase) {
-
+unsafe extern "C" fn specialsdischarge(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 4.0);
         if macros::is_excute(agent)
         {
@@ -176,8 +170,7 @@ unsafe fn specialsdischarge(agent: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", script = "game_specialswall", category = ACMD_GAME, low_priority)]
-unsafe fn specialswall(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialswall(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.);
@@ -194,8 +187,7 @@ unsafe fn specialswall(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", script = "game_specialswallend", category = ACMD_GAME, low_priority)]
-unsafe fn specialswallend(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialswallend(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -211,9 +203,7 @@ unsafe fn specialswallend(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", scripts = ["game_specialn", "game_specialairn"], category = ACMD_GAME, low_priority)]
-unsafe fn specialn(fighter: &mut L2CAgentBase) {
-
+unsafe extern "C" fn specialn(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 17.0);
         if macros::is_excute(fighter)
         {
@@ -232,55 +222,7 @@ unsafe fn specialn(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "luigi", script = "effect_specialn", category = ACMD_EFFECT, low_priority )]
-unsafe fn fx_specialn(agent: &mut L2CAgentBase) {
-
-        if macros::is_excute(agent)
-        {
-            macros::LANDING_EFFECT(agent, Hash40::new("sys_action_smoke_h"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, false);
-        }
-    frame(agent.lua_state_agent, 17.0);
-        if macros::is_excute(agent)
-        {
-            macros::EFFECT_FOLLOW(agent, Hash40::new("luigi_fb_shoot"), Hash40::new("havel"), 0, 0, 0, -30, 0, 0, 1, true);
-            macros::FLASH(agent, 0, 1, 0, 0.353);
-            macros::EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("havel"), 0, 0, 0, -30, 0, 0, 1, true);
-        }
-    frame(agent.lua_state_agent, 19.0);
-        if macros::is_excute(agent)
-        {
-            macros::COL_NORMAL(agent);
-        }
-    frame(agent.lua_state_agent, 37.0);
-        if macros::is_excute(agent)
-        {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_fb_shoot"), false, false);
-        }
-}
-#[acmd_script( agent = "luigi", script = "effect_specialairn", category = ACMD_EFFECT, low_priority )]
-unsafe fn fx_specialairn(agent: &mut L2CAgentBase) {
-
-    frame(agent.lua_state_agent, 17.0);
-        if macros::is_excute(agent)
-        {
-            macros::EFFECT_FOLLOW(agent, Hash40::new("luigi_fb_shoot"), Hash40::new("havel"), 0, 0, 0, -30, 0, 0, 1, true);
-            macros::FLASH(agent, 0, 1, 0, 0.353);
-            macros::EFFECT_FOLLOW(agent, Hash40::new("sys_hit_elec_s"), Hash40::new("havel"), 0, 0, 0, -30, 0, 0, 1, true);
-        }
-    frame(agent.lua_state_agent, 19.0);
-        if macros::is_excute(agent)
-        {
-            macros::COL_NORMAL(agent);
-        }
-    frame(agent.lua_state_agent, 37.0);
-        if macros::is_excute(agent)
-        {
-            macros::EFFECT_OFF_KIND(agent, Hash40::new("luigi_fb_shoot"), false, false);
-        }
-}
-
-#[acmd_script( agent = "luigi", scripts = ["game_speciallw", "game_specialairlw"], category = ACMD_GAME, low_priority)]
-unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 3.);
@@ -332,17 +274,16 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        specialhi,
-        specialairhi,
-        specialsstart,
-        specialsdischarge,
-        specialswall,
-        specialswallend,
-        specialn,
-        speciallw,
-        fx_specialn,
-        fx_specialairn,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_specialhi", specialhi,);
+    agent.game_acmd("game_specialairhi", specialairhi,);
+    agent.game_acmd("game_specialsstart", specialsstart,);
+    agent.game_acmd("game_specialsairstart", specialsstart,);
+    agent.game_acmd("game_specialsdischarge", specialsdischarge,);
+    agent.game_acmd("game_specialswall", specialswall,);
+    agent.game_acmd("game_specialswallend", specialswallend,);
+    agent.game_acmd("game_specialn", specialn,);
+    agent.game_acmd("game_specialairn", specialn,);
+    agent.game_acmd("game_speciallw", speciallw,);
+    agent.game_acmd("game_specialairlw", speciallw,);
 }

@@ -1,8 +1,5 @@
 use smash::{
     hash40,
-    phx::{
-        Hash40,
-    },
     lua2cpp:: {
         L2CFighterCommon,
         L2CAgentBase
@@ -19,10 +16,11 @@ use smash_script::*;
 use crate::fighters::common::galeforce::*;
 use galeforce_utils::{utils::*, vars::*};
 
-mod opff;
 mod acmd;
+mod opff;
 
 pub fn install() {
-    opff::install();
-    acmd::install();
+    let agent = &mut smashline::Agent::new("sonic");
+    acmd::install(agent);
+    opff::install(agent);
 }

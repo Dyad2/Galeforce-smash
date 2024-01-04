@@ -1,7 +1,7 @@
 use super::*;
 use crate::fighters::common::opff::common_fighter_frame;
 
-unsafe extern "C" fn steve_frame(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn steve_fixes(fighter: &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
     let fighter_kinetic_energy_motion = mem::transmute::<u64, &mut smash::app::FighterKineticEnergyMotion>(KineticModule::get_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_MOTION));
     
@@ -28,6 +28,7 @@ unsafe extern "C" fn steve_frame(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn steve_frame(fighter: &mut L2CFighterCommon) {
     common_fighter_frame(fighter);
+    steve_fixes(fighter);
 }
 
 pub fn install(agent: &mut smashline::Agent) {

@@ -25,12 +25,17 @@ use galeforce_utils::{vars::*, table_const::*, utils::*};
 use custom_var::*;
 use crate::fighters::common::galeforce::*;
 
-mod opff;
 mod acmd;
+mod opff;
+mod specials;
 mod status;
+mod weapon;
 
 pub fn install() {
-    opff::install();
-    acmd::install();
-    status::install();
+    let agent = &mut smashline::Agent::new("zelda");
+    acmd::install(agent);
+    opff::install(agent);
+    specials::install(agent);
+    status::install(agent);
+    weapon::install(agent);
 }

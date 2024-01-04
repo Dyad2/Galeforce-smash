@@ -1,7 +1,6 @@
 use super::*;
 
 //up tilt
-#[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI3, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn rocky_attackhi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let mask = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI3 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64;
@@ -34,7 +33,6 @@ unsafe fn rocky_attackhi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 //removes workmodule::on_flag for FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING
-#[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI3, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn rocky_attackhi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.status_AttackHi3()
 }
@@ -104,7 +102,6 @@ pub unsafe fn status_AttackHi4_Main_minjump(fighter: &mut L2CFighterCommon) -> b
     return false;
 }
 
-#[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI4, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN)]
 unsafe fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     //fighter.status_AttackHi4Start_Main();
@@ -116,7 +113,6 @@ unsafe fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_shift_status_main(L2CValue::Ptr(rockman_attack_hi4_main_loop as *const () as _))
 }
 
-#[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_ATTACK_HI4, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE)]
 unsafe fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let mask = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI) as u64;
@@ -149,7 +145,6 @@ unsafe fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-#[status_script(agent="rockman", status = FIGHTER_STATUS_KIND_LANDING, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
 unsafe fn status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     fighter.sub_landing_uniq_process_exec();
@@ -164,12 +159,12 @@ unsafe fn status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into()
 }
 
-pub fn install() {
-    install_status_scripts!(
-        status_landing,
-        rocky_attackhi3_pre,
-        rocky_attackhi3_main,
-        rocky_attackhi4_pre,
-        rocky_attackhi4_main,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Exec, *FIGHTER_STATUS_KIND_LANDING, status_landing);
+
+    agent.status(smashline::Pre, *FIGHTER_STATUS_KIND_ATTACK_HI4, rocky_attackhi4_pre);
+    agent.status(smashline::Main, *FIGHTER_STATUS_KIND_ATTACK_HI4, rocky_attackhi4_main);
+
+    agent.status(smashline::Pre, *FIGHTER_STATUS_KIND_ATTACK_HI3, rocky_attackhi3_pre);
+    agent.status(smashline::Main, *FIGHTER_STATUS_KIND_ATTACK_HI3, rocky_attackhi3_main);
 }

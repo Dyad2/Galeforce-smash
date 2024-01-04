@@ -1,8 +1,7 @@
 use super::*;
 
 //effects
-#[acmd_script( agent = "roy", script = "effect_attackairlw", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 12.);
@@ -17,8 +16,7 @@ unsafe fn effectairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "roy", script = "effect_attackairn", category = ACMD_EFFECT, low_priority)]
-unsafe fn effectairn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn effectairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 8.0);
@@ -41,8 +39,7 @@ unsafe fn effectairn(fighter: &mut L2CAgentBase) {
 }
 
 //sound
-#[acmd_script( agent = "roy", script = "sound_attackairlw", category = ACMD_SOUND, low_priority)]
-unsafe fn soundairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 10.);
@@ -58,8 +55,7 @@ unsafe fn soundairlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "roy", script = "sound_attackairn", category = ACMD_SOUND, low_priority)]
-unsafe fn soundairn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn soundairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 5.0);
@@ -74,11 +70,10 @@ unsafe fn soundairn(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        effectairlw,
-        effectairn,
-        soundairlw,
-        soundairn
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.effect_acmd("effect_attackairlw", effectairlw,);
+    agent.effect_acmd("effect_attackairn", effectairn,);
+
+    agent.sound_acmd("sound_attackairlw", soundairlw,);
+    agent.sound_acmd("sound_attackairn", soundairn,);
 }

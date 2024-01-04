@@ -29,13 +29,15 @@ unsafe fn get_hitsound(boma: &mut BattleObjectModuleAccessor) -> i32 {
 }
 
 mod acmd;
-mod opff;
-mod status;
 mod agent_init;
+mod opff;
+mod specials;
 
 pub fn install() {
-    acmd::install();
-    opff::install();
-    status::install();
-    agent_init::install();
+    let agent = &mut smashline::Agent::new("reflet");
+    acmd::install(agent);
+    agent_init::install(agent);
+    opff::install(agent);
+    specials::install(agent);
+    weapon::install(agent);
 }

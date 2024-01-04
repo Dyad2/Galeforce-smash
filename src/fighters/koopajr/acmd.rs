@@ -137,4 +137,4 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_attackairn", attackairn,);
     agent.game_acmd("game_attackairb", attackairb,);
     agent.game_acmd("game_attackairlw", attackairlw,);
-   
+}

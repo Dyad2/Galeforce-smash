@@ -1,8 +1,7 @@
 use super::*;
 
 //global edits
-#[acmd_script( agent = "rockman", script = "game_dash", category = ACMD_GAME, low_priority)]
-unsafe fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -12,8 +11,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "rockman", script = "game_turndash", category = ACMD_GAME, low_priority)]
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -29,8 +27,7 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
-#[acmd_script( agent = "rockman", script = "game_attackhi3", category = ACMD_GAME, low_priority)]
-unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -78,8 +75,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "rockman", script = "game_attackhi4", category = ACMD_GAME, low_priority)]
-unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 4.);
@@ -117,8 +113,7 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
 }
 
 //air
-#[acmd_script( agent = "rockman", script = "game_attackairb", category = ACMD_GAME, low_priority)]
-unsafe fn attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -164,8 +159,7 @@ unsafe fn attackairb(fighter: &mut L2CAgentBase) {
 }
 
 //others
-#[acmd_script( agent = "rockman", script = "game_escapeairslide", category = ACMD_GAME, low_priority)]
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
@@ -181,27 +175,11 @@ unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
         }
 }
 
-//effects
-#[acmd_script( agent = "rockman", script = "effect_attackairb", category = ACMD_EFFECT, low_priority)]
-unsafe fn fxattackairb(fighter: &mut L2CAgentBase) {
-    let lua_state = fighter.lua_state_agent;
-
-    wait(lua_state, 3.);
-        if macros::is_excute(fighter)
-        {
-            macros::EFFECT_FOLLOW_FLIP(fighter, Hash40::new("rockman_slashcraw"), Hash40::new("rockman_slashcraw"), Hash40::new("top"), 0, 10, 9, 0, 0, 0, 1, true, *EF_FLIP_YZ);
-            EffectModule::set_rate_last(fighter.module_accessor, 0.7);
-        }
-}
-
-pub fn install() {
-    smashline::install_acmd_scripts!(
-        dash,
-        turndash,
-        attackhi3,
-        attackhi4,
-        attackairb,
-        escapeairslide,
-        fxattackairb
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.game_acmd("game_dash", dash,);
+    agent.game_acmd("game_turndash", turndash,);
+    agent.game_acmd("game_attackhi3", attackhi3,);
+    agent.game_acmd("game_attackhi4", attackhi4,);
+    agent.game_acmd("game_attackairb", attackairb,);
+    agent.game_acmd("game_escapeairslide", escapeairslide,);
 }
