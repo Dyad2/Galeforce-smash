@@ -1,4 +1,4 @@
-use super::*
+use super::*;
 
 //global edits
 unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {

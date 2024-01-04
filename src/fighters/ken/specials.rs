@@ -1,8 +1,7 @@
 use super::*;
 
 //specials
-#[acmd_script( agent = "ken", script = "game_specials", category = ACMD_GAME, low_priority)]
-unsafe fn specials(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -63,7 +62,7 @@ unsafe fn specials(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn specialairs(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialairs(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     wait(lua_state, 1.);

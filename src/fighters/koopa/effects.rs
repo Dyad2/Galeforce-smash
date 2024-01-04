@@ -1,8 +1,7 @@
 use super::*;
 
 //effect
-#[acmd_script( agent = "koopa", script = "effect_attack11", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fx_attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -21,8 +20,7 @@ unsafe fn fx_attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-#[acmd_script( agent = "koopa", script = "effect_attackairf", category = ACMD_EFFECT, low_priority)]
-unsafe fn fx_attackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn fx_attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 11.);
@@ -39,7 +37,7 @@ unsafe fn fx_attackairf(fighter: &mut L2CAgentBase) {
 }
 
 //expression
-unsafe fn ex_landingheavy(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn ex_landingheavy(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)

@@ -9,12 +9,10 @@ use smash_script::*;
 mod acmd;
 mod effects;
 mod opff;
-mod specials;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("miiswordsman");
     acmd::install(agent);
     opff::install(agent);
     effects::install(agent);
-    specials::install(agent);
 }

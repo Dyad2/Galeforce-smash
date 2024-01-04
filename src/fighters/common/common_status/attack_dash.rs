@@ -1,6 +1,5 @@
 use super::*;
 
-
 #[common_status_script(status = FIGHTER_STATUS_KIND_ATTACK_DASH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
     symbol = "_ZN7lua2cpp16L2CFighterCommon17status_AttackDashEv")]
 unsafe fn status_attack_dash(fighter: &mut L2CFighterCommon) -> L2CValue {

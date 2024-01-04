@@ -1,5 +1,4 @@
 use super::*;
-use crate::fighters::common::opff::common_fighter_frame;
 
 //global edits
 unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {

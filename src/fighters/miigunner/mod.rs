@@ -7,7 +7,7 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
-mod fighter;
+mod acmd;
 mod opff;
 mod specials;
 mod weapons;

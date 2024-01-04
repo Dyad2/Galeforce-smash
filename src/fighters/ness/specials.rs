@@ -1,4 +1,4 @@
-use super::*
+use super::*;
 
 //special
 #[acmd_script( agent = "ness", scripts = ["game_specials", "game_specialairs"], category = ACMD_GAME, low_priority)]

@@ -1,8 +1,6 @@
 use super::*;
 
-#[status_script(agent="gamewatch", status = FIGHTER_STATUS_KIND_SPECIAL_S, condition = LUA_SCRIPT_STATUS_FUNC_INIT_STATUS)]
-unsafe fn specials_setkind(fighter: &mut L2CFighterCommon) -> L2CValue {
-
+unsafe extern "C" fn specials_setkind(fighter: &mut L2CFighterCommon) -> L2CValue {
     println!("game and watch!");
 
     if VarModule::is_flag(fighter.battle_object,commons::instance::flag::GALEFORCE_ATTACK_ON) {
@@ -18,10 +16,8 @@ unsafe fn specials_setkind(fighter: &mut L2CFighterCommon) -> L2CValue {
     return ret;
 }
 
-pub fn install() {
-    install_status_scripts!(
-        specials_setkind,
-    );
+pub fn install(agent: &mut smashline::Agent) {
+    agent.status(smashline::Init, *FIGHTER_STATUS_KIND_SPECIAL_S, specials_setkind);
 }
 
 // // Rewrite this you NERD
