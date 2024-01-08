@@ -1,7 +1,7 @@
 use super::*;
 
 //global edits
-unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -11,7 +11,7 @@ unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -27,7 +27,7 @@ unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
-unsafe extern "C" fn jab1(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_jab1(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -66,7 +66,7 @@ unsafe extern "C" fn jab1(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn jab2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_jab2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -104,7 +104,7 @@ unsafe extern "C" fn jab2(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn jab3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_jab3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -144,7 +144,7 @@ unsafe extern "C" fn jab3(fighter: &mut L2CAgentBase) {
          }
 }
 
-unsafe extern "C" fn jab100end(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_jab100end(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -200,7 +200,7 @@ unsafe extern "C" fn jab100end(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -264,7 +264,7 @@ unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -313,7 +313,7 @@ unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacks3s2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attacks3s2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -360,7 +360,7 @@ unsafe extern "C" fn attacks3s2(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacklw3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attacklw3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -399,7 +399,7 @@ unsafe extern "C" fn attacklw3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -441,7 +441,7 @@ unsafe extern "C" fn attackdash(fighter: &mut L2CAgentBase) {
 }
 
 //Air
-unsafe extern "C" fn airhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_airhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -545,7 +545,7 @@ unsafe extern "C" fn airhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airhihold(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_airhihold(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -557,7 +557,7 @@ unsafe extern "C" fn airhihold(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -604,7 +604,7 @@ unsafe extern "C" fn airf(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airf2(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairf2(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -657,7 +657,7 @@ unsafe extern "C" fn airf2(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airf3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairf3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -702,7 +702,7 @@ unsafe extern "C" fn airf3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -757,7 +757,7 @@ unsafe extern "C" fn airn(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     //custom animation, no longer needs set_rate
@@ -805,7 +805,7 @@ unsafe extern "C" fn airb(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn airlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_attackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -865,7 +865,7 @@ unsafe extern "C" fn airlw(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn landingairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_landingairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -893,7 +893,7 @@ unsafe extern "C" fn landingairlw(fighter: &mut L2CAgentBase) {
 }
 
 //grabs & throws
-unsafe extern "C" fn catch(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_catch(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -922,7 +922,7 @@ unsafe extern "C" fn catch(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn catchdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_catchdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -951,7 +951,7 @@ unsafe extern "C" fn catchdash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn catchturn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_catchturn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -980,7 +980,7 @@ unsafe extern "C" fn catchturn(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn throwf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_throwf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -1015,7 +1015,7 @@ unsafe extern "C" fn throwf(fighter: &mut L2CAgentBase) {
 }
 
 //Other
-unsafe extern "C" fn escapeb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_escapeb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -1057,7 +1057,7 @@ unsafe extern "C" fn escapeb(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn escapen(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_escapen(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -1099,7 +1099,7 @@ unsafe extern "C" fn escapen(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn escapef(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_escapef(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -1152,7 +1152,7 @@ unsafe extern "C" fn escapef(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn escapeair(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_escapeair(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -1172,7 +1172,7 @@ unsafe extern "C" fn escapeair(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn bayo_escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 2.);
@@ -1199,37 +1199,37 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhi", dash,);
-    agent.game_acmd("game_specialhi", turndash,);
+    agent.game_acmd("game_dash", bayo_dash);
+    agent.game_acmd("game_turndash", bayo_turndash);
     
-    agent.game_acmd("game_specialairhi", jab1);
-    agent.game_acmd("game_specialairhi", jab2);
-    agent.game_acmd("game_specialairhi", jab3);
-    agent.game_acmd("game_specialairhi", jab100end);
-    agent.game_acmd("game_specialairhi", attackhi3);
-    agent.game_acmd("game_specialairhi", attacks3);
-    agent.game_acmd("game_specialairhi", attacks3s2);
-    agent.game_acmd("game_specialairhi", attacklw3);
-    agent.game_acmd("game_specialairsu", attackdash);
+    agent.game_acmd("game_attack11", bayo_jab1);
+    agent.game_acmd("game_attack12", bayo_jab2);
+    agent.game_acmd("game_attack13", bayo_jab3);
+    agent.game_acmd("game_attack100end", bayo_jab100end);
+    agent.game_acmd("game_attackhi3", bayo_attackhi3);
+    agent.game_acmd("game_attacks3", bayo_attacks3);
+    agent.game_acmd("game_attacks3s2", bayo_attacks3s2);
+    agent.game_acmd("game_attacklw3", bayo_attacklw3);
+    agent.game_acmd("game_attackdash", bayo_attackdash);
 
-    agent.game_acmd("game_specialairsu", airhi);
-    agent.game_acmd("game_specialairsu", airhihold);
-    agent.game_acmd("game_specialairsu", airf);
-    agent.game_acmd("game_specialairsu", airf2);
-    agent.game_acmd("game_specialairsu", airf3);
-    agent.game_acmd("game_specialairsu", airn);
-    agent.game_acmd("game_specialairsu", airb);
-    agent.game_acmd("game_specialairsu", airlw);
-    agent.game_acmd("game_specialairsu", landingairlw);
+    agent.game_acmd("game_attackairhi", bayo_airhi);
+    agent.game_acmd("game_attackairhihold", bayo_airhihold);
+    agent.game_acmd("game_attackairf", bayo_attackairf);
+    agent.game_acmd("game_attackairf2", bayo_attackairf2);
+    agent.game_acmd("game_attackairf3", bayo_attackairf3);
+    agent.game_acmd("game_attackairn", bayo_attackairn);
+    agent.game_acmd("game_attackairb", bayo_attackairb);
+    agent.game_acmd("game_attackairlw", bayo_attackairlw);
+    agent.game_acmd("game_landingairlw", bayo_landingairlw);
     
-    agent.game_acmd("game_specialairsu", catch);
-    agent.game_acmd("game_specialairsu", catchdash);
-    agent.game_acmd("game_specialairsu", catchturn);
-    agent.game_acmd("game_specialairsu", throwf);
+    agent.game_acmd("game_catch", bayo_catch);
+    agent.game_acmd("game_catchdash", bayo_catchdash);
+    agent.game_acmd("game_catchturn", bayo_catchturn);
+    agent.game_acmd("game_throwf", bayo_throwf);
     
-    agent.game_acmd("game_specialairsu", escapeb);
-    agent.game_acmd("game_specialairsu", escapen);
-    agent.game_acmd("game_specialairsu", escapef);
-    agent.game_acmd("game_specialairsu", escapeair);
-    agent.game_acmd("game_specialairsu", escapeairslide);
+    agent.game_acmd("game_escapeb", bayo_escapeb);
+    agent.game_acmd("game_escapen", bayo_escapen);
+    agent.game_acmd("game_escapef", bayo_escapef);
+    agent.game_acmd("game_escapeair", bayo_escapeair);
+    agent.game_acmd("game_escapeairslide", bayo_escapeairslide);
 }

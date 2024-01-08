@@ -1,112 +1,112 @@
-mod bayonetta;
-mod brave;
-mod buddy;
+pub mod bayonetta;
+pub mod brave;
+pub mod buddy;
 
-mod captain;
-//mod chrom;
-mod cloud;
+pub mod captain;
+//pub mod chrom;
+pub mod cloud;
 pub mod common;
 
-mod daisy;
-mod dedede;
-mod demon;
-mod diddy;
-mod dolly;
-mod donkey;
-mod duckhunt;
+pub mod daisy;
+pub mod dedede;
+pub mod demon;
+pub mod diddy;
+pub mod dolly;
+pub mod donkey;
+pub mod duckhunt;
 
-mod edge;
-mod eflame;
-mod elight;
+pub mod edge;
+pub mod eflame;
+pub mod elight;
 
-mod falco;
-mod fox;
+pub mod falco;
+pub mod fox;
 
-mod ganon;
-mod gaogaen;
-mod gamewatch;
-mod gekkouga;
+pub mod ganon;
+pub mod gaogaen;
+pub mod gamewatch;
+pub mod gekkouga;
 
-mod ike;
-mod inkling;
+pub mod ike;
+pub mod inkling;
 
-mod jack;
+pub mod jack;
 
-mod kamui;
-mod ken;
-mod kirby;
-mod koopa;
-mod koopajr;
-mod krool;
+pub mod kamui;
+pub mod ken;
+pub mod kirby;
+pub mod koopa;
+pub mod koopajr;
+pub mod krool;
 
-mod link;
-mod littlemac;
-mod lucario;
-mod lucas;
-mod lucina;
-mod luigi;
+pub mod link;
+pub mod littlemac;
+pub mod lucario;
+pub mod lucas;
+pub mod lucina;
+pub mod luigi;
 
-mod mario;
-mod mariod;
-mod marth;
-mod master;
-mod metaknight;
-mod mewtwo;
-mod miifighter;
-mod miigunner;
-mod miiswordman;
-mod murabito;
+pub mod mario;
+pub mod mariod;
+pub mod marth;
+pub mod master;
+pub mod metaknight;
+pub mod mewtwo;
+pub mod miifighter;
+pub mod miigunner;
+pub mod miiswordman;
+pub mod murabito;
 
-mod nana;
-mod ness;
+pub mod nana;
+pub mod ness;
 
-mod packun;
-mod pacman;
-mod palutena;
-mod peach;
-mod pfushigisou;
-//mod pichu;
-mod pickel;
-mod pikachu;
-mod pikmin;
-mod pit;
-mod pitb;
-mod plizardon;
-mod popo;
-mod purin;
-mod pzenigame;
+pub mod packun;
+pub mod pacman;
+pub mod palutena;
+pub mod peach;
+pub mod pfushigisou;
+//pub mod pichu;
+pub mod pickel;
+pub mod pikachu;
+pub mod pikmin;
+pub mod pit;
+pub mod pitb;
+pub mod plizardon;
+pub mod popo;
+pub mod purin;
+pub mod pzenigame;
 
-mod reflet;
-mod richter;
-mod ridley;
-mod robot;
-mod rockman;
-mod rosetta;
-mod roy;
-mod ryu;
+pub mod reflet;
+pub mod richter;
+pub mod ridley;
+pub mod robot;
+pub mod rockman;
+pub mod rosetta;
+pub mod roy;
+pub mod ryu;
 
-mod samus;
-mod samusd;
-mod sheik;
-mod shizue;
-mod shulk;
-mod simon;
-mod snake;
-mod sonic;
-mod szerosuit;
+pub mod samus;
+pub mod samusd;
+pub mod sheik;
+pub mod shizue;
+pub mod shulk;
+pub mod simon;
+pub mod snake;
+pub mod sonic;
+pub mod szerosuit;
 
-mod tantan;
-mod tink;
-mod trail;
+pub mod tantan;
+pub mod tink;
+pub mod trail;
 
-mod wario;
-mod wiifit;
-mod wolf;
+pub mod wario;
+pub mod wiifit;
+pub mod wolf;
 
-mod yoshi;
-mod younglink;
+pub mod yoshi;
+pub mod younglink;
 
-mod zelda;
+pub mod zelda;
 
 pub fn install(){
     bayonetta::install();   

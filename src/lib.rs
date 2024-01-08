@@ -1,11 +1,12 @@
-#![feature(concat_idents)]
-#![feature(proc_macro_hygiene)]
+#![feature(
+    concat_idents,
+    proc_macro_hygiene,
+    simd_ffi,
+    repr_simd
+)]
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 #![allow(unused_macros)]
-
-//TODO:
-// dolly crash (dthrow?)
 
 use skyline::libc::c_char;
 
