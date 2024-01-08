@@ -3,7 +3,7 @@ mod brave;
 mod buddy;
 
 mod captain;
-mod chrom;
+//mod chrom;
 mod cloud;
 pub mod common;
 
@@ -65,7 +65,7 @@ mod pacman;
 mod palutena;
 mod peach;
 mod pfushigisou;
-mod pichu;
+//mod pichu;
 mod pickel;
 mod pikachu;
 mod pikmin;
@@ -90,7 +90,7 @@ mod samusd;
 mod sheik;
 mod shizue;
 mod shulk;
-//mod simon;
+mod simon;
 mod snake;
 mod sonic;
 mod szerosuit;
@@ -109,95 +109,95 @@ mod younglink;
 mod zelda;
 
 pub fn install(){
-    bayonetta::install();   //okay, bullet arts have no hitboxes
-    brave::install();        //testing
-    buddy::install();       //testing
-    captain::install();     //testing
+    bayonetta::install();   
+    brave::install();        
+    buddy::install();       
+    captain::install();     
     //chrom::install();       //char removed
-    cloud::install();       //testing
-    common::install();     //lol
-    daisy::install();       //testing
-    dedede::install();      //testing
-    demon::install();       //testing, tons of new stuff
-    diddy::install();       //testing
-    dolly::install();       //testing
-    donkey::install();      //testing
-    duckhunt::install();    //testing
-    edge::install();        //testing
-    eflame::install();      //testing
-    elight::install();      //testing
-    falco::install();       //testing
-    fox::install();         //testing
+    cloud::install();       
+    common::install();     
+    daisy::install();       
+    dedede::install();      
+    demon::install();      
+    diddy::install();       
+    dolly::install();       
+    donkey::install();      
+    duckhunt::install();    
+    edge::install();        
+    eflame::install();      
+    elight::install();      
+    falco::install();       
+    fox::install();         
     ganon::install();       //okay
-    gaogaen::install();     //testing
+    gaogaen::install();     
     gamewatch::install();
     gekkouga::install();
-    ike::install();         //testing
-    inkling::install();     //ink arts don't work as intended. wrong angle and doesn't require ink
-    jack::install();        //testing
-    kamui::install();       //okay, ryusensya might have to much stun
-    ken::install();         //testing
-    kirby::install();       //okay
-    koopa::install();       //testing
-    koopajr::install();     //testing
-    krool::install();       //okay
-    link::install();        //testing
-    littlemac::install();   //testing
-    lucario::install();     //testing
-    lucas::install();       //testing
-    lucina::install();      //okay
-    luigi::install();       //testing
-    mario::install();       //testing
-    mariod::install();      //testing
-    marth::install();       //okay
-    master::install();      //okay
-    metaknight::install();  //testing
-    mewtwo::install();      //testing
-    miifighter::install();  //testing
-    miigunner::install();  //testing
-    miiswordman::install();  //testing
-    murabito::install();    //testing
+    ike::install();         
+    inkling::install();     
+    jack::install();        
+    kamui::install();       
+    ken::install();         
+    kirby::install();       
+    koopa::install();       
+    koopajr::install();     
+    krool::install();       
+    link::install();        
+    littlemac::install();   
+    lucario::install();     
+    lucas::install();       
+    lucina::install();      
+    luigi::install();       
+    mario::install();       
+    mariod::install();      
+    marth::install();       
+    master::install();      
+    metaknight::install();  
+    mewtwo::install();      
+    miifighter::install();  
+    miigunner::install();  
+    miiswordman::install(); 
+    murabito::install();    
     nana::install();
-    ness::install();        //testing
+    ness::install();        
     packun::install();
     pacman::install();
-    palutena::install();    //testing
-    peach::install();       //testing
+    palutena::install();    
+    peach::install();       
     pfushigisou::install();
     //pichu::install();       //char removed
     pickel::install();
     pikachu::install();
     pikmin::install();
-    pit::install();         //testing
-    pitb::install();        //testing
+    pit::install();         
+    pitb::install();        
     plizardon::install();
     popo::install();
-    purin::install();       //testing
+    purin::install();       
     pzenigame::install();
-    reflet::install();      //testing
-    richter::install();     //testing
+    reflet::install();      
+    richter::install();     
     ridley::install();
     robot::install();
     rockman::install();
-    rosetta::install();     //testing
-    roy::install();         //testing
-    ryu::install();         //testing
-    samus::install();       //testing
-    samusd::install();      //testing
-    sheik::install();       //testing
-    shizue::install();      //testing
-    shulk::install();       //testing
-    //simon::install();       //char removed
-    snake::install();       //testing
+    rosetta::install();     
+    roy::install();         
+    ryu::install();         
+    samus::install();       
+    samusd::install();      
+    sheik::install();       
+    shizue::install();      
+    shulk::install();       
+    simon::install();       
+    snake::install();       
     sonic::install();
-    szerosuit::install();   //testing
-    tantan::install();      //testing
-    tink::install();        //testing
-    trail::install();       //testing
+    szerosuit::install();   
+    tantan::install();      
+    tink::install();        
+    trail::install();       
     wario::install();
-    wiifit::install();      //testing
-    wolf::install();        //testing
-    yoshi::install();       //testing
+    wiifit::install();      
+    wolf::install();        
+    yoshi::install();       
     younglink::install();
-    zelda::install();       //testing
+    zelda::install();       
 }

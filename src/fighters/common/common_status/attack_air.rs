@@ -2,8 +2,8 @@ use super::*;
 use smash::phx::Vector4f;
 use smash::lib::L2CAgent;
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon14sub_attack_airEv")]
-unsafe fn sub_attack_air(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
+#[skyline::hook(replace = L2CFighterCommon_status_AttackAir_Sub)]
+unsafe extern "C" fn sub_attack_air(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
 
     if is_training_mode() {
         if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING) {
@@ -20,8 +20,8 @@ unsafe fn sub_attack_air(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
     return;
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon21sub_attack_air_commonEN3lib8L2CValueE")]
-unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
+#[skyline::hook(replace = L2CFighterCommon_sub_attack_air_common)]
+unsafe extern "C" fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValue) {
     ControlModule::reset_trigger(fighter.module_accessor);
     ControlModule::reset_flick_y(fighter.module_accessor);
     ControlModule::reset_flick_sub_y(fighter.module_accessor);
@@ -166,23 +166,37 @@ unsafe fn sub_attack_air_common(fighter: &mut L2CFighterCommon, param1 : L2CValu
 //     return 0.into()
 // }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ATTACK_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon20status_end_AttackAirEv")]
-unsafe fn status_AttackAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_AttackAir)]
+unsafe extern "C" fn status_AttackAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     ColorBlendModule::cancel_main_color(fighter.module_accessor, 0);
     return 0.into();
 }
 
-pub fn install() {
-    install_status_scripts!(
-        //status_attackair_main,
-        status_AttackAir_end,
-    );
-    install_hooks!(
-        //bac_attackair_uniq,
-        sub_attack_air,
-        sub_attack_air_common,
-        //status_attackair,
-        //status_attackair_main_common,
-    );
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            sub_attack_air,
+            sub_attack_air_common,
+            status_AttackAir_end,
+        );
+    }
 }
+
+pub fn install() {
+    skyline::nro::add_hook(nro_hook);
+}
+
+
+//pub fn install() {
+//    install_status_scripts!(
+//        //status_attackair_main,
+//        status_AttackAir_end,
+//    );
+//    install_hooks!(
+//        //bac_attackair_uniq,
+//        sub_attack_air,
+//        sub_attack_air_common,
+//        //status_attackair,
+//        //status_attackair_main_common,
+//    );
+//}

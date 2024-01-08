@@ -1,8 +1,7 @@
 use super::*;
 
 //specials
-#[acmd_script( agent = "link", script = "game_specialhi", category = ACMD_GAME, low_priority)]
-unsafe fn specialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -38,8 +37,8 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
             AttackModule::clear_all(fighter.module_accessor);
             MotionModule::set_rate(fighter.module_accessor, 1.0);
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) && DamageModule::damage(fighter.module_accessor, 0) >= 100.0 {
-                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 900);
+                VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::set_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 900);
             }
         }
     frame(lua_state, 48.);

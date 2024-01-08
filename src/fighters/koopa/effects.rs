@@ -43,7 +43,7 @@ unsafe extern "C" fn ex_landingheavy(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE_INTP, *SLOPE_STATUS_LR, 2);
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+            if !VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

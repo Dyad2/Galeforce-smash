@@ -1,8 +1,7 @@
 use super::*;
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ATTACK_DASH, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon17status_AttackDashEv")]
-unsafe fn status_attack_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_AttackDash)]
+unsafe extern "C" fn status_attack_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("attack_dash"), 0.0, 1.0, false, 0.0, false, false);
 
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_CATCH_TURN);
@@ -66,7 +65,7 @@ unsafe fn status_attack_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     return 0.into()
 // }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon22status_AttackDash_MainEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_AttackDash_Main)]
 unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     //prevents crossups with dash attack
@@ -81,14 +80,14 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
         let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
         let instance_boma = mem::transmute::<&mut smash::app::BattleObjectModuleAccessor, &mut smash::app::FighterModuleAccessor>(&mut *fighter.module_accessor);
 
-        if fighter.global_table[MOTION_FRAME].get_i32() <= 5 && !VarModule::is_flag(fighter.battle_object, reflet::status::flag::ATTACK_BUTTON_RELEASED) {
+        if fighter.global_table[MOTION_FRAME].get_i32() <= 5 && !VarModule::is_flag(fighter.module_accessor, reflet::status::flag::ATTACK_BUTTON_RELEASED) {
             if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
                 if WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THUNDER_SWORD_CURRENT_POINT) > 0 {
                     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
                 }
             }
             else {
-                VarModule::on_flag(fighter.battle_object, reflet::status::flag::ATTACK_BUTTON_RELEASED);
+                VarModule::on_flag(fighter.module_accessor, reflet::status::flag::ATTACK_BUTTON_RELEASED);
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
             }
         }
@@ -167,12 +166,25 @@ unsafe extern "C" fn status_AttackDash_Main(fighter: &mut L2CFighterCommon) -> L
     return 0.into();
 }
 
-pub fn install() {
-    install_status_scripts!(
-        status_attack_dash,
-    );
-    install_hooks!(
-        //sub_attack_dash_uniq,
-        status_AttackDash_Main
-    );
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_attack_dash,
+            status_AttackDash_Main,
+        );
+    }
 }
+
+pub fn install() {
+    skyline::nro::add_hook(nro_hook);
+}
+
+//pub fn install() {
+//    install_status_scripts!(
+//        status_attack_dash,
+//    );
+//    install_hooks!(
+//        //sub_attack_dash_uniq,
+//        status_AttackDash_Main
+//    );
+//}

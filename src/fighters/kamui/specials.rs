@@ -1,7 +1,7 @@
 use super::*; 
 
 //specials
-unsafe fn specialhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -43,7 +43,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 23.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 28.);
         if macros::is_excute(fighter)
@@ -56,7 +56,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 39.);
         if macros::is_excute(fighter)
@@ -75,7 +75,7 @@ unsafe fn specialhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -117,7 +117,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 23.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 28.);
         if macros::is_excute(fighter)
@@ -130,7 +130,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 39.);
         if macros::is_excute(fighter)
@@ -149,7 +149,7 @@ unsafe fn specialairhi(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn specialswallattackb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn specialswallattackb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
         if macros::is_excute(fighter)
@@ -196,7 +196,7 @@ unsafe fn specialswallattackb(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn speciallw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 1.);
@@ -220,7 +220,7 @@ unsafe fn speciallw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("specialhi", game_specialhi,);
+    agent.game_acmd("specialhi", specialhi,);
     agent.game_acmd("game_specialairhi", specialairhi,);
     agent.game_acmd("game_specialswallattackb", specialswallattackb,);
     agent.game_acmd("game_speciallw", speciallw,);

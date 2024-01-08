@@ -12,11 +12,10 @@ use {
     galeforce_utils::vars::*,
 };
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon20status_pre_EscapeAirEv")]
-pub unsafe fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeAir)]
+unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         GroundModule::attach_ground(fighter.module_accessor, true);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
         return 0.into();
@@ -27,9 +26,8 @@ pub unsafe fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon16status_EscapeAirEv")]
-unsafe fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_EscapeAir)]
+unsafe extern "C" fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     //TODO: re-check vanilla script for identical behavior.
     ControlModule::reset_trigger(fighter.module_accessor);
@@ -54,7 +52,7 @@ unsafe fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         return 1.into();
     }
     if !fighter.sub_escape_air_common_main().get_bool() {
@@ -63,7 +61,7 @@ unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2
     0.into()
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon26sub_escape_air_common_mainEv")]
+#[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_main)]
 unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
@@ -88,7 +86,7 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
     return true.into();
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon33sub_escape_air_common_strans_mainEv")]
+#[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_strans_main)]
 unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     let escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
     let escape_throw_item_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("escape_throw_item_frame"));
@@ -142,7 +140,7 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
         }
         //new
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
-            VarModule::on_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+            VarModule::on_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
         }
         fighter.set_situation(SITUATION_KIND_GROUND.into());
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
@@ -185,12 +183,11 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
     0.into()
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_AIR, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon20status_end_EscapeAirEv")]
-unsafe fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_end_EscapeAir)]
+unsafe extern "C" fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
     
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
     }
     call_original!(fighter)
 }
@@ -224,7 +221,7 @@ unsafe fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 //                 //StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
 //                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_KEEP_AIR_TURNED_OFF);
 //             }
-//             //let speed_mul = ParamModule::get_float(fighter.battle_object, ParamType::Common, "escape_air_slide_speed_mul");
+//             //let speed_mul = ParamModule::get_float(fighter.module_accessor, ParamType::Common, "escape_air_slide_speed_mul");
 //             let speed_mul = 0.9; //this is the hdr speed value, im testing stuff
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_mul, speed_mul);
@@ -238,23 +235,19 @@ unsafe fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
 //             let speed_y = smash::app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-
 //             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST_NO_CAP, speed_x, 0.0, 0.0, 0.0, 0.0);
 //             smash::app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL);
 //             smash::app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
 //             smash::app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
 //             fighter.clear_lua_stack();
 //             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
 //             smash::app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-
 //             KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_STOP, fighter.module_accessor);
 //             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_KINE_FALL);
 //             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
@@ -264,23 +257,18 @@ unsafe fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     }
 // }
 
-// fn nro_hook(info: &skyline::nro::NroInfo) {
-//     if info.name == "common" {
-//         skyline::install_hooks!(
-//             exec_escape_air_slide
-//         );
-//     }
-// }
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_EscapeAir_pre,
+            status_EscapeAir,
+            sub_escape_air_common_main,
+            sub_escape_air_common_strans_main,
+            status_EscapeAir_end,
+        );
+    }
+}
 
 pub fn install() {
-    install_status_scripts!(
-        status_EscapeAir_pre,
-        status_EscapeAir,
-        status_EscapeAir_end
-    );
-    install_hooks!(
-        sub_escape_air_common_strans_main,
-        sub_escape_air_common_main
-    );
-    //skyline::nro::add_hook(nro_hook);
+    skyline::nro::add_hook(nro_hook);
 }

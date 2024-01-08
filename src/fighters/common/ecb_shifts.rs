@@ -61,7 +61,7 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
     if is_fighter(&mut *fighter.module_accessor) {
         if !FighterManager::is_ready_go(singletons::FighterManager()) {
             GroundModule::set_rhombus_offset(fighter.module_accessor,  &Vector2f{x : 0.0, y : 0.0});
-            VarModule::set_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y, 0.0);
+            VarModule::set_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y, 0.0);
             return;
         }
 
@@ -114,13 +114,13 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
                 max_offset = 0.;
             }
             // else {
-            //     max_offset = VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y);
+            //     max_offset = VarModule::get_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y);
             // }
-            VarModule::set_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y, max_offset);
-            GroundModule::set_rhombus_offset(fighter.module_accessor, &Vector2f{x : 0.0, y : VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y)});
+            VarModule::set_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y, max_offset);
+            GroundModule::set_rhombus_offset(fighter.module_accessor, &Vector2f{x : 0.0, y : VarModule::get_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y)});
         }
-        else if VarModule::get_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y) != 0.0 {
-            VarModule::set_float(fighter.battle_object, commons::instance::float::ECB_OFFSET_Y, 0.0);
+        else if VarModule::get_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y) != 0.0 {
+            VarModule::set_float(fighter.module_accessor, commons::instance::float::ECB_OFFSET_Y, 0.0);
             GroundModule::set_rhombus_offset(fighter.module_accessor, &Vector2f{x : 0.0, y : 0.0});
         }
     }

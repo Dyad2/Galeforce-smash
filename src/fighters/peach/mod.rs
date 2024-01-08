@@ -1,6 +1,7 @@
 use smash::phx::Hash40;
 use smash::hash40;
 use smash::app::lua_bind::*;
+use smash::lib::lua_const::*;
 use smash::{lua2cpp::L2CFighterCommon, lua2cpp::L2CAgentBase};
 use smash::app::sv_animcmd::*;
 use smashline::*;

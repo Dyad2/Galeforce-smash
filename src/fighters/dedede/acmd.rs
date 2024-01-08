@@ -377,7 +377,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -392,7 +392,7 @@ unsafe extern "C" fn expressionlandingheavy(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             smash_script::slope!(fighter, *MA_MSC_CMD_SLOPE_SLOPE, *SLOPE_STATUS_LR);
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) {
+            if !VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
                 macros::QUAKE(fighter, *CAMERA_QUAKE_KIND_S);
             }
         }

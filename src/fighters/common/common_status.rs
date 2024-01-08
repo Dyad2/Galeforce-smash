@@ -10,8 +10,8 @@ mod guard;
 mod jumpsquat;
 mod landing;
 mod run;
-mod shieldbreakDown;
-mod shieldbreakFly;
+mod shieldbreakdown;
+mod shieldbreakfly;
 mod turn;
 
 pub fn install() {
@@ -25,7 +25,7 @@ pub fn install() {
     jumpsquat::install();
     landing::install();
     run::install();
-    shieldbreakDown::install();
-    shieldbreakFly::install();
+    shieldbreakdown::install();
+    shieldbreakfly::install();
     turn::install();
 }

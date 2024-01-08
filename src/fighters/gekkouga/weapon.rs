@@ -9,10 +9,8 @@ unsafe extern "C" fn water_specialhi(weapon: &mut L2CAgentBase) {
     //weapons using owner_fighter.module_accessor stuff
     if !smash::app::sv_battle_object::is_null(owner_id) && smash::app::sv_battle_object::is_active(owner_id) {
         let owner_boma = &mut *sv_battle_object::module_accessor(owner_id);
-        let owner_object_id = owner_boma.battle_object_id;
-        let owner_object = get_battle_object_from_id(owner_object_id);
 
-        if VarModule::is_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+        if VarModule::is_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) {
             frame(lua_state, 1.);
                 if macros::is_excute(weapon)
                 {

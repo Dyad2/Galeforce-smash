@@ -6,10 +6,10 @@ unsafe extern "C" fn simon_specialhi_noHelpless(fighter: &mut L2CFighterCommon) 
     
     if (curr_motion_kind == hash40("special_air_hi") || curr_motion_kind == hash40("special_hi")) && MotionModule::frame(fighter.module_accessor) >= 45.0 {
         StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_FALL, false);
-        VarModule::on_flag(fighter.battle_object, commons::instance::flag::DISABLE_SPECIAL_HI)
+        VarModule::on_flag(fighter.module_accessor, commons::instance::flag::DISABLE_SPECIAL_HI)
     }
     if is_special_reset(&mut *fighter.module_accessor) {
-        VarModule::off_flag(fighter.battle_object,commons::instance::flag::DISABLE_SPECIAL_HI)
+        VarModule::off_flag(fighter.module_accessor,commons::instance::flag::DISABLE_SPECIAL_HI)
     }
 } 
 

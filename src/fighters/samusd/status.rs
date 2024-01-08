@@ -1,7 +1,7 @@
 use super::*;
 
 //manages speed, and the shoot flag for some reason
-unsafe fn samusd_specialnf_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn samusd_specialnf_exec(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_FLAG_SHOOT) {
         //let count = WorkModule::get_int(fighter.module_accessor, *FIGHTER_SAMUS_STATUS_SPECIAL_N_WORK_INT_COUNT) as f32;

@@ -1,7 +1,6 @@
 use super::*;
 
 //special
-#[acmd_script( agent = "ness", scripts = ["game_specials", "game_specialairs"], category = ACMD_GAME, low_priority)]
 unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 

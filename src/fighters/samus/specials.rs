@@ -18,7 +18,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 57, 60, 0, 80, 9.5, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_ELEC, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 3.);
@@ -36,7 +36,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -57,7 +57,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 3.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 9.0, 57, 60, 0, 80, 9.5, 0.0, 6.5, 0.0, None, None, None, 1.3, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_rush"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_SAMUSD_SCREW, *ATTACK_REGION_BODY);
         }
     wait(lua_state, 4.);
@@ -75,7 +75,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 

@@ -55,7 +55,7 @@ unsafe extern "C" fn specialhi2(fighter: &mut L2CAgentBase) {
     frame(lua_state, 44.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 47.);
         if macros::is_excute(fighter)
@@ -115,7 +115,7 @@ unsafe extern "C" fn specialairhi2(agent: &mut L2CAgentBase) {
     frame(agent.lua_state_agent, 44.0);
         if macros::is_excute(agent)
         {
-            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07 as u64), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(agent, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(agent.lua_state_agent, 47.0);
         if macros::is_excute(agent)

@@ -29,7 +29,7 @@ use {
 // flag: L2CValue) {
 //     println!("in change_status");
 
-//     if fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PEACH && !VarModule::is_flag(fighter.battle_object, peach::instance::flag::ALLOW_FLOAT) {
+//     if fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PEACH && !VarModule::is_flag(fighter.module_accessor, peach::instance::flag::ALLOW_FLOAT) {
 //         let status_i32 = status.get_i32();
 //         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status_i32) {
 //             return;
@@ -51,7 +51,7 @@ flag: i32) {
     let object_id = boma.battle_object_id;
     let object = get_battle_object_from_id(object_id);
 
-    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
             return;
         }
@@ -72,7 +72,7 @@ flag: i32) {
     let object_id = boma.battle_object_id;
     let object = get_battle_object_from_id(object_id);
 
-    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
             return;
         }
@@ -92,7 +92,7 @@ status: i32) {
     let object_id = boma.battle_object_id;
     let object = get_battle_object_from_id(object_id);
 
-    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(object, peach::instance::flag::ALLOW_FLOAT) {
+    if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
             return;
         }
@@ -131,7 +131,7 @@ pub unsafe fn init_settings_replace(
     }
     let object_id = (*boma).battle_object_id;
     let object = get_battle_object_from_id(object_id);
-    VarModule::reset(object, mask);
+    VarModule::reset(boma, mask);
 
     // teleports fighters on landing
     // The ECB shift code runs in opff, so it runs a frame late,
@@ -164,10 +164,10 @@ pub unsafe fn init_settings_replace(
         ].contains(&StatusModule::prev_status_kind(boma, 0)/*&status_kind*/)
         && !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_AIR)
         && !WorkModule::is_flag(boma, *FIGHTER_INSTANCE_WORK_ID_FLAG_GANON_SPECIAL_S_DAMAGE_FALL_GROUND)
-        && VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y) != 0.0 {
+        && VarModule::get_float(boma, vars::commons::instance::float::ECB_OFFSET_Y) != 0.0 {
             if StatusModule::situation_kind(boma) == *SITUATION_KIND_GROUND {
                 if StatusModule::prev_situation_kind(boma) != *SITUATION_KIND_GROUND {
-                    let fighter_pos = smash::phx::Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma) + VarModule::get_float(object, vars::commons::instance::float::ECB_OFFSET_Y), z: PostureModule::pos_z(boma)};
+                    let fighter_pos = smash::phx::Vector3f {x: PostureModule::pos_x(boma), y: PostureModule::pos_y(boma) + VarModule::get_float(boma, vars::commons::instance::float::ECB_OFFSET_Y), z: PostureModule::pos_z(boma)};
                     PostureModule::set_pos(boma, &fighter_pos);
                 }
             }
@@ -216,7 +216,7 @@ float: i32) -> f32 {
     let object = get_battle_object_from_id(object_id);
 
     if smash::app::utility::get_kind(boma) == *FIGHTER_KIND_LUCARIO
-      && VarModule::get_int(object, lucario::instance::int::MAX_AURA_TIMER) > 0 
+      && VarModule::get_int(boma, lucario::instance::int::MAX_AURA_TIMER) > 0 
       && [*FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_DEBUG_AURAPOWER,
           /* *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_AURA_EFFECT_SCALE, */
           *FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_PREV_AURAPOWER, 
@@ -247,10 +247,10 @@ term: i32
     //when hit, check if character is falling off
     if ![*FIGHTER_STATUS_KIND_CATCHED_CUT_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CATCHED_AIR_FALL_GANON].contains(&prev_status_kind_1) {
         if is_hitlag(module_accessor) && situation_kind == *SITUATION_KIND_GROUND {
-            VarModule::on_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
+            VarModule::on_flag(module_accessor, commons::instance::flag::PLATFORM_FALL_STUN);
         }
-        if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_DAMAGE].contains(&prev_status_kind) && situation_kind == *SITUATION_KIND_AIR && VarModule::is_flag(object,commons::instance::flag::PLATFORM_FALL_STUN) {
-            VarModule::off_flag(object,commons::instance::flag::PLATFORM_FALL_STUN);
+        if [*FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_GUARD_DAMAGE].contains(&prev_status_kind) && situation_kind == *SITUATION_KIND_AIR && VarModule::is_flag(module_accessor, commons::instance::flag::PLATFORM_FALL_STUN) {
+            VarModule::off_flag(module_accessor, commons::instance::flag::PLATFORM_FALL_STUN);
         }
         if curr_motion_kind == hash40("fall_damage") {
             if WorkModule::get_int(module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_FRAME_IN_AIR) <= 30 && situation_kind != *SITUATION_KIND_GROUND {
@@ -269,14 +269,14 @@ term: i32
     }
     
     if fighter_kind == *FIGHTER_KIND_LUCINA {
-        if VarModule::get_int(object, commons::instance::int::FRAME_COUNTER) >= 0 {
+        if VarModule::get_int(module_accessor, commons::instance::int::FRAME_COUNTER) >= 0 {
             if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S {
                 return false;
             }
         }
     }
     else if fighter_kind == *FIGHTER_KIND_GEKKOUGA {
-        if VarModule::get_int(object, commons::instance::int::FRAME_COUNTER) > 0 
+        if VarModule::get_int(module_accessor, commons::instance::int::FRAME_COUNTER) > 0 
         && [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_100, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR,
              *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_DASH, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI3, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4,
              *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_HI4_START, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW3, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_LW4,
@@ -291,29 +291,29 @@ term: i32
         //TODO: update FAF?
         if WorkModule::is_flag(module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
             if MotionModule::frame(module_accessor) <= 1.0 {
-                VarModule::set_float(object, falco::instance::float::STICK_X, ControlModule::get_stick_x(module_accessor));
-                VarModule::set_float(object, falco::instance::float::STICK_Y, ControlModule::get_stick_y(module_accessor));
+                VarModule::set_float(module_accessor, falco::instance::float::STICK_X, ControlModule::get_stick_x(module_accessor));
+                VarModule::set_float(module_accessor, falco::instance::float::STICK_Y, ControlModule::get_stick_y(module_accessor));
             }
             //up
-            if VarModule::get_float(object, falco::instance::float::STICK_Y) >= 0.46 && VarModule::get_float(object, falco::instance::float::STICK_X).abs() < 0.46 {
+            if VarModule::get_float(module_accessor, falco::instance::float::STICK_Y) >= 0.46 && VarModule::get_float(module_accessor, falco::instance::float::STICK_X).abs() < 0.46 {
                 if 93. <= MotionModule::frame(module_accessor) {
-                    VarModule::on_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
+                    VarModule::on_flag(module_accessor, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
                 }
             }
             //side
-            if VarModule::get_float(object, falco::instance::float::STICK_X).abs() >= 0.46 && VarModule::get_float(object, falco::instance::float::STICK_Y).abs() < 0.46 {
+            if VarModule::get_float(module_accessor, falco::instance::float::STICK_X).abs() >= 0.46 && VarModule::get_float(module_accessor, falco::instance::float::STICK_Y).abs() < 0.46 {
                 if 73. <= MotionModule::frame(module_accessor) {
-                    VarModule::on_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
+                    VarModule::on_flag(module_accessor, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
                 }
             }
             //down
-            if VarModule::get_float(object, falco::instance::float::STICK_Y) <= -0.46 && VarModule::get_float(object, falco::instance::float::STICK_X).abs() < 0.46 {
+            if VarModule::get_float(module_accessor, falco::instance::float::STICK_Y) <= -0.46 && VarModule::get_float(module_accessor, falco::instance::float::STICK_X).abs() < 0.46 {
                 if 61. <= MotionModule::frame(module_accessor) {
-                    VarModule::on_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
+                    VarModule::on_flag(module_accessor, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
                 }
             }
-            if !VarModule::is_flag(object, falco::instance::flag::AIRDASH) {
-                if VarModule::is_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF) {
+            if !VarModule::is_flag(module_accessor, falco::instance::flag::AIRDASH) {
+                if VarModule::is_flag(module_accessor, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF) {
                     return original!()(boma, term);
                 }
                 else {
@@ -329,9 +329,9 @@ term: i32
             }
         }
         else {
-            VarModule::set_float(object, falco::instance::float::STICK_X, 0.0);
-            VarModule::set_float(object, falco::instance::float::STICK_Y, 0.0);
-            VarModule::off_flag(object, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
+            VarModule::set_float(module_accessor, falco::instance::float::STICK_X, 0.0);
+            VarModule::set_float(module_accessor, falco::instance::float::STICK_Y, 0.0);
+            VarModule::off_flag(module_accessor, falco::instance::flag::DIRECTIONAL_AIR_ESCAPE_FAF);
         }
     }
     //todo might be useless, this is a param?
@@ -357,24 +357,24 @@ term: i32
            ].contains(&term) {
             return false;
         }
-        if !VarModule::is_flag(object, pickel::instance::flag::ALLOW_SPECIAL_N) && term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N {
+        if !VarModule::is_flag(module_accessor, pickel::instance::flag::ALLOW_SPECIAL_N) && term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N {
             return false;
         }
     }
     //aerial turn
-    // if VarModule::get_int(object, commons::instance::int::AIR_TURN_INITIATE_METHOD) == 2 && VarModule::get_int(object,commons::instance::int::AIR_TURN_INPUT_FRAME) <= 3 {
+    // if VarModule::get_int(module_accessor, commons::instance::int::AIR_TURN_INITIATE_METHOD) == 2 && VarModule::get_int(module_accessor,commons::instance::int::AIR_TURN_INPUT_FRAME) <= 3 {
     //     if ![*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR].contains(&term) {
     //         return false;
     //     }
     // }
     //special moves disabling
-    if [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW].contains(&term) && VarModule::is_flag(object,commons::instance::flag::DISABLE_SPECIAL_ALL) {
+    if [*FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_N, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_LW].contains(&term) && VarModule::is_flag(module_accessor,commons::instance::flag::DISABLE_SPECIAL_ALL) {
         return false;
     }
-    else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI && VarModule::is_flag(object,commons::instance::flag::DISABLE_SPECIAL_HI) {
+    else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_HI && VarModule::is_flag(module_accessor,commons::instance::flag::DISABLE_SPECIAL_HI) {
         return false;
     }
-    else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S && VarModule::is_flag(object,commons::instance::flag::DISABLE_SPECIAL_S) {
+    else if term == *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_SPECIAL_S && VarModule::is_flag(module_accessor,commons::instance::flag::DISABLE_SPECIAL_S) {
         return false;
     }
     
@@ -409,34 +409,34 @@ pub unsafe fn get_attack_air_kind_replace(
     let object = get_battle_object_from_id(object_id);
 
     if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {
-        VarModule::set_float(object, commons::instance::float::SUBSTICK_X, ControlModule::get_stick_x(boma) * PostureModule::lr(boma));
-        VarModule::set_float(object, commons::instance::float::SUBSTICK_Y, ControlModule::get_stick_y(boma));
+        VarModule::set_float(boma, commons::instance::float::SUBSTICK_X, ControlModule::get_stick_x(boma) * PostureModule::lr(boma));
+        VarModule::set_float(boma, commons::instance::float::SUBSTICK_Y, ControlModule::get_stick_y(boma));
     }
     else {
-        VarModule::set_float(object, commons::instance::float::SUBSTICK_X, 0.0);
-        VarModule::set_float(object, commons::instance::float::SUBSTICK_Y, 0.0);
+        VarModule::set_float(boma, commons::instance::float::SUBSTICK_X, 0.0);
+        VarModule::set_float(boma, commons::instance::float::SUBSTICK_Y, 0.0);
     }
 
-    if !(VarModule::get_float(object, commons::instance::float::SUBSTICK_X) == 0.0 && VarModule::get_float(object, commons::instance::float::SUBSTICK_Y) == 0.0) {
-        if VarModule::get_float(object, commons::instance::float::SUBSTICK_X).abs() < 0.46 && VarModule::get_float(object,commons::instance::float::SUBSTICK_Y) > 0.46 {
-            VarModule::set_int(object, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_HI);
+    if !(VarModule::get_float(boma, commons::instance::float::SUBSTICK_X) == 0.0 && VarModule::get_float(boma, commons::instance::float::SUBSTICK_Y) == 0.0) {
+        if VarModule::get_float(boma, commons::instance::float::SUBSTICK_X).abs() < 0.46 && VarModule::get_float(boma,commons::instance::float::SUBSTICK_Y) > 0.46 {
+            VarModule::set_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_HI);
         }
         //fair
-        if VarModule::get_float(object, commons::instance::float::SUBSTICK_X) > 0.46 && VarModule::get_float(object, commons::instance::float::SUBSTICK_Y).abs() < 0.46 {
-            VarModule::set_int(object, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_F,);
+        if VarModule::get_float(boma, commons::instance::float::SUBSTICK_X) > 0.46 && VarModule::get_float(boma, commons::instance::float::SUBSTICK_Y).abs() < 0.46 {
+            VarModule::set_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_F,);
         }
         //bair
-        if VarModule::get_float(object, commons::instance::float::SUBSTICK_X) < -0.46 && VarModule::get_float(object, commons::instance::float::SUBSTICK_Y).abs() < 0.46 {
-            VarModule::set_int(object, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_B);
+        if VarModule::get_float(boma, commons::instance::float::SUBSTICK_X) < -0.46 && VarModule::get_float(boma, commons::instance::float::SUBSTICK_Y).abs() < 0.46 {
+            VarModule::set_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_B);
         }
         //dair
-        if VarModule::get_float(object, commons::instance::float::SUBSTICK_X).abs() < 0.46 && VarModule::get_float(object, commons::instance::float::SUBSTICK_Y) < -0.46 {
-            VarModule::set_int(object, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW);
+        if VarModule::get_float(boma, commons::instance::float::SUBSTICK_X).abs() < 0.46 && VarModule::get_float(boma, commons::instance::float::SUBSTICK_Y) < -0.46 {
+            VarModule::set_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK, *FIGHTER_COMMAND_ATTACK_AIR_KIND_LW);
         }
     }
 
-    if VarModule::get_int(object,  commons::instance::int::SUBSTICK_AIR_ATTACK) != 0 {
-        return VarModule::get_int(object, commons::instance::int::SUBSTICK_AIR_ATTACK);
+    if VarModule::get_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK) != 0 {
+        return VarModule::get_int(boma, commons::instance::int::SUBSTICK_AIR_ATTACK);
     }
 
     original!()(boma)
@@ -486,12 +486,12 @@ move_type_again: bool) -> u64 {
                 //type: buff (go! meter)
                 //hitting with power wave above 100% unlocks super specials
             // if attacker_kind == *WEAPON_KIND_DOLLY_WAVE {
-            //     VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            //     VarModule::on_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
             // }
 
             //sheik: checks if vanish hits an opponent
             if attacker_kind == *WEAPON_KIND_SHEIK_FUSIN {
-                VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
 
             //Dr.Mario
@@ -500,10 +500,10 @@ move_type_again: bool) -> u64 {
             //the speed buff is in float hook
             //detecting if drMario's pills hit someone
             if attacker_kind == *WEAPON_KIND_MARIOD_DRCAPSULE {
-                if VarModule::get_int(owner_object, mariod::instance::int::GA_MEDECINE_TIMER) <= 0
+                if VarModule::get_int(owner_boma, mariod::instance::int::GA_MEDECINE_TIMER) <= 0
                   && (PostureModule::pos_x(defender_boma) - PostureModule::pos_x(owner_boma)).abs() < 33.0
                   && (PostureModule::pos_y(defender_boma) - PostureModule::pos_y(owner_boma)).abs() < 28.0 {
-                    VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                    VarModule::on_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 }
             }
         }
@@ -521,18 +521,18 @@ move_type_again: bool) -> u64 {
 
             //pikachu: for some reason is_infliction_status doesnt work. trying here
             if attacker_kind == *FIGHTER_KIND_PIKACHU && attacker_status == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP {
-                VarModule::on_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(attacker_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
 
             //Ganon - Warlock's Darkest Flight
                 //type: cancel
                 //cancels aerial side b with up b to regrab
             if def_status_kind_prev == FIGHTER_STATUS_KIND_CATCHED_AIR_GANON {
-                if VarModule::is_flag(attacker_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-                    VarModule::on_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA);
+                if VarModule::is_flag(attacker_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                    VarModule::on_flag(defender_boma, commons::instance::flag::IS_VICTIM_GANON_GA);
                 }
             }
-            if VarModule::is_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA)
+            if VarModule::is_flag(defender_boma, commons::instance::flag::IS_VICTIM_GANON_GA)
             && ![*FIGHTER_STATUS_KIND_CATCHED_AIR_GANON, *FIGHTER_STATUS_KIND_CATCHED_GANON, *FIGHTER_STATUS_KIND_CLUNG_GANON, *FIGHTER_STATUS_KIND_FALL].contains(&defender_status) {
                 StatusModule::change_status_request(defender_boma, *FIGHTER_STATUS_KIND_FALL, true);
                 MotionModule::change_motion_kind(defender_boma, Hash40{hash: hash40("fall")});
@@ -540,7 +540,7 @@ move_type_again: bool) -> u64 {
                 PostureModule::set_pos(defender_boma, &fighter_pos);
             }
             else {
-                VarModule::off_flag(defender_object, commons::instance::flag::IS_VICTIM_GANON_GA);
+                VarModule::off_flag(defender_boma, commons::instance::flag::IS_VICTIM_GANON_GA);
             }
 
             //Counter hit GAs
@@ -659,7 +659,7 @@ param_hash : u64) -> f32 {
 
         if kind == *FIGHTER_KIND_LUIGI {
             if param_hash == hash40("charge_bonus") { //normally this gives 20 bonus frames when side b is smash inputted, but in vl the param is 0, and then the value is set down here for the GA.
-                let mul = VarModule::get_int(object, luigi::instance::int::ELEC_CHARGE) as f32;
+                let mul = VarModule::get_int(module_accessor, luigi::instance::int::ELEC_CHARGE) as f32;
                 return 20.0 * mul;
             }
         }
@@ -685,18 +685,18 @@ param_hash : u64) -> f32 {
         }
         //add up b landing lag to other stuff
         else if [*FIGHTER_KIND_SIMON, *FIGHTER_KIND_RICHTER, *FIGHTER_KIND_GAMEWATCH].contains(&kind) {
-            if VarModule::is_flag(object, commons::instance::flag::DISABLE_SPECIAL_HI) {
+            if VarModule::is_flag(module_accessor, commons::instance::flag::DISABLE_SPECIAL_HI) {
                 if [hash40("landing_attack_air_frame_hi"), hash40("landing_attack_air_frame_b"), hash40("landing_attack_air_frame_n"), hash40("landing_attack_air_frame_f"), hash40("landing_attack_air_frame_lw"), hash40("landing_frame"), hash40("landing_frame_light")].contains(&param_type) {
                     return ret + 20.0;
                 }
             }
         }
         else if kind == *FIGHTER_KIND_SHEIK {
-            if VarModule::is_flag(object, sheik::instance::flag::ATTACK_AIR_LW_W) && param_type == hash40("landing_attack_air_frame_lw") {
+            if VarModule::is_flag(module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) && param_type == hash40("landing_attack_air_frame_lw") {
                 return 13.0;
             }
         }
-        else if kind == *FIGHTER_KIND_MARIOD && VarModule::get_int(object, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
+        else if kind == *FIGHTER_KIND_MARIOD && VarModule::get_int(module_accessor, mariod::instance::int::GA_MEDECINE_TIMER) >= 0 {
             if [hash40("air_accel_x_mul"), hash40("air_speed_x_stable"), hash40("air_brake_x"), hash40("walk_speed_max"), hash40("run_speed_max"), hash40("dash_speed")].contains(&param_type) {
                 return ret * 1.66;
             }
@@ -705,9 +705,9 @@ param_hash : u64) -> f32 {
     else {
         let owner_id = WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
         let owner_object = get_battle_object_from_id(owner_id);
-        //let owner_boma = get_boma_from_id(owner_id);
+        let owner_boma = get_boma_from_id(owner_id);
 
-        if kind == *WEAPON_KIND_DUCKHUNT_GUNMAN && (VarModule::is_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON) || VarModule::is_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE)) {
+        if kind == *WEAPON_KIND_DUCKHUNT_GUNMAN && (VarModule::is_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) || VarModule::is_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE)) {
             if [hash40("ready_minutes_hige"), hash40("ready_minutes_noppo"), hash40("ready_minutes_kurofuku"), hash40("ready_minutes_sonburero"), hash40("ready_minutes_boss")].contains(&param_hash) {
                 return 0.1;
             }

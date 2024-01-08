@@ -7,7 +7,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 MotionModule::set_rate(fighter.module_accessor, 4.5);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 65, 100, 50, 0, 4.0, 0.0, 11.0, 7.5, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_none"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_NONE);
                 AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, 10.0, false);
@@ -27,7 +27,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_SUPER_JUMP_PUNCH_FLAG_REVERSE_LR);
             MotionModule::set_rate(fighter.module_accessor, 1.0);
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::CATCH(fighter, 0, Hash40::new("top"), 6.5, 0.0, 16.0, 3.5, Some(0.0), Some(10.0), Some(3.5), *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
                 macros::CATCH(fighter, 1, Hash40::new("top"), 6.5, 0.0, 8.8, 13.7, None, None, None, *FIGHTER_STATUS_KIND_CLUNG_GANON, *COLLISION_SITUATION_MASK_GA);
                 macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 6.0, 0, 50, 0, 70, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_NONE);
@@ -47,7 +47,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 18.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 29.);
         if macros::is_excute(fighter)
@@ -65,7 +65,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 46.);
         if macros::is_excute(fighter)
@@ -99,7 +99,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 18.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 29.);
         if macros::is_excute(fighter)
@@ -117,7 +117,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 46.);
         if macros::is_excute(fighter)
@@ -132,7 +132,7 @@ unsafe extern "C" fn specialhithrow(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 9.0, 361, 75, 0, 50, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_elec"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_FIRE, *ATTACK_REGION_THROW);
                 macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 8.0, 0, 10, 0, 100, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_THROW);
                 macros::ATK_HIT_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, Hash40::new("throw"), WorkModule::get_int64(fighter.module_accessor,*FIGHTER_STATUS_THROW_WORK_INT_TARGET_OBJECT), WorkModule::get_int64(fighter.module_accessor,*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_GROUP), WorkModule::get_int64(fighter.module_accessor,*FIGHTER_STATUS_THROW_WORK_INT_TARGET_HIT_NO));

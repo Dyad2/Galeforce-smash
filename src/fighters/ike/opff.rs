@@ -11,9 +11,9 @@ unsafe extern "C" fn ike_galeforce_attack(fighter: &mut L2CFighterCommon) {
     // TODO: rewrite in status
     if curr_motion_kind == hash40("special_lw_hit") || curr_motion_kind == hash40("special_air_lw_hit") {
         if fighter.global_table[MOTION_FRAME].get_i32() <= 3 && !ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-            VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
-            VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 20);
+            VarModule::set_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 20);
             CancelModule::enable_cancel(fighter.module_accessor);
             if situation_kind == *SITUATION_KIND_GROUND {
                 StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_WAIT, false);
@@ -23,14 +23,14 @@ unsafe extern "C" fn ike_galeforce_attack(fighter: &mut L2CFighterCommon) {
             }
         }
     }
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-        if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) > 0 {
-            VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+        if VarModule::get_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER) > 0 {
+            VarModule::sub_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 1);
             HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
         }
         else {
             HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
     }
 }

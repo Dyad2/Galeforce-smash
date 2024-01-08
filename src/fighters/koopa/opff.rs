@@ -6,14 +6,14 @@ unsafe extern "C" fn koopa_galeforce_attack(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     
     if curr_motion_kind == hash40("special_lw") {
-        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && check_jump_input(fighter.module_accessor) {
+        if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) && check_jump_input(fighter.module_accessor) {
             StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_JUMP_AERIAL, false);
             galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
     }
     else {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
     }
 }
 

@@ -1,8 +1,7 @@
 use super::*;
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon26status_ShieldBreakFly_MainEv")]
-unsafe fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_status_ShieldBreakFly)]
+unsafe extern "C" fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) {
     if MotionModule::is_end(fighter.module_accessor) {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             fighter.change_status(FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN.into(), true.into()); //made custom
@@ -14,9 +13,8 @@ unsafe fn status_ShieldBreakFly_Main(fighter: &mut L2CFighterCommon) {
     return;
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_FLY, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon25status_pre_ShieldBreakFlyEv")]
-unsafe fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_ShieldBreakFly)]
+unsafe extern "C" fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     
     StatusModule::init_settings(
         fighter.module_accessor, 
@@ -70,19 +68,19 @@ unsafe fn status_ShieldBreakFly_pre(fighter: &mut L2CFighterCommon) -> L2CValue 
 //     }
 //     let another_some_param = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), 0x16856bbe5); //hash not cracked yet, but has a value of 300. number of frames before victim xlu ends?
 //     WorkModule::set_int(fighter.module_accessor, another_some_param, *FIGHTER_STATUS_FURAFURA_STAND_WORK_INT_FRAME_COUNT); //was FIGHTER_STATUS_FURAFURA_STAND_WORK_INT_TERMINATE_XLU_COUNT, but it doesn't exists?
-//     smash_script::notify_event_msc_cmd!(fighter, 0x20cbc92683 as u64, 1, *FIGHTER_LOG_DATA_INT_SHIELD_BREAK_FLY_NUM);
+//     notify_event_msc_cmd!(fighter, 0x20cbc92683 as u64, 1, *FIGHTER_LOG_DATA_INT_SHIELD_BREAK_FLY_NUM);
 //     return
 // }
 
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_ShieldBreakFly_Main,
+            status_ShieldBreakFly_pre,
+        );
+    }
+}
+
 pub fn install() {
-    install_status_scripts!(
-        status_ShieldBreakFly_Main,
-        status_ShieldBreakFly_pre
-    );
-    // install_hooks!(
-    //     bac_status_ShieldBreakFly,
-    //     status_ShieldBreakFly,
-    //     bac_status_ShieldBreakFly_Main,
-    //     substatus_shield_break_fly_common,
-    // );
+    skyline::nro::add_hook(nro_hook);
 }

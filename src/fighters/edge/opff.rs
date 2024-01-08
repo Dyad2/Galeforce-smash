@@ -7,18 +7,18 @@ use crate::fighters::common::opff::common_fighter_frame;
 //pub unsafe extern "C" fn edge_galeforce_attack(fighter : &mut L2CFighterCommon) {
 //        if !is_operation_cpu(fighter.module_accessor) {
 //            if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_EDGE_INSTANCE_WORK_ID_FLAG_ONE_WINGED_ACTIVATED)
-//              && VarModule::is_flag(fighter.battle_object, edge::instance::flag::FLARE_EXISTS) {
+//              && VarModule::is_flag(fighter.module_accessor, edge::instance::flag::FLARE_EXISTS) {
 //                if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_APPEAL_LW) {
 //                    //println!("explosion? :)");
 //                    galeforce_apply_effect(&mut *fighter.module_accessor, 1.0);
-//                    VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-//                    VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 3600);
+//                    VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//                    VarModule::set_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 3600);
 //                }
 //            }
-//            if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) > 0 {
-//                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//            if VarModule::get_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER) > 0 {
+//                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
 //                WorkModule::on_flag(fighter.module_accessor, *FIGHTER_EDGE_WING_STATE_ACTIVATE_OFF);
-//                VarModule::add_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, -1);
+//                VarModule::add_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, -1);
 //            }
 //        }
 //}

@@ -6,9 +6,9 @@ pub unsafe extern "C" fn daisy_galeforce_attack(fighter : &mut L2CFighterCommon)
     
     //jump cancel her up b?
     if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_HI && AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-        VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
     }
-    else if status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_HI_AIR_END && VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+    else if status_kind == *FIGHTER_PEACH_STATUS_KIND_SPECIAL_HI_AIR_END && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL);
         WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_AERIAL_BUTTON);
         if fighter.sub_transition_group_check_air_jump_aerial().get_bool() {
@@ -16,7 +16,7 @@ pub unsafe extern "C" fn daisy_galeforce_attack(fighter : &mut L2CFighterCommon)
         }
     }
     else {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
     }
 }
 

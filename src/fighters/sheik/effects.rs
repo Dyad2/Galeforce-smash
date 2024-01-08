@@ -7,7 +7,7 @@ unsafe extern "C" fn effectattackdash(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 VisibilityModule::set_whole(fighter.module_accessor, false);
                 macros::EFFECT(fighter, Hash40::new("sheik_fushin_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
             }
@@ -15,7 +15,7 @@ unsafe extern "C" fn effectattackdash(fighter: &mut L2CAgentBase) {
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 VisibilityModule::set_whole(fighter.module_accessor, true);
             }
             macros::EFFECT_FOLLOW(fighter, Hash40::new("sheik_attack_cut"), Hash40::new("top"), 1, 7, 6, 0, 20, 45, 0.7, true);
@@ -41,7 +41,7 @@ unsafe extern "C" fn effectattackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 macros::EFFECT_FOLLOW(fighter, Hash40::new("sheik_atk_lw"), Hash40::new("top"), 0, -10, 2, -105, 0, 0, 0.8, true);
             }
         }
@@ -52,7 +52,7 @@ unsafe extern "C" fn effectescapeair(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 wait(lua_state, 3.);
                     if macros::is_excute(fighter)
                     {
@@ -74,7 +74,7 @@ unsafe extern "C" fn effectescapeairslide(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 wait(lua_state, 3.);
                     if macros::is_excute(fighter)
                     {
@@ -125,7 +125,7 @@ unsafe extern "C" fn effectescapef(fighter: &mut L2CAgentBase) {
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::EFFECT(fighter, Hash40::new("sheik_fushin_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
                 VisibilityModule::set_whole(fighter.module_accessor, false);
             }
@@ -138,7 +138,7 @@ unsafe extern "C" fn effectescapef(fighter: &mut L2CAgentBase) {
     frame(lua_state, 18.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::EFFECT(fighter, Hash40::new("sheik_fushin_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
                 VisibilityModule::set_whole(fighter.module_accessor, true);
             }
@@ -155,7 +155,7 @@ unsafe extern "C" fn effectescapeb(fighter: &mut L2CAgentBase) {
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::EFFECT(fighter, Hash40::new("sheik_fushin_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
                 VisibilityModule::set_whole(fighter.module_accessor, false);
             }
@@ -168,7 +168,7 @@ unsafe extern "C" fn effectescapeb(fighter: &mut L2CAgentBase) {
     frame(lua_state, 20.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::EFFECT(fighter, Hash40::new("sheik_fushin_end"), Hash40::new("top"), 0, 0, 0, 0, 0, 0, 0.25, 0, 0, 0, 0, 0, 0, true);
                 VisibilityModule::set_whole(fighter.module_accessor, true);
             }

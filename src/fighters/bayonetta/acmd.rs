@@ -33,7 +33,7 @@ unsafe extern "C" fn jab1(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10, 3, 10, 5, true);
             MotionModule::set_rate(fighter.module_accessor, 1.4);
         }
     frame(lua_state, 9.);
@@ -72,7 +72,7 @@ unsafe extern "C" fn jab2(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10, 3, 10, 5, true);
             MotionModule::set_rate(fighter.module_accessor, 1.6);
         }
     frame(lua_state, 9.);
@@ -110,8 +110,8 @@ unsafe extern "C" fn jab3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
          if macros::is_excute(fighter)
          {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 10, 5, true);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, true, false, 10);
             MotionModule::set_rate(fighter.module_accessor, 1.75); //0.6
          }
     frame(lua_state, 10.);
@@ -150,8 +150,8 @@ unsafe extern "C" fn jab100end(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
-            smash_script::notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 25, -1, 0);
+            notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
+            notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 25, -1, 0);
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_BAYONETTA_GENERATE_ARTICLE_WICKEDWEAVEARM, false, -1);
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_BAYONETTA_GENERATE_ARTICLE_WICKEDWEAVEARM, Hash40::new("attack_s4_s"), false, 0.0);
         }
@@ -159,7 +159,7 @@ unsafe extern "C" fn jab100end(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::CORRECT(fighter, *GROUND_CORRECT_KIND_GROUND_CLIFF_STOP);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 15, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 15, 5, true);
             MotionModule::set_rate(fighter.module_accessor, 1.2);
         }
     frame(lua_state, 4.);
@@ -196,7 +196,7 @@ unsafe extern "C" fn jab100end(fighter: &mut L2CAgentBase) {
     frame(lua_state, 57.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 30, 0, 1);
+            notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 30, 0, 1);
         }
 }
 
@@ -206,7 +206,7 @@ unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 10, 5, true);
         }
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
@@ -270,7 +270,7 @@ unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, true, false, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, true, false, false, 10, 3, 10, 5, true);
             macros::FT_MOTION_RATE(fighter, 0.45);
         }
     frame(lua_state, 24.);
@@ -295,10 +295,10 @@ unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-                VarModule::on_flag(fighter.battle_object, bayonetta::status::flag::DODGE_OFFSET_FORBID);
+                VarModule::on_flag(fighter.module_accessor, bayonetta::status::flag::DODGE_OFFSET_FORBID);
             }
             else if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                VarModule::set_int(fighter.battle_object, bayonetta::instance::int::DODGE_OFFSET_NUM, 2);
+                VarModule::set_int(fighter.module_accessor, bayonetta::instance::int::DODGE_OFFSET_NUM, 2);
             }
             else {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
@@ -319,7 +319,7 @@ unsafe extern "C" fn attacks3s2(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, true, false, false, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, true, false, false, 10, 3, 10, 5, true);
             macros::FT_MOTION_RATE(fighter, 0.6);
         }
     frame(lua_state, 18.);
@@ -337,10 +337,10 @@ unsafe extern "C" fn attacks3s2(fighter: &mut L2CAgentBase) {
             sv_animcmd::FT_START_ADJUST_MOTION_FRAME_arg1(fighter.lua_state_agent);
             FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 3.0, 5.0);
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_SHIELD) {
-                VarModule::on_flag(fighter.battle_object, bayonetta::status::flag::DODGE_OFFSET_FORBID);
+                VarModule::on_flag(fighter.module_accessor, bayonetta::status::flag::DODGE_OFFSET_FORBID);
             }
             else if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-                VarModule::set_int(fighter.battle_object, bayonetta::instance::int::DODGE_OFFSET_NUM, 3);
+                VarModule::set_int(fighter.module_accessor, bayonetta::instance::int::DODGE_OFFSET_NUM, 3);
             }
             else {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
@@ -366,9 +366,9 @@ unsafe extern "C" fn attacklw3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 10, 3, 15, 5, true);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, false, 10);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, false, 10);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 10, 3, 15, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, false, 10);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, false, 10);
             FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 5.0, 6.5);
             macros::FT_MOTION_RATE(fighter, 0.5);
         }
@@ -405,7 +405,7 @@ unsafe extern "C" fn attackdash(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter,0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 15, 5, true);
+            notify_event_msc_cmd!(fighter,0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, true, true, false, 10, 3, 15, 5, true);
             //macros::FT_MOTION_RATE(fighter, 0.8);
         }
     frame(lua_state, 15.);
@@ -447,10 +447,10 @@ unsafe extern "C" fn airhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20, 3, 15, 0, false);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 20);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20, 3, 15, 0, false);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
             MotionModule::set_rate(fighter.module_accessor, 0.8);
         }
     frame(lua_state, 2.);
@@ -535,7 +535,7 @@ unsafe extern "C" fn airhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 27.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, false);
             AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 34.);
@@ -563,7 +563,7 @@ unsafe extern "C" fn airf(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, false, true, 10, 3, 10, 0, true);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, false, true, 10, 3, 10, 0, true);
         }   
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
@@ -610,7 +610,7 @@ unsafe extern "C" fn airf2(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-           smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, false, true, 10, 3, 10, 0, true);
+           notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, true, false, true, 10, 3, 10, 0, true);
             MotionModule::set_rate(fighter.module_accessor, 1.33);
         }
     frame(lua_state, 2.);
@@ -663,10 +663,10 @@ unsafe extern "C" fn airf3(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, true);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
             MotionModule::set_rate(fighter.module_accessor, 1.2);
         }
     frame(lua_state, 2.);
@@ -708,9 +708,9 @@ unsafe extern "C" fn airn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20, 0, 15, 0, false);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20, 0, 15, 0, false);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
             MotionModule::set_rate(fighter.module_accessor, 2.9);
         }
     wait(lua_state, 1.);
@@ -742,7 +742,7 @@ unsafe extern "C" fn airn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 40.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, false);
             AttackModule::clear_all(fighter.module_accessor);
         }
     frame(lua_state, 47.);
@@ -753,7 +753,7 @@ unsafe extern "C" fn airn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 69.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -764,10 +764,10 @@ unsafe extern "C" fn airb(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, true);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, true);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
             //MotionModule::set_rate(fighter.module_accessor, 2.0);
         }
     frame(lua_state, 3.);
@@ -874,7 +874,7 @@ unsafe extern "C" fn landingairlw(fighter: &mut L2CAgentBase) {
                 if macros::is_excute(fighter)
                 {
                     macros::SET_SPEED_EX(fighter, 0, 0, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
-                    smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 10, 3, 3, 0, true);
+                    notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 10, 3, 3, 0, true);
                     macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 2.5, 45, 145, 0, 80, 7.5, 0.0, 8.0, 5.0, Some(0.0), Some(8.0), Some(13.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
                 }
             wait(lua_state, 3.);
@@ -985,7 +985,7 @@ unsafe extern "C" fn throwf(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 25, -1, 0);
+            notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 25, -1, 0);
             macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_THROW, 0, 7.0, 55, 100, 80, 0, 0.0, 1.0, *ATTACK_LR_CHECK_F,  0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
             macros::ATTACK_ABS(fighter, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 3.0, 361, 100, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_THROW);
         }
@@ -1010,7 +1010,7 @@ unsafe extern "C" fn throwf(fighter: &mut L2CAgentBase) {
     frame(lua_state, 40.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 30, 0, 1);
+            notify_event_msc_cmd!(fighter, 0x25fd66ecef as u64, 30, 0, 1);
         }
 }
 
@@ -1020,24 +1020,24 @@ unsafe extern "C" fn escapeb(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, false, 2, 0, 0, 0, false);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 20);
-                //smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10, 3, 10, 5, false);
-                //smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
+                notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, false, 2, 0, 0, 0, false);
+                notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, false, 20);
+                //notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 10, 3, 10, 5, false);
+                //notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 10);
                 MotionModule::set_rate(fighter.module_accessor, 1.33);
             }
         }
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("legl"), 1.0, 361, 0, 0, 0, 3.0, 0.0, 0.0, 0.0, Some(0.0), Some(0.0), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("legl"), 1.0, 361, 80, 0, 10, 3.0, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -1049,9 +1049,9 @@ unsafe extern "C" fn escapeb(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
+                notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
                 MotionModule::set_rate(fighter.module_accessor, 1.0);
             }
         }
@@ -1062,26 +1062,26 @@ unsafe extern "C" fn escapen(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, false, 2, 0, 0, 0, false);
-                //smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20);
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
+                notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, false, 2, 0, 0, 0, false);
+                //notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20);
                 MotionModule::set_rate(fighter.module_accessor, 1.33);
             }
         }
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
         }
     frame(lua_state, 7.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("haver"), 1.0, 361, 0, 0, 0, 2.5, 0.0, 0.0, 0.0, Some(0.0), Some(0.0), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
                 macros::ATTACK(fighter, 2, 0, Hash40::new("haver"), 1.0, 361, 80, 0, 10, 2.5, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -1091,9 +1091,9 @@ unsafe extern "C" fn escapen(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
+                notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
                 MotionModule::set_rate(fighter.module_accessor, 1.0);
             }
         }
@@ -1104,24 +1104,24 @@ unsafe extern "C" fn escapef(fighter: &mut L2CAgentBase) {
 
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
-                //smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, false);
-                //smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, false, 2, 0, 0, 0, false);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, false, 20);
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
+                //notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 10, 3, 10, 5, false);
+                //notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 10);
+                notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, false, 2, 0, 0, 0, false);
+                notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, false, 20);
                 MotionModule::set_rate(fighter.module_accessor, 1.33);
             }
         }
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("havel"), 1.0, 361, 0, 0, 0, 2.5, 0.0, 0.0, 0.0, Some(0.0), Some(0.0), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("havel"), 1.0, 361, 80, 0, 10, 2.5, 0.0, 0.0, 0.0, None, None, None, 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 8, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
@@ -1137,7 +1137,7 @@ unsafe extern "C" fn escapef(fighter: &mut L2CAgentBase) {
     frame(lua_state, 20.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 MotionModule::set_rate(fighter.module_accessor, 1.0);
             }
         }
@@ -1145,9 +1145,9 @@ unsafe extern "C" fn escapef(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             AttackModule::clear_all(fighter.module_accessor);
-            if VarModule::is_flag(fighter.battle_object, bayonetta::instance::flag::DODGE_OFFSET) {
+            if VarModule::is_flag(fighter.module_accessor, bayonetta::instance::flag::DODGE_OFFSET) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
+                notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
             }
         }
 }
@@ -1158,12 +1158,12 @@ unsafe extern "C" fn escapeair(fighter: &mut L2CAgentBase) {
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-        smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
+        notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true); //bats
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-        smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+        notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
         }
     frame(lua_state, 19.);
         if macros::is_excute(fighter)
@@ -1178,18 +1178,18 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
         }
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)

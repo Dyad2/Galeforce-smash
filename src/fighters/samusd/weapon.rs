@@ -1,6 +1,6 @@
+use super::*; 
 
 //weapon
-#[acmd_script( agent = "samus_cshot", script = "game_shoot", category = ACMD_GAME, low_priority)]
 unsafe extern "C" fn cshotshoot(weapon: &mut L2CAgentBase) {
 
         if macros::is_excute(weapon)

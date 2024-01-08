@@ -7,11 +7,14 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+use galeforce_utils::{vars::*, utils::*, table_const::*};
+use custom_var::*;
+
 mod acmd;
 mod opff;
 
 pub fn install() {
-    let agent = &mut smashline::Agent::new("cloud");
+    let agent = &mut smashline::Agent::new("demon");
     acmd::install(agent);
     opff::install(agent);
 }

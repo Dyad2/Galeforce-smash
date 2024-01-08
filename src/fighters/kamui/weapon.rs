@@ -1,6 +1,6 @@
 use super::*;
 
-unsafe fn ryusensya_min(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn ryusensya_min(weapon: &mut L2CAgentBase) {
 
         if macros::is_excute(weapon)
         {
@@ -12,7 +12,7 @@ unsafe fn ryusensya_min(weapon: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn ryusensya_max(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn ryusensya_max(weapon: &mut L2CAgentBase) {
 
         if macros::is_excute(weapon)
         {
@@ -20,7 +20,7 @@ unsafe fn ryusensya_max(weapon: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn dragoncounter(weapon: &mut L2CAgentBase) {
+unsafe extern "C" fn dragoncounter(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
 
     frame(lua_state, 26.);

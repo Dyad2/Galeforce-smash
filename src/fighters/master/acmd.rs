@@ -397,7 +397,7 @@ unsafe extern "C" fn attackairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 73.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -448,7 +448,7 @@ unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
             ArticleModule::generate_article(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW, false, -1);
             ArticleModule::change_motion(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW, smash::phx::Hash40{hash:hash40("attack_air_n")}, false, 0.0);
             FighterAreaModuleImpl::enable_fix_jostle_area(fighter.module_accessor, 3.0, 3.0);
-            if VarModule::is_flag(fighter.battle_object, master::instance::flag::FAILNAUGHT_TO_AIRN) {
+            if VarModule::is_flag(fighter.module_accessor, master::instance::flag::FAILNAUGHT_TO_AIRN) {
                 MotionModule::set_frame(fighter.module_accessor, 27.0, false);
                 ArticleModule::set_frame(fighter.module_accessor, *FIGHTER_MASTER_GENERATE_ARTICLE_BOW, 27.0);
                 wait(lua_state, 6.);
@@ -525,7 +525,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)

@@ -1,12 +1,5 @@
 use super::*;
 
-//not in opff, used in acmd scripts only
-unsafe fn check_add_charge(fighter: &mut L2CAgentBase) {
-    if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-        VarModule::add_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE, 1);
-        luigi_charge_effect(fighter, 1.25);
-    }
-}
 
 //global edits
 unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
@@ -471,7 +464,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -485,10 +478,10 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_turndash", turndash,);
     agent.game_acmd("game_attack11", attack11,);
     agent.game_acmd("game_attacks3hi", attacks3hi,);
-    agent.game_acmd("game_attacks3s", attacks3,);
+    agent.game_acmd("game_attacks3s", attacks3s,);
     agent.game_acmd("game_attacks3lw", attacks3lw,);
     agent.game_acmd("game_attackdash", attackdash,);
-    agent.game_acmd("game_attacks4hi", attacks4shi,);
+    agent.game_acmd("game_attacks4hi", attacks4hi,);
     agent.game_acmd("game_attacks4", attacks4s,);
     agent.game_acmd("game_attacks4lw", attacks4lw,);
     agent.game_acmd("game_attackhi4", attackhi4,);

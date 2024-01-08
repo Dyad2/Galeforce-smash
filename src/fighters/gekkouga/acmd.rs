@@ -125,7 +125,7 @@ unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             MotionModule::set_rate(fighter.module_accessor, 0.66);
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if !VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("haver"), 14.0, 45, 95, 0, 30, 4.7, 0.0, -8.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("haver"), 14.0, 45, 95, 0, 30, 4.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_SWORD);
                 macros::ATTACK(fighter, 2, 0, Hash40::new("top"), 12.0, 45, 95, 0, 30, 4.0, 0.0, 7.5, 7.0, Some(0.0), Some(8.5), Some(14.5), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0.0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_PUNCH);
@@ -210,7 +210,7 @@ unsafe extern "C" fn catchattack(fighter: &mut L2CAgentBase) {
     frame(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if !VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 1.0, 361, 100, 30, 0, 6.0, 0.0, 6.0, 10.0, None, None, None, 1.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_water"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_PUNCH, *ATTACK_REGION_NONE);
             }
             else {
@@ -233,7 +233,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -248,7 +248,6 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_attackhi4", attackhi4,);
     agent.game_acmd("game_attackairhi", attackairhi,);
     agent.game_acmd("game_attackairf", attackairf,);
-    agent.game_acmd("game_attackairn", attackairn,);
     agent.game_acmd("game_attackairb", attackairb,);
     agent.game_acmd("game_catchattack", catchattack,);
     agent.game_acmd("game_escapeairslide", escapeairslide,);

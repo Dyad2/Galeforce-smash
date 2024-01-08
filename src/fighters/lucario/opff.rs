@@ -1,4 +1,5 @@
 use super::*; 
+use crate::fighters::common::opff::common_fighter_frame;
 
 static mut STICK_DIR : [i32; 9] = [0; 9];
 static mut COMMAND_FRAME : [i32; 9] = [0; 9];
@@ -20,6 +21,7 @@ unsafe extern "C" fn lucario_tail3_intangibility(fighter: &mut L2CFighterCommon)
 //aura charge taunt
 unsafe extern "C" fn lucario_aura_charge(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
+
     if curr_motion_kind == hash40("appeal_hi_r") || curr_motion_kind == hash40("appeal_hi_l") {
         if fighter.global_table[MOTION_FRAME].get_i32() == 36 {
             if PostureModule::lr(fighter.module_accessor) == -1.0 { //posture check to get the correct motion below
@@ -49,6 +51,9 @@ unsafe extern "C" fn lucario_aura_charge(fighter: &mut L2CFighterCommon) {
 
 //charge input dair, hold down for 10 frames and it becomes a spike
 unsafe extern "C" fn lucario_dair_charge(fighter: &mut L2CFighterCommon) {
+    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
+    let status_kind = StatusModule::status_kind(fighter.module_accessor);
+
     if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR 
     && (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) || [*FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_JUMP_SQUAT].contains(&status_kind)) {
         STICK_DIR[entry_id as usize] = get_stick_dir(&mut *fighter.module_accessor);
@@ -57,15 +62,15 @@ unsafe extern "C" fn lucario_dair_charge(fighter: &mut L2CFighterCommon) {
         }
         else {
             COMMAND_FRAME[entry_id as usize] = 0;
-            VarModule::off_flag(fighter.battle_object,  lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
+            VarModule::off_flag(fighter.module_accessor,  lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
         }
         if COMMAND_FRAME[entry_id as usize] > 10 {
-            VarModule::on_flag(fighter.battle_object, lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
+            VarModule::on_flag(fighter.module_accessor, lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
         }
     }
     else {
         COMMAND_FRAME[entry_id as usize] = 0;
-        VarModule::off_flag(fighter.battle_object, lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
+        VarModule::off_flag(fighter.module_accessor, lucario::instance::flag::ATTACK_AIR_LW_CHARGED);
     }
 }
 
@@ -74,7 +79,7 @@ unsafe extern "C" fn lucario_dair_charge(fighter: &mut L2CFighterCommon) {
 //  hit someone with charged up taunt hitbox to gain maximum aura for a short time
 unsafe extern "C" fn lucario_galeforce_attack(fighter: &mut L2CFighterCommon) {
     if !is_operation_cpu(fighter.module_accessor) {
-        if VarModule::get_int(fighter.battle_object, lucario::instance::int::MAX_AURA_TIMER) > 0 {
+        if VarModule::get_int(fighter.module_accessor, lucario::instance::int::MAX_AURA_TIMER) > 0 {
             //WorkModule::set_float(fighter.module_accessor, 1.33, FIGHTER_LUCARIO_INSTANCE_WORK_ID_FLOAT_AURA_SCALE);
             if DamageModule::damage(fighter.module_accessor, 0) < 150.0 {
                 AttackModule::set_power_mul(fighter.module_accessor, (1.33 - (100.0 + 0.22 * DamageModule::damage(fighter.module_accessor, 0)) / 100.0) + 1.0);
@@ -82,9 +87,9 @@ unsafe extern "C" fn lucario_galeforce_attack(fighter: &mut L2CFighterCommon) {
             else {
                 AttackModule::set_power_mul(fighter.module_accessor, 1.0);
             }
-            VarModule::sub_int(fighter.battle_object, lucario::instance::int::MAX_AURA_TIMER, 1);
+            VarModule::sub_int(fighter.module_accessor, lucario::instance::int::MAX_AURA_TIMER, 1);
     
-            if VarModule::get_int(fighter.battle_object, lucario::instance::int::MAX_AURA_TIMER) % 20 == 1 {
+            if VarModule::get_int(fighter.module_accessor, lucario::instance::int::MAX_AURA_TIMER) % 20 == 1 {
                 let pos = Vector3f  {x : 0., y : 3.5, z : 0.};
                 let rot = Vector3f  {x : 0., y : 0., z : 0.};
     
@@ -99,10 +104,10 @@ unsafe extern "C" fn lucario_galeforce_attack(fighter: &mut L2CFighterCommon) {
         }
         
         //visual effect
-        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             galeforce_apply_effect(&mut *fighter.module_accessor, 0.5);
-            VarModule::set_int(fighter.battle_object, lucario::instance::int::MAX_AURA_TIMER, 480);
+            VarModule::set_int(fighter.module_accessor, lucario::instance::int::MAX_AURA_TIMER, 480);
         }
     }
 }

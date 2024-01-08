@@ -11,16 +11,16 @@ unsafe extern "C" fn falco_galeforce_attack(fighter: &mut L2CFighterCommon) {
     if !is_operation_cpu(fighter.module_accessor) {
         if status_kind == *FIGHTER_STATUS_KIND_SPECIAL_LW {
             if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
             //remove GA is falco reflects (FIXME: doesn't do anything)
             if ReflectModule::is_reflect(fighter.module_accessor) {
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-                VarModule::off_flag(fighter.battle_object, falco::instance::flag::AIRDASH);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::off_flag(fighter.module_accessor, falco::instance::flag::AIRDASH);
             }
         }
         //interrupts an aerial with airdash
-        if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+        if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
             zelda_buff_effect(fighter);
             if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD)
             && (ControlModule::get_stick_x(fighter.module_accessor).abs() >= 0.1 || ControlModule::get_stick_y(fighter.module_accessor).abs() >= 0.1)
@@ -30,22 +30,22 @@ unsafe extern "C" fn falco_galeforce_attack(fighter: &mut L2CFighterCommon) {
             && status_kind == *FIGHTER_STATUS_KIND_ATTACK_AIR {
                 StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, false);
                 MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
-                VarModule::on_flag(fighter.battle_object, falco::instance::flag::AIRDASH);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(fighter.module_accessor, falco::instance::flag::AIRDASH);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);
             }
         }
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
             //interrupts an airdodge with an aerial
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) && (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)) {
                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.66);
-                VarModule::on_flag(fighter.battle_object, falco::instance::flag::AIRDASH);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(fighter.module_accessor, falco::instance::flag::AIRDASH);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
                 HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
             }
         }
         if [*SITUATION_KIND_GROUND, *SITUATION_KIND_CLIFF].contains(&situation_kind) {
-            VarModule::off_flag(fighter.battle_object, falco::instance::flag::AIRDASH);
+            VarModule::off_flag(fighter.module_accessor, falco::instance::flag::AIRDASH);
         }
     }
 }

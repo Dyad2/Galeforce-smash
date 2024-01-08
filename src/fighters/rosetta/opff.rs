@@ -9,7 +9,7 @@ unsafe extern "C" fn rosetta_stuff(fighter: &mut L2CFighterCommon) {
     //todo: allow rosa to use this also in the air
     if curr_motion_kind == hash40("special_n_charge") || curr_motion_kind == hash40("special_air_n_charge") {
         if (ControlModule::is_enable_flick_jump(fighter.module_accessor) && (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP) != 0) || (cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_JUMP_BUTTON) != 0 {
-            VarModule::on_flag(fighter.battle_object, rosetta::instance::flag::TICO_RECALL);
+            VarModule::on_flag(fighter.module_accessor, rosetta::instance::flag::TICO_RECALL);
             if situation_kind == SITUATION_KIND_GROUND {
                 WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
                 WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT_BUTTON);
@@ -23,7 +23,7 @@ unsafe extern "C" fn rosetta_stuff(fighter: &mut L2CFighterCommon) {
             }
         }
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-            VarModule::on_flag(fighter.battle_object, rosetta::instance::flag::TICO_RECALL);
+            VarModule::on_flag(fighter.module_accessor, rosetta::instance::flag::TICO_RECALL);
             if situation_kind == SITUATION_KIND_GROUND {
                 StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_GUARD_ON, false);
             }

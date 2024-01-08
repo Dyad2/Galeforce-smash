@@ -43,7 +43,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
         frame(lua_state, 13.);
             if macros::is_excute(fighter)
             {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             }
         frame(lua_state, 17.);
             if macros::is_excute(fighter)
@@ -96,7 +96,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
         frame(lua_state, 13.);
             if macros::is_excute(fighter)
             {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             }
         frame(lua_state, 17.);
             if macros::is_excute(fighter)
@@ -154,7 +154,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
         frame(lua_state, 13.);
             if macros::is_excute(fighter)
             {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             }
         frame(lua_state, 17.);
             if macros::is_excute(fighter)
@@ -208,7 +208,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
         frame(lua_state, 13.);
             if macros::is_excute(fighter)
             {
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             }
         frame(lua_state, 17.);
             if macros::is_excute(fighter)

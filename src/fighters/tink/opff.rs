@@ -31,7 +31,7 @@ unsafe extern "C" fn toonlink_specialhi_move(fighter: &mut L2CFighterCommon) {
 }
 unsafe extern "C" fn toonlink_frame(fighter: &mut L2CFighterCommon) {
     common_fighter_frame(fighter);
-    tink_specialhi_move(fighter);
+    toonlink_specialhi_move(fighter);
 }
 
 pub fn install(agent: &mut smashline::Agent) {

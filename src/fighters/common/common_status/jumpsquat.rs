@@ -4,20 +4,19 @@ use super::*;
 use galeforce_utils::{vars::*, table_const::*};
 use custom_var::*;
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_JUMP_SQUAT, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon16status_JumpSquatEv")]
-unsafe fn status_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_JumpSquat)]
+unsafe extern "C" fn status_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
     let lr_update = fighter.sub_status_JumpSquat_check_stick_lr_update();
     fighter.status_JumpSquat_common(lr_update);
     if (ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP_MINI) || ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_JUMP)
       || (ControlModule::is_enable_flick_jump(fighter.module_accessor) && ControlModule::get_stick_y(fighter.module_accessor) >= 0.7)) && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
-        VarModule::on_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR);
+        VarModule::on_flag(fighter.module_accessor, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR);
     }
     fighter.sub_shift_status_main(L2CValue::Ptr(status_JumpSquat_Main as *const () as _))
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon21status_JumpSquat_MainEv")]
-unsafe fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_JumpSquat_Main)]
+unsafe extern "C" fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() && {
         let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr());
@@ -66,8 +65,8 @@ unsafe fn status_JumpSquat_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     0.into()
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon40uniq_process_JumpSquat_exec_status_paramEN3lib8L2CValueE")]
-unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommon, _arg: L2CValue) {
+#[skyline::hook(replace = L2CFighterCommon_uniq_process_JumpSquat_exec_status_param)]
+unsafe extern "C" fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommon, _arg: L2CValue) {
     
     let should_check = if fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_bool() {
         let custom_routine: *const extern "C" fn(&mut L2CFighterCommon) -> L2CValue = fighter.global_table[JUMP_SQUAT_MAIN_UNIQ].get_ptr() as _;
@@ -98,31 +97,31 @@ unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommo
     && cat1 & *FIGHTER_PAD_CMD_CAT1_FLAG_ATTACK_N == 0 {
         if !(fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PICKEL 
         && [*FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N1_JUMP_SQUAT, *FIGHTER_PICKEL_STATUS_KIND_SPECIAL_N3_JUMP_SQUAT].contains(&StatusModule::prev_status_kind(fighter.module_accessor, 0))) {
-            VarModule::on_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR);
+            VarModule::on_flag(fighter.module_accessor, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR);
         }
     }
-    if (frame + update_rate) >= end_frame || VarModule::is_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) {
+    if (frame + update_rate) >= end_frame || VarModule::is_flag(fighter.module_accessor, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) {
         StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), false);
         let situation_kind = fighter.global_table[SITUATION_KIND].clone();
         fighter.global_table[PREV_SITUATION_KIND].assign(&situation_kind);
-        if VarModule::is_flag(fighter.battle_object, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) {
+        if VarModule::is_flag(fighter.module_accessor, commons::status::flag::JUMP_SQUAT_TO_ESCAPE_AIR) {
             let stick = smash::app::sv_math::vec2_length(fighter.global_table[STICK_X].get_f32(), fighter.global_table[STICK_Y].get_f32());
             if stick >= 0.66 && fighter.global_table[STICK_Y].get_f32() <= 0.2
             {
-                VarModule::on_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+                VarModule::on_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
                 //GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_NONE));
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_AIR_ESCAPE);
                 WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
             } 
             else {
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
                 GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
                 KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP);
             }
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ESCAPE_AIR);
         } 
         else {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::WAVEDASH);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
             GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_AIR));
             WorkModule::set_int(fighter.module_accessor, *FIGHTER_STATUS_JUMP_FROM_SQUAT, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_JUMP_FROM);
             KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_JUMP);
@@ -131,21 +130,21 @@ unsafe fn uniq_process_JumpSquat_exec_status_param(fighter: &mut L2CFighterCommo
     }
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_JUMP_SQUAT, condition = LUA_SCRIPT_STATUS_FUNC_EXEC_STATUS)]
-unsafe fn status_exec_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
+//#[skyline::hook(replace = L2CFighterCommon_status_exec_JumpSquat)]
+//unsafe extern "C" fn status_exec_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
 
+//    uniq_process_JumpSquat_exec_status_param(fighter, L2CValue::Ptr(0 as _));
+//    0.into()
+//}
+
+#[skyline::hook(replace = L2CFighterCommon_uniq_process_JumpSquat_exec_status)]
+unsafe extern "C" fn uniq_process_JumpSquat_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
     uniq_process_JumpSquat_exec_status_param(fighter, L2CValue::Ptr(0 as _));
     0.into()
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon34uniq_process_JumpSquat_exec_statusEv")]
-unsafe fn uniq_process_JumpSquat_exec_status(fighter: &mut L2CFighterCommon) -> L2CValue {
-    uniq_process_JumpSquat_exec_status_param(fighter, L2CValue::Ptr(0 as _));
-    0.into()
-}
-
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon29sub_jump_squat_uniq_check_subEN3lib8L2CValueE")]
-unsafe fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, flag: L2CValue) {
+#[skyline::hook(replace = L2CFighterCommon_sub_jump_squat_uniq_check_sub)]
+unsafe extern "C" fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, flag: L2CValue) {
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
         return;
     }
@@ -179,8 +178,8 @@ unsafe fn sub_jump_squat_uniq_check_sub(fighter: &mut L2CFighterCommon, flag: L2
     }
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon41sub_jump_squat_uniq_check_sub_mini_attackEv")]
-unsafe fn sub_jump_squat_uniq_check_sub_mini_attack(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_sub_jump_squat_uniq_check_sub_mini_attack)]
+unsafe extern "C" fn sub_jump_squat_uniq_check_sub_mini_attack(fighter: &mut L2CFighterCommon) {
     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_MINI_JUMP) {
         return;
     }
@@ -209,9 +208,8 @@ unsafe fn sub_jump_squat_uniq_check_sub_mini_attack(fighter: &mut L2CFighterComm
     }
 }
 
-
 #[skyline::hook(replace = L2CFighterCommon_status_JumpSquat_common)]
-unsafe fn status_jumpsquat_common(fighter: &mut L2CFighterCommon, lr_update: L2CValue) {
+unsafe extern "C" fn status_jumpsquat_common(fighter: &mut L2CFighterCommon, lr_update: L2CValue) {
     let stick_jump_command_life = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_STICK_JUMP_COMMAND_LIFE);
     if stick_jump_command_life == 0
     || fighter.global_table[FLICK_Y_DIR].get_i32() <= 0 {
@@ -266,23 +264,18 @@ unsafe fn status_jumpsquat_common(fighter: &mut L2CFighterCommon, lr_update: L2C
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
-            status_jumpsquat_common,
+            status_JumpSquat,
+            status_JumpSquat_Main,
+            uniq_process_JumpSquat_exec_status_param,
+            //status_exec_JumpSquat,
+            uniq_process_JumpSquat_exec_status,
+            sub_jump_squat_uniq_check_sub,
+            sub_jump_squat_uniq_check_sub_mini_attack,
+            status_jumpsquat_common
         );
     }
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook).unwrap();
-    install_status_scripts!(
-        status_JumpSquat,
-        status_exec_JumpSquat
-    );
-
-    install_hooks!(
-        status_JumpSquat_Main,
-        uniq_process_JumpSquat_exec_status_param,
-        uniq_process_JumpSquat_exec_status,
-        sub_jump_squat_uniq_check_sub,
-        sub_jump_squat_uniq_check_sub_mini_attack
-    );
+    skyline::nro::add_hook(nro_hook);
 }

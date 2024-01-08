@@ -52,7 +52,7 @@ unsafe extern "C" fn specialairhistart(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_NONE);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_NONE);
         }
     frame(lua_state, 6.);
         if macros::is_excute(fighter)
@@ -67,7 +67,7 @@ unsafe extern "C" fn specialairhistart(fighter: &mut L2CAgentBase) {
     frame(lua_state, 17.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -92,7 +92,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL) {
+            if !VarModule::is_flag(fighter.module_accessor, zelda::instance::flag::SPECIAL_HI_CANCEL) {
                 JostleModule::set_status(fighter.module_accessor, true);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("rot"), 10.0, 361, 90, 0, 80, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("rot"), 7.0, 361, 90, 0, 60, 15.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
@@ -120,15 +120,15 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 1.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL) {
+            if !VarModule::is_flag(fighter.module_accessor, zelda::instance::flag::SPECIAL_HI_CANCEL) {
                 JostleModule::set_status(fighter.module_accessor, true);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
                 macros::ATTACK(fighter, 0, 0, Hash40::new("rot"), 10.0, 361, 90, 0, 80, 10.0, 0.0, 0.0, 0.0, None, None, None, 1.5, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("rot"), 7.0, 361, 90, 0, 60, 15.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             }
             else {
                 JostleModule::set_status(fighter.module_accessor, true);
-                smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+                notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
                 macros::ATTACK(fighter, 1, 0, Hash40::new("rot"), 6.0, 361, 70, 0, 70, 15.0, 0.0, 0.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_THRU, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_MAGIC, *ATTACK_REGION_MAGIC);
             }
         }
@@ -152,7 +152,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
 
 pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_specialn", specialn,);
-    agent.game_acmd("game_specialairn", specialairn,);
+    agent.game_acmd("game_specialairn", specialn,);
     agent.game_acmd("game_specialairhistart", specialairhistart,);
     agent.game_acmd("game_specialhistart", specialhistart,);
     agent.game_acmd("game_specialhi", specialhi,);

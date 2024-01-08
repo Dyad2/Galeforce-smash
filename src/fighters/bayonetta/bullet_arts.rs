@@ -10,7 +10,7 @@ unsafe extern "C" fn shootingarml_atkon_attack11(fighter: &mut L2CAgentBase) {
             macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 0, Hash40::new("top"), 1.0, 361, 80, 0, 10, 2.5, 0.0, 10.5, 9.0, Some(0.0), Some(10.5), Some(69.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
         }
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 0, Hash40::new("top"), 1.0, 361, 0, 0, 0, 2.5, 0.0, 10.5, 9.0, Some(0.0), Some(10.5), Some(69.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
-        smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(_boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
+        notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(_boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
     }
 }
 
@@ -102,7 +102,7 @@ unsafe extern "C" fn shooting_on_specialhi(fighter: &mut L2CAgentBase) {
 
     if macros::is_excute(fighter)
     {
-        VarModule::on_flag(fighter.battle_object,bayonetta::status::flag::SPECIAL_HI_SHOOT);
+        VarModule::on_flag(fighter.module_accessor,bayonetta::status::flag::SPECIAL_HI_SHOOT);
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 1, Hash40::new("top"), 0.5, 361, 0, 0, 0, 11.0, 0.0, 11.0, 0.0, Some(0.0), Some(11.0), Some(0.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
     }
 }
@@ -122,7 +122,7 @@ unsafe extern "C" fn shootinglegl_on_escapeb(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
     {
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 0, Hash40::new("footl"), 0.5, 361, 0, 0, 0, 2.5, 0.0, 2.5, 8.0, Some(0.0), Some(2.5), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
-        smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 8, 4);
+        notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 8, 4);
     }
 }
 
@@ -140,7 +140,7 @@ unsafe extern "C" fn shootinglegr_on_escapeb(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
     {
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 1, Hash40::new("footr"), 0.5, 361, 0, 0, 0, 2.5, 0.0, 2.5, 8.0, Some(0.0), Some(2.5), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
-        smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
+        notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
     }
 }
 
@@ -157,7 +157,7 @@ unsafe extern "C" fn shootingarml_on_escapef(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
     {
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 1, Hash40::new("footl"), 0.5, 361, 0, 0, 0, 2.5, 0.0, 2.5, 8.0, Some(0.0), Some(2.5), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
-        smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 16, 4);
+        notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_00), 16, 4);
     }
 }
 
@@ -175,7 +175,7 @@ unsafe extern "C" fn shootingarmr_on_escapef(fighter: &mut L2CAgentBase) {
     if macros::is_excute(fighter)
     {
         macros::ATTACK(fighter, WorkModule::get_int64(fighter.module_accessor, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 1, Hash40::new("footr"), 0.5, 361, 0, 0, 0, 2.5, 0.0, 2.5, 8.0, Some(0.0), Some(2.5), Some(68.0), 0.0, 0.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal_bullet"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_BAYONETTA_HIT_01, *ATTACK_REGION_NONE);
-        smash_script::notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
+        notify_event_msc_cmd!(fighter, 0x36db1a34c9 as u64, WorkModule::get_int64(boma, *FIGHTER_BAYONETTA_SHOOTING_ATTACK_ID_01), 8, 4);
     }
 }
 

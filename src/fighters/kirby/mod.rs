@@ -5,7 +5,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
-use smash::app::FighterSpecializer_Kirby;
+//use smash::app::FighterSpecializer_Kirby;
 use smashline::*;
 use smash_script::*;
 use std::mem;

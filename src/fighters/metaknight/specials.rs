@@ -18,7 +18,7 @@ unsafe extern "C" fn specialnend(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::FT_MOTION_RATE(fighter, 1.2);
-            if !VarModule::is_flag(fighter.battle_object, metaknight::instance::flag::MACH_TORNADO_HIT) {
+            if !VarModule::is_flag(fighter.module_accessor, metaknight::instance::flag::MACH_TORNADO_HIT) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.5, 45, 60, 0, 70, 10.0, 0.0, 8.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
             }
         }
@@ -41,7 +41,7 @@ unsafe extern "C" fn specialairnend(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             macros::FT_MOTION_RATE(fighter, 1.2);
-            VarModule::on_flag(fighter.battle_object, metaknight::instance::flag::MACH_TORNADO_HIT);
+            VarModule::on_flag(fighter.module_accessor, metaknight::instance::flag::MACH_TORNADO_HIT);
             macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 3.5, 45, 60, 0, 70, 10.0, 0.0, 8.0, 0.0, None, None, None, 1.2, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_BODY);
         }
     frame(lua_state, 4.);

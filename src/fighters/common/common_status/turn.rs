@@ -1,14 +1,13 @@
 use super::*;
 use galeforce_utils::table_const::*;
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_TURN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon11status_TurnEv")]
-unsafe fn status_turn(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_Turn)]
+unsafe extern "C" fn status_turn(fighter: &mut L2CFighterCommon) -> L2CValue {
     status_pre_turncommon(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(status_turn_main as *const () as _))
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon21status_pre_TurnCommonEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_pre_TurnCommon)]
 unsafe extern "C" fn status_pre_turncommon(fighter: &mut L2CFighterCommon) {
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_SPECIAL);
     WorkModule::enable_transition_term_group(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_GROUP_CHK_GROUND_ITEM);
@@ -31,7 +30,7 @@ unsafe extern "C" fn status_pre_turncommon(fighter: &mut L2CFighterCommon) {
     MotionModule::change_motion(fighter.module_accessor, Hash40::new("turn"), 0.0, 1.0, false, 0.0, false, false);
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon16status_Turn_MainEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_Turn_Main)]
 unsafe extern "C" fn status_turn_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let callable: extern "C" fn(&mut L2CFighterCommon) -> L2CValue = std::mem::transmute(fighter.global_table[TURN_UNIQ].get_ptr());
@@ -44,17 +43,17 @@ unsafe extern "C" fn status_turn_main(fighter: &mut L2CFighterCommon) -> L2CValu
     let stick_x = fighter.global_table[STICK_X].get_f32();
 
     if stick_x == 0.0 {
-        VarModule::off_flag(fighter.battle_object, commons::status::flag::DISABLE_BACKDASH);
+        VarModule::off_flag(fighter.module_accessor, commons::status::flag::DISABLE_BACKDASH);
     }
 
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND
     && stick_x * -1.0 * turn_work_lr < dash_stick_x // checks if stick is below dash threshold
-    && VarModule::is_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN)
-    && VarModule::is_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT)
+    && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN)
+    && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT)
     && StatusModule::prev_status_kind(fighter.module_accessor, 0) == *FIGHTER_STATUS_KIND_DASH
     && MotionModule::frame(fighter.module_accessor) <= 1.0 {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT);
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
         let pivot_boost = -1.75 * PostureModule::lr(fighter.module_accessor);
         fighter.clear_lua_stack();
         smash_script::lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, pivot_boost);
@@ -64,16 +63,16 @@ unsafe extern "C" fn status_turn_main(fighter: &mut L2CFighterCommon) -> L2CValu
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
             if fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_DASH != 0
             || fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH != 0
-            || VarModule::is_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN) {
-                if stick_x * turn_work_lr >= dash_stick_x && VarModule::is_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT) {
+            || VarModule::is_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN) {
+                if stick_x * turn_work_lr >= dash_stick_x && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT) {
                     if MotionModule::frame(fighter.module_accessor) >= 1.0 {
-                        VarModule::on_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+                        VarModule::on_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
                         StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_TURN, false);
                     }
                 }
-                if !VarModule::is_flag(fighter.battle_object, commons::status::flag::DISABLE_BACKDASH) && stick_x * -1.0 * turn_work_lr >= dash_stick_x {
+                if !VarModule::is_flag(fighter.module_accessor, commons::status::flag::DISABLE_BACKDASH) && stick_x * -1.0 * turn_work_lr >= dash_stick_x {
                     if MotionModule::frame(fighter.module_accessor) >= 1.0 {
-                        VarModule::off_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+                        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
                         StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_DASH, false);
                     }
                 }
@@ -84,7 +83,7 @@ unsafe extern "C" fn status_turn_main(fighter: &mut L2CFighterCommon) -> L2CValu
     1.into()
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon17status_TurnCommonEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_TurnCommon)]
 unsafe extern "C" fn status_turncommon(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() != *SITUATION_KIND_AIR {
         if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
@@ -137,29 +136,31 @@ unsafe extern "C" fn status_turncommon(fighter: &mut L2CFighterCommon) -> L2CVal
     return true.into()
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_TURN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_END,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon15status_end_TurnEv")]
-unsafe fn status_end_turn(fighter: &mut L2CFighterCommon) -> L2CValue {
-    if !VarModule::is_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN) {
-        VarModule::off_flag(fighter.battle_object, commons::status::flag::DISABLE_BACKDASH);
+#[skyline::hook(replace = L2CFighterCommon_status_end_Turn)]
+unsafe extern "C" fn status_end_turn(fighter: &mut L2CFighterCommon) -> L2CValue {
+    if !VarModule::is_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN) {
+        VarModule::off_flag(fighter.module_accessor, commons::status::flag::DISABLE_BACKDASH);
     }
-    VarModule::off_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+    VarModule::off_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_DASH {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT);
     }
     fighter.sub_exit_Turn();
     0.into()
 }
 
-pub fn install() {
-    install_hooks!(
-        status_pre_turncommon,
-        status_turn_main,
-        status_turncommon,
-    );
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_turn,
+            status_pre_turncommon,
+            status_turn_main,
+            status_turncommon,
+            status_end_turn,
+        );
+    }
+}
 
-    install_status_scripts!(
-        status_turn,
-        status_end_turn,
-    );
+pub fn install() {
+    skyline::nro::add_hook(nro_hook);
 }

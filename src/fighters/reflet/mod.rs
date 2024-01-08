@@ -39,5 +39,4 @@ pub fn install() {
     agent_init::install(agent);
     opff::install(agent);
     specials::install(agent);
-    weapon::install(agent);
 }

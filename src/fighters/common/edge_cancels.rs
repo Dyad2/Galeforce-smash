@@ -14,7 +14,7 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon, status_kind: i32, situation_k
         }
     }
     //hold shield to stay on ground while wavedashing
-    else if VarModule::is_flag(fighter.battle_object, commons::instance::flag::WAVEDASH) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && situation_kind == *SITUATION_KIND_GROUND {
+    else if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) && situation_kind == *SITUATION_KIND_GROUND {
         GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND_CLIFF_STOP));
     }
     //shield push, land cancel when not in landing lag, other edge cancel stuff

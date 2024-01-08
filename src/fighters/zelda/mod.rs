@@ -18,7 +18,6 @@ use smash::{
     }
 };
 
-use smashline::*;
 use smash_script::*;
 
 use galeforce_utils::{vars::*, table_const::*, utils::*};

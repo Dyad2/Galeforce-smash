@@ -25,7 +25,7 @@ unsafe extern "C" fn speciallw(agent: &mut L2CAgentBase) {
         {
             macros::FT_MOTION_RATE(agent, 1.5);
             if ArticleModule::is_exist(agent.module_accessor, *FIGHTER_DUCKHUNT_GENERATE_ARTICLE_GUNMAN) {
-                VarModule::on_flag(agent.battle_object, duckhunt::instance::flag::GUNMAN_REACTIVATE);
+                VarModule::on_flag(agent.module_accessor, duckhunt::instance::flag::GUNMAN_REACTIVATE);
             }
         }
     frame(agent.lua_state_agent, 4.0);

@@ -1,7 +1,7 @@
 use super::*;
 
 //global edits
-unsafe fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -11,7 +11,7 @@ unsafe fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -27,7 +27,7 @@ unsafe fn turndash(fighter: &mut L2CAgentBase) {
 }
 
 //ground
-unsafe fn attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attack11(fighter: &mut L2CAgentBase) {
 
     frame(fighter.lua_state_agent, 1.0);
         if macros::is_excute(fighter) 
@@ -61,7 +61,7 @@ unsafe fn attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attack12(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attack12(fighter: &mut L2CAgentBase) {
 
     frame(fighter.lua_state_agent, 2.0);
         if macros::is_excute(fighter)
@@ -78,7 +78,7 @@ unsafe fn attack12(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
     frame(lua_state, 9.0);
@@ -98,7 +98,7 @@ unsafe fn attackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
 
     frame(fighter.lua_state_agent, 7.0);
         if macros::is_excute(fighter)
@@ -121,7 +121,7 @@ unsafe fn attacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attackdash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackdash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -153,7 +153,7 @@ unsafe fn attackdash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 10.);
@@ -184,7 +184,7 @@ unsafe fn attackhi4(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe fn attacklw4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attacklw4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -222,7 +222,7 @@ unsafe fn attacklw4(fighter: &mut L2CAgentBase) {
 }
 
 //air
-unsafe fn attackairf(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 10.);
@@ -249,14 +249,14 @@ unsafe fn attackairf(fighter: &mut L2CAgentBase) {
 }
 
 //other
-unsafe fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)

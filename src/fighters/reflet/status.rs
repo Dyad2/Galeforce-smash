@@ -32,14 +32,14 @@ unsafe fn attack_air_custom(fighter: &mut L2CFighterCommon) {
     let instance_boma = mem::transmute::<&mut smash::app::BattleObjectModuleAccessor, &mut smash::app::FighterModuleAccessor>(&mut *fighter.module_accessor);
 
     //up to frame 5, check is player is holding A
-    if fighter.global_table[MOTION_FRAME].get_i32() <= 5 && !VarModule::is_flag(fighter.battle_object, reflet::status::flag::ATTACK_BUTTON_RELEASED) {
+    if fighter.global_table[MOTION_FRAME].get_i32() <= 5 && !VarModule::is_flag(fighter.module_accessor, reflet::status::flag::ATTACK_BUTTON_RELEASED) {
         if ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_ATTACK) {
             if WorkModule::get_int(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_INT_THUNDER_SWORD_CURRENT_POINT) > 0 {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
             }
         }
         else {
-            VarModule::on_flag(fighter.battle_object, reflet::status::flag::ATTACK_BUTTON_RELEASED);
+            VarModule::on_flag(fighter.module_accessor, reflet::status::flag::ATTACK_BUTTON_RELEASED);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_REFLET_INSTANCE_WORK_ID_FLAG_THUNDER_SWORD_ON);
         }
     }

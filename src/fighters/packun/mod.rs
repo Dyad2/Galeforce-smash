@@ -14,5 +14,4 @@ pub fn install() {
     let agent = &mut smashline::Agent::new("packun");
     acmd::install(agent);
     opff::install(agent);
-    weapon::install(agent);
 }

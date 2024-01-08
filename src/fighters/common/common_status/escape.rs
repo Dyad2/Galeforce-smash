@@ -1,8 +1,7 @@
 use super::*;
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon18status_pre_EscapeEv")]
-unsafe fn status_Escape(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_Escape)]
+unsafe extern "C" fn status_Escape(fighter: &mut L2CFighterCommon) -> L2CValue {
     StatusModule::init_settings(
         fighter.module_accessor, 
         smash::app::SituationKind(*SITUATION_KIND_GROUND), 
@@ -37,9 +36,8 @@ unsafe fn status_Escape(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_F, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon18status_pre_EscapeFEv")]
-unsafe fn status_EscapeF(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeF)]
+unsafe extern "C" fn status_EscapeF(fighter: &mut L2CFighterCommon) -> L2CValue {
  
     let ret = fighter.sub_pre_escape_fb().get_bool();
  
@@ -78,9 +76,8 @@ unsafe fn status_EscapeF(fighter: &mut L2CFighterCommon) -> L2CValue {
     return ret.into();
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_ESCAPE_B, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon18status_pre_EscapeBEv")]
-unsafe fn status_EscapeB(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeB)]
+unsafe extern "C" fn status_EscapeB(fighter: &mut L2CFighterCommon) -> L2CValue {
     let ret = fighter.sub_pre_escape_fb().get_bool();
     if !ret {
         StatusModule::init_settings(
@@ -118,10 +115,16 @@ unsafe fn status_EscapeB(fighter: &mut L2CFighterCommon) -> L2CValue {
     return ret.into();
 }
 
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_Escape,
+            status_EscapeF,
+            status_EscapeB,
+        );
+    }
+}
+
 pub fn install() {
-    install_status_scripts!(
-        status_Escape,
-        status_EscapeF,
-        status_EscapeB
-    );
+    skyline::nro::add_hook(nro_hook);
 }

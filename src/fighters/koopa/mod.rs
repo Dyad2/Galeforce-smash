@@ -20,7 +20,7 @@ mod specials;
 pub fn install() {
     let agent = &mut smashline::Agent::new("koopa");
     acmd::install(agent);
-    effect::install(agent);
+    effects::install(agent);
     opff::install(agent);
     specials::install(agent);
 }

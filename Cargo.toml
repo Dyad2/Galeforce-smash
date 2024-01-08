@@ -20,9 +20,13 @@ skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
 skyline_smash = { git = "https://github.com/blu-dev/skyline-smash.git", features = ["weak_l2cvalue"] }
 smash_script = { git = "https://github.com/blu-dev/smash-script", branch = "development" }
 smashline = { git = "https://github.com/HDR-Development/smashline"}
+smash_rs = { package = "smash", git = "https://github.com/blu-dev/smash-rs" }
 
 custom_var = { path = "./custom-var" }
 galeforce_utils = { path = "./galeforce_utils"}
+
+[patch.crates-io]
+skyline = { git = "https://github.com/ultimate-research/skyline-rs.git" }
 
 [profile.dev]
 panic = "abort"

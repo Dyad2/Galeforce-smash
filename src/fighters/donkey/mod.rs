@@ -10,12 +10,14 @@ use galeforce_utils::vars::*;
 use custom_var::*;
 
 mod acmd;
+mod effects;
 mod opff;
 mod specials;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("donkey");
     acmd::install(agent);
+    effects::install(agent);
     opff::install(agent);
     specials::install(agent);
 }

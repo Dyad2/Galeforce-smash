@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn specialhi(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent)
         {
-            MotionModule::set_rate(fighter.module_accessor, 1.2);
+            MotionModule::set_rate(agent.module_accessor, 1.2);
             FighterAreaModuleImpl::enable_fix_jostle_area(agent.module_accessor, 6.5, 6.5);
         }
     frame(agent.lua_state_agent, 6.0);
@@ -50,7 +50,7 @@ unsafe extern "C" fn specialhi(agent: &mut L2CAgentBase) {
 unsafe extern "C" fn specialairhi(agent: &mut L2CAgentBase) {
         if macros::is_excute(agent)
         {
-            MotionModule::set_rate(fighter.module_accessor, 1.2);
+            MotionModule::set_rate(agent.module_accessor, 1.2);
         }
     frame(agent.lua_state_agent, 6.0);
         if macros::is_excute(agent)

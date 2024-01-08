@@ -256,7 +256,7 @@ unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     frame(lua_state, 58.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -292,7 +292,7 @@ unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
     frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
-            if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+            if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                 macros::HIT_NODE(fighter, Hash40::new("kneer"), *HIT_STATUS_XLU);
                 macros::HIT_NODE(fighter, Hash40::new("legr"), *HIT_STATUS_XLU);
             }
@@ -328,7 +328,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_LANDING_CLEAR_SPEED);
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                 macros::SET_SPEED_EX(fighter, 0, 2, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
@@ -344,7 +344,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 15.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
                 macros::SET_SPEED_EX(fighter, 1.2, -6, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_MAIN);
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_NO_SPEED_OPERATION_CHK);
@@ -357,7 +357,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 19.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 macros::ATTACK(fighter, 0, 0, Hash40::new("top"), 10.0, 56, 78, 0, 55, 5.8, 0.0, 0.0, 0.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_sting"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             }
             else {
@@ -372,7 +372,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 48.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_FLAG_RESERVE_GRAVITY_STABLE_UNABLE);
                 KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
             }
@@ -383,7 +383,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 53.);
         if macros::is_excute(fighter)
         {
-            if !VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+            if !VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
                 WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
             }
         }
@@ -392,7 +392,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
 unsafe extern "C" fn landingairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    if VarModule::is_flag(fighter.battle_object, sheik::instance::flag::ATTACK_AIR_LW_W) {
+    if VarModule::is_flag(fighter.module_accessor, sheik::instance::flag::ATTACK_AIR_LW_W) {
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
             {
@@ -414,7 +414,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)

@@ -104,7 +104,7 @@ unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {
     frame(fighter.lua_state_agent, 1.0);
         if macros::is_excute(fighter)
         {
-            VarModule::on_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL);
+            VarModule::on_flag(fighter.module_accessor, donkey::instance::flag::GET_BARREL);
         }
     //frame(fighter.lua_state_agent, 33.0);
     //    if macros::is_excute(fighter)

@@ -163,7 +163,7 @@ unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 56.0);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -314,7 +314,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
     frame(lua_state, 14.0);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.0);
         if macros::is_excute(fighter)
@@ -337,7 +337,6 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_dash", dash,);
     agent.game_acmd("game_turndash", turndash,);
     agent.game_acmd("game_attack11", attack11,);
-    agent.game_acmd("game_attacks3lw", attacks3lw,);
     agent.game_acmd("game_attackairn", attackairn,);
     agent.game_acmd("game_throwhi", throwhi,);
     agent.game_acmd("game_throwf", throwf,);

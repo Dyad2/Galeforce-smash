@@ -1,7 +1,7 @@
 use super::*;
 
 //global edits
-unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_dash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 15.);
@@ -11,7 +11,7 @@ unsafe extern "C" fn dash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_turndash(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 1.);
@@ -26,7 +26,7 @@ unsafe extern "C" fn turndash(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attack11(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attack11(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
         if macros::is_excute(fighter)
@@ -47,7 +47,7 @@ unsafe extern "C" fn attack11(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attacks3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 6.);
@@ -82,7 +82,7 @@ unsafe extern "C" fn attacks3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attackhi3(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 8.);
@@ -103,7 +103,7 @@ unsafe extern "C" fn attackhi3(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacks4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attacks4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -135,7 +135,7 @@ unsafe extern "C" fn attacks4(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackhi4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attackhi4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -162,7 +162,7 @@ unsafe extern "C" fn attackhi4(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attacklw4(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attacklw4(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -202,7 +202,7 @@ unsafe extern "C" fn attacklw4(fighter: &mut L2CAgentBase) {
 }
 
 //air
-unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attackairn(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -230,7 +230,7 @@ unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attackairb(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 3.);
@@ -259,7 +259,7 @@ unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
         }
 }
 
-unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_attackairlw(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 0.);
@@ -302,14 +302,14 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
 }
 
 //other
-unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
+unsafe extern "C" fn brave_escapeairslide(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
     frame(lua_state, 14.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -319,18 +319,18 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", dash,);
-    agent.game_acmd("game_turndash", turndash,);
-    agent.game_acmd("game_attack11", attack11);
-    agent.game_acmd("game_attacks3", attacks3);
-    agent.game_acmd("game_attackhi3", attackhi3);
-    agent.game_acmd("game_attacks4", attacks4);
-    agent.game_acmd("game_attackhi4", attackhi4);
-    agent.game_acmd("game_attacklw4", attacklw4);
+    agent.game_acmd("game_dash", brave_dash,);
+    agent.game_acmd("game_turndash", brave_turndash,);
+    agent.game_acmd("game_attack11", brave_attack11);
+    agent.game_acmd("game_attacks3", brave_attacks3);
+    agent.game_acmd("game_attackhi3", brave_attackhi3);
+    agent.game_acmd("game_attacks4", brave_attacks4);
+    agent.game_acmd("game_attackhi4", brave_attackhi4);
+    agent.game_acmd("game_attacklw4", brave_attacklw4);
 
-    agent.game_acmd("game_attackairn", attackairn);
-    agent.game_acmd("game_attackairb", attackairb);
-    agent.game_acmd("game_attackairlw", attackairlw);
+    agent.game_acmd("game_attackairn", brave_attackairn);
+    agent.game_acmd("game_attackairb", brave_attackairb);
+    agent.game_acmd("game_attackairlw", brave_attackairlw);
     
-    agent.game_acmd("game_escapeairslide", escapeairslide);
+    agent.game_acmd("game_escapeairslide", brave_escapeairslide);
 }

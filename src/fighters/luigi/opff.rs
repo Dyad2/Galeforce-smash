@@ -5,7 +5,7 @@ use crate::fighters::common::opff::common_fighter_frame;
 // fn fingerguns_frame(fighter: &mut L2CFighterCommon) {
 //     unsafe {
 //         let status_kind = StatusModule::status_kind(fighter.module_accessor);
-//         let elec_charge = VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE);
+//         let elec_charge = VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE);
 //         //rewrite in status, charge bonus is set frame 1
 //         if status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_CHARGE {
 //             if ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) && fighter.global_table[MOTION_FRAME].get_i32() < 14 {
@@ -18,7 +18,7 @@ use crate::fighters::common::opff::common_fighter_frame;
 //             }
 //         }
 //         if status_kind == *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM {
-//             if elec_charge != 0 && VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
+//             if elec_charge != 0 && VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
 //                 galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
 //             }
 //         }

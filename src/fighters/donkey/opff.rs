@@ -5,8 +5,8 @@ pub unsafe extern "C" fn donkey_get_barrell(fighter : &mut L2CFighterCommon) {
     //dash attack to neutral air when diddy falls offstage
     if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_SPECIAL_S &&
      StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND &&
-     VarModule::is_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL) {
-        VarModule::off_flag(fighter.battle_object, donkey::instance::flag::GET_BARREL);
+     VarModule::is_flag(fighter.module_accessor, donkey::instance::flag::GET_BARREL) {
+        VarModule::off_flag(fighter.module_accessor, donkey::instance::flag::GET_BARREL);
         fighter.change_status(FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP.into(), false.into());
         ItemModule::have_item(fighter.module_accessor, smash::app::ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
     }

@@ -16,10 +16,11 @@ use custom_var::*;
 
 mod acmd;
 mod opff;
-mod status;
+//mod status;
+
 
 pub fn install() {
-    acmd::install();
-    opff::install();
-    status::install();
+    let agent = &mut smashline::Agent::new("gamewatch");
+    acmd::install(agent);
+    opff::install(agent);
 }

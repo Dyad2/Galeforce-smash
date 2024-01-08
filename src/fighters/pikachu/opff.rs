@@ -3,7 +3,7 @@ use crate::fighters::common::opff::common_fighter_frame;
 
 unsafe extern "C" fn pikachu_reenable_side_special(fighter: &mut L2CFighterCommon) {
     if is_special_reset(&mut *fighter.module_accessor) {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::DISABLE_SPECIAL_S);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::DISABLE_SPECIAL_S);
     }
 }
 
@@ -14,7 +14,7 @@ unsafe extern "C" fn pikachu_galeforce_attack(fighter: &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
     let status_kind_prev = StatusModule::prev_status_kind(fighter.module_accessor, 0);    
     
-    if status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL && status_kind_prev == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END && VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+    if status_kind == *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL && status_kind_prev == *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
         //WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_PASS);
         if check_jump_input(fighter.module_accessor) {
             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_JUMP_SQUAT);
@@ -25,7 +25,7 @@ unsafe extern "C" fn pikachu_galeforce_attack(fighter: &mut L2CFighterCommon) {
         }
     }
     if ![*FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_WARP, *FIGHTER_PIKACHU_STATUS_KIND_SPECIAL_HI_END, *FIGHTER_STATUS_KIND_LANDING_FALL_SPECIAL].contains(&status_kind) {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
     }
 }
 

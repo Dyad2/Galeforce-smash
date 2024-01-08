@@ -1,11 +1,3 @@
-
-pub mod galeforce;
-pub mod controls;
-pub mod edge_cancels;
-pub mod ecb_shifts;
-mod common_status;
-mod opff;
-
 use {
     smashline::*,
     smash_script::*,
@@ -47,7 +39,13 @@ use {
 
 pub static mut TOTAL_FIGHTER: i32 = 0;
 
+pub mod galeforce;
+pub mod controls;
+pub mod edge_cancels;
+pub mod ecb_shifts;
+pub mod opff;
+mod common_status;
+
 pub fn install() {
-    opff::install();
     common_status::install();
 }

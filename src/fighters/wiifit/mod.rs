@@ -16,6 +16,9 @@ use {
     std::mem
 };
 
+use galeforce_utils::{vars::*, table_const::*, utils::*};
+use custom_var::*;
+
 mod acmd;
 mod opff;
 

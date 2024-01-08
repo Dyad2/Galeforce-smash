@@ -26,13 +26,13 @@
 //         if !is_operation_cpu(fighter.module_accessor) {
 //             if status_kind == *FIGHTER_ROY_STATUS_KIND_SPECIAL_S3 {
 //                 if AttackModule::is_infliction(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-//                     VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//                     VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
 //                 }
 //             }
 //             else {
-//                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//                 VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
 //             }
-//             if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
+//             if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) && ControlModule::check_button_on(fighter.module_accessor, *CONTROL_PAD_BUTTON_GUARD) {
 //                 StopModule::cancel_hit_stop(fighter.module_accessor);
 //                 if ControlModule::get_stick_y(fighter.module_accessor) > 0.0 {
 //                     ControlModule::set_main_stick_y(fighter.module_accessor, 0.0);
@@ -41,12 +41,12 @@
 //                 StatusModule::set_situation_kind(fighter.module_accessor, smash::app::SituationKind(*SITUATION_KIND_AIR), true);
 //                 StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_ESCAPE_AIR, true);
 //                 //MotionModule::change_motion_kind(fighter.module_accessor, smash::phx::Hash40{hash: hash40("escape_air_slide")});
-//                 VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
-//                 VarModule::set_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 420);
+//                 VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
+//                 VarModule::set_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 420);
 //             }
-//             if VarModule::get_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER) >= 0 {
+//             if VarModule::get_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER) >= 0 {
 //                 chrom_disable_dance_effect(fighter);
-//                 VarModule::sub_int(fighter.battle_object, commons::instance::int::FRAME_COUNTER, 1);
+//                 VarModule::sub_int(fighter.module_accessor, commons::instance::int::FRAME_COUNTER, 1);
 //             }
 //         }
 //     }
@@ -191,7 +191,7 @@
 //         if macros::is_excute(fighter)
 //         {
 //             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-//             smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+//             notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
 //         }
 //     frame(lua_state, 24.);
 //         if macros::is_excute(fighter)

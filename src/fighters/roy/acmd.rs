@@ -300,7 +300,7 @@ unsafe extern "C" fn airlw(fighter: &mut L2CAgentBase) {
 unsafe extern "C" fn appealhil(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
             {
@@ -317,7 +317,7 @@ unsafe extern "C" fn appealhil(fighter: &mut L2CAgentBase) {
             {
                 //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
                 HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
     }
 }
@@ -325,7 +325,7 @@ unsafe extern "C" fn appealhil(fighter: &mut L2CAgentBase) {
 unsafe extern "C" fn appealhir(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
 
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON) {
         frame(lua_state, 1.);
             if macros::is_excute(fighter)
             {
@@ -342,7 +342,7 @@ unsafe extern "C" fn appealhir(fighter: &mut L2CAgentBase) {
             {
                 //smash_script::damage!(fighter, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
                 HitModule::set_status_all(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
-                VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
     }
 }
@@ -354,7 +354,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)

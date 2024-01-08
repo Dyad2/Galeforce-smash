@@ -1,7 +1,7 @@
 use super::*;
 
 //up tilt
-unsafe fn rocky_attackhi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn rocky_attackhi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let mask = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI3 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK) as u64;
 
@@ -33,7 +33,7 @@ unsafe fn rocky_attackhi3_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 }
 
 //removes workmodule::on_flag for FIGHTER_ROCKMAN_INSTANCE_WORK_ID_FLAG_ATTACK_HI3_LANDING
-unsafe fn rocky_attackhi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn rocky_attackhi3_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.status_AttackHi3()
 }
 
@@ -75,7 +75,7 @@ unsafe extern "C" fn rockman_attack_hi4_main_loop(fighter: &mut L2CFighterCommon
     return 1.into()
 }
 
-pub unsafe fn status_AttackHi4_Main_minjump(fighter: &mut L2CFighterCommon) -> bool { //not an actual status fn, reimplements status_AttackHi3_Main_minjump()
+pub unsafe extern "C" fn status_AttackHi4_Main_minjump(fighter: &mut L2CFighterCommon) -> bool { //not an actual status fn, reimplements status_AttackHi3_Main_minjump()
     let jump_mini_attack_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_WORK_ID_INT_RESERVE_ATTACK_MINI_JUMP_ATTACK_FRAME);
     
     if 0 < jump_mini_attack_frame {
@@ -102,7 +102,7 @@ pub unsafe fn status_AttackHi4_Main_minjump(fighter: &mut L2CFighterCommon) -> b
     return false;
 }
 
-unsafe fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     //fighter.status_AttackHi4Start_Main();
     fighter.status_AttackHi4_common(L2CValue::U64(0xa5598d745)); //the u64 should be attack_hi4 ? vanilla script had attack_hi3
@@ -113,7 +113,7 @@ unsafe fn rocky_attackhi4_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_shift_status_main(L2CValue::Ptr(rockman_attack_hi4_main_loop as *const () as _))
 }
 
-unsafe fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let mask = (*FIGHTER_LOG_MASK_FLAG_ATTACK_KIND_ATTACK_HI4 | *FIGHTER_LOG_MASK_FLAG_ACTION_CATEGORY_ATTACK | *FIGHTER_LOG_MASK_FLAG_HAJIKI) as u64;
     let mask2 = *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_VISIBILITY | *FS_SUCCEEDS_KEEP_NO_REACTION;
@@ -145,7 +145,7 @@ unsafe fn rocky_attackhi4_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-unsafe fn status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
+unsafe extern "C" fn status_landing(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     fighter.sub_landing_uniq_process_exec();
     if fighter.global_table[STATUS_KIND_INTERRUPT].get_i32() == *FIGHTER_STATUS_KIND_LANDING {

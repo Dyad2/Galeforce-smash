@@ -19,10 +19,10 @@ unsafe extern "C" fn steve_fixes(fighter: &mut L2CFighterCommon) {
     //removing pmlg. might not affect all setups? 
     if (fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_AIR && !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR))
      || (fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK)) {
-        VarModule::off_flag(fighter.battle_object, pickel::instance::flag::ALLOW_SPECIAL_N);
+        VarModule::off_flag(fighter.module_accessor, pickel::instance::flag::ALLOW_SPECIAL_N);
     }
     else {
-        VarModule::on_flag(fighter.battle_object, pickel::instance::flag::ALLOW_SPECIAL_N);
+        VarModule::on_flag(fighter.module_accessor, pickel::instance::flag::ALLOW_SPECIAL_N);
     }
 }
 

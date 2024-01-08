@@ -31,7 +31,7 @@ mod effect;
 mod opff;
 mod sound;
 mod special;
-mod status;
+//mod status;
 mod weapon;
 
 pub fn install() {
@@ -42,6 +42,6 @@ pub fn install() {
     opff::install(agent);
     sound::install(agent);
     special::install(agent);
-    status::install(agent);
+    //status::install(agent);
     weapon::install(agent);
 }

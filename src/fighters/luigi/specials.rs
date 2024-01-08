@@ -38,7 +38,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -85,7 +85,7 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 10.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -104,28 +104,28 @@ unsafe extern "C" fn specialsstart(fighter: &mut L2CAgentBase) {
         frame(fighter.lua_state_agent, 11.0);
             if macros::is_excute(fighter)
             {
-                if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) >= 4 {
+                if VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE) >= 4 {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, false);
                 }
             }
         frame(fighter.lua_state_agent, 14.0);
             if macros::is_excute(fighter)
             {
-                if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) == 3 {
+                if VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE) == 3 {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, false);
                 }
             }
         frame(fighter.lua_state_agent, 17.0);
             if macros::is_excute(fighter)
             {
-                if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) == 2 {
+                if VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE) == 2 {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, false);
                 }
             }
         frame(fighter.lua_state_agent, 20.0);
             if macros::is_excute(fighter)
             {
-                if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) == 1 {
+                if VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE) == 1 {
                     StatusModule::change_status_request_from_script(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_KIND_SPECIAL_S_RAM, false);
                 }
             }

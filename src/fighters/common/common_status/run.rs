@@ -1,7 +1,7 @@
 use super::*;
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon14status_Run_SubEv")]
-unsafe fn status_run_sub(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_status_Run_Sub)]
+unsafe extern "C" fn status_run_sub(fighter: &mut L2CFighterCommon) {
     let value: f32 = if fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_DASH || fighter.global_table[PREV_STATUS_KIND].get_i32() == *FIGHTER_STATUS_KIND_TURN {
         WorkModule::get_float(fighter.module_accessor, *FIGHTER_STATUS_RUN_WORK_FLOAT_START_FRAME)
     } else {
@@ -31,7 +31,7 @@ unsafe fn status_run_sub(fighter: &mut L2CFighterCommon) {
     WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW);
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon15status_Run_MainEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_Run_Main)]
 unsafe extern "C" fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U) && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0)
@@ -53,22 +53,20 @@ unsafe extern "C" fn status_run_main(fighter: &mut L2CFighterCommon) -> L2CValue
     call_original!(fighter)
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_RUN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon10status_RunEv")]
-unsafe fn status_run(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_Run)]
+unsafe extern "C" fn status_run(fighter: &mut L2CFighterCommon) -> L2CValue {
     status_run_sub(fighter);
     fighter.sub_shift_status_main(L2CValue::Ptr(status_run_main as *const () as _))
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_RUN_BRAKE, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon15status_RunBrakeEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_RunBrake)]
 unsafe fn status_runbrake(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_RunBrake();
     fighter.sub_shift_status_main(L2CValue::Ptr(status_runbrake_main as *const () as _))
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon20status_RunBrake_MainEv")]
-unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_RunBrake_Main)]
+unsafe extern "C" fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     if (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U) && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_HI != 0)
     || (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_LW) && fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_LW != 0)
     || (WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_S)  && (fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_L != 0 || fighter.global_table[CMD_CAT2].get_i32() & *FIGHTER_PAD_CMD_CAT2_FLAG_APPEAL_S_R != 0))
@@ -92,14 +90,18 @@ unsafe fn status_runbrake_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     call_original!(fighter)
 }
 
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_run_sub,
+            status_run_main,
+            status_run,
+            status_runbrake,
+            status_runbrake_main
+        );
+    }
+}
+
 pub fn install() {
-    install_hooks!(
-        status_run_sub,
-        status_run_main,
-        status_runbrake_main
-    );
-    install_status_scripts!(
-        status_run,
-        status_runbrake,
-    );
+    skyline::nro::add_hook(nro_hook);
 }

@@ -1,24 +1,24 @@
-use super::*;
+//use super::*;
 
-unsafe extern "C" fn specials_setkind(fighter: &mut L2CFighterCommon) -> L2CValue {
-    println!("game and watch!");
+//unsafe extern "C" fn specials_setkind(fighter: &mut L2CFighterCommon) -> L2CValue {
+//    println!("game and watch!");
 
-    if VarModule::is_flag(fighter.battle_object,commons::instance::flag::GALEFORCE_ATTACK_ON) {
-        WorkModule::set_int(fighter.module_accessor, VarModule::get_int(fighter.battle_object, gamewatch::instance::int::JUDGE_STORED_KIND), *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND);
-        //WorkModule::set_int64(
-    }
+//    if VarModule::is_flag(fighter.module_accessor,commons::instance::flag::GALEFORCE_ATTACK_ON) {
+//        WorkModule::set_int(fighter.module_accessor, VarModule::get_int(fighter.module_accessor, gamewatch::instance::int::JUDGE_STORED_KIND), *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND);
+//        //WorkModule::set_int64(
+//    }
 
-    println!("gnw stored judge: {}", VarModule::get_int(fighter.battle_object, gamewatch::instance::int::JUDGE_STORED_KIND));
-    println!("gnw special_s_kind: {}", WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND));
+//    println!("gnw stored judge: {}", VarModule::get_int(fighter.module_accessor, gamewatch::instance::int::JUDGE_STORED_KIND));
+//    println!("gnw special_s_kind: {}", WorkModule::get_int(fighter.module_accessor, *FIGHTER_GAMEWATCH_INSTANCE_WORK_ID_INT_SPECIAL_S_KIND));
 
-    let ret = original!(fighter);
+//    let ret = original!(fighter);
 
-    return ret;
-}
+//    return ret;
+//}
 
-pub fn install(agent: &mut smashline::Agent) {
-    agent.status(smashline::Init, *FIGHTER_STATUS_KIND_SPECIAL_S, specials_setkind);
-}
+//pub fn install(agent: &mut smashline::Agent) {
+//    agent.status(smashline::Init, *FIGHTER_STATUS_KIND_SPECIAL_S, specials_setkind);
+//}
 
 // // Rewrite this you NERD
 // void __thiscall+

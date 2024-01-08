@@ -48,7 +48,7 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
 
 unsafe extern "C" fn specialscatch(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        MotionModule::set_rate(fighter.module_accessor, 0.75);
+        MotionModule::set_rate(agent.module_accessor, 0.75);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     frame(agent.lua_state_agent, 5.0);
@@ -57,11 +57,11 @@ unsafe extern "C" fn specialscatch(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        MotionModule::set_rate(fighter.module_accessor, 1.0);
-        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.5, 19.0, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_G);
-        macros::CATCH(agent, 1, Hash40::new("top"), 5.0, 0.0, 8.0, 11.0, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_G);
+        MotionModule::set_rate(agent.module_accessor, 1.0);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.0, 0.0, 8.5, 19.0, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_G);
+        macros::CATCH(agent, 1, Hash40::new("top"), 5.0, 0.0, 8.0, 11.0, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_G);
         macros::CATCH(agent, 2, Hash40::new("top"), 2.0, 0.0, 8.5, 19.0, Some(0.0), Some(8.5), Some(16.0), *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_A);
-        macros::CATCH(agent, 3, Hash40::new("top"), 3.0, 0.0, 8.0, 11.0, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_A);
+        macros::CATCH(agent, 3, Hash40::new("top"), 3.0, 0.0, 8.0, 11.0, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_A);
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
@@ -72,7 +72,7 @@ unsafe extern "C" fn specialscatch(agent: &mut L2CAgentBase) {
 
 unsafe extern "C" fn specialsaircatch(agent: &mut L2CAgentBase) {
     if macros::is_excute(agent) {
-        MotionModule::set_rate(fighter.module_accessor, 0.45);
+        MotionModule::set_rate(agent.module_accessor, 0.45);
         macros::ATTACK_ABS(agent, *FIGHTER_ATTACK_ABSOLUTE_KIND_CATCH, 0, 5.0, 70, 30, 0, 60, 0.0, 1.0, *ATTACK_LR_CHECK_F, 0.0, true, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_NONE, *ATTACK_REGION_BODY);
     }
     frame(agent.lua_state_agent, 5.0);
@@ -81,9 +81,9 @@ unsafe extern "C" fn specialsaircatch(agent: &mut L2CAgentBase) {
     }
     frame(agent.lua_state_agent, 6.0);
     if macros::is_excute(agent) {
-        MotionModule::set_rate(fighter.module_accessor, 1.0);
-        macros::CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 6.0, 21.0, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
-        macros::CATCH(agent, 1, Hash40::new("top"), 5.5, 0.0, 7.0, 14.0, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
+        MotionModule::set_rate(agent.module_accessor, 1.0);
+        macros::CATCH(agent, 0, Hash40::new("top"), 4.5, 0.0, 6.0, 21.0, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
+        macros::CATCH(agent, 1, Hash40::new("top"), 5.5, 0.0, 7.0, 14.0, None, None, None, *FIGHTER_STATUS_KIND_KOOPA_DIVED, *COLLISION_SITUATION_MASK_GA);
     }
     frame(agent.lua_state_agent, 7.0);
     if macros::is_excute(agent) {
@@ -119,13 +119,13 @@ unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                VarModule::on_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                VarModule::on_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
             }
         }
     frame(lua_state, 30.);
         if macros::is_excute(fighter)
         {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::GALEFORCE_ATTACK_ON);
         }
     frame(lua_state, 37.);
         if macros::is_excute(fighter)

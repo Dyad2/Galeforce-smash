@@ -1,8 +1,7 @@
 use super::*; 
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_PRE,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon26status_pre_ShieldBreakDownEv")]
-unsafe fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_pre_ShieldBreakDown)]
+unsafe extern "C" fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     let mask = (*FIGHTER_STATUS_ATTR_DAMAGE | *FIGHTER_STATUS_ATTR_DISABLE_SHIELD_RECOVERY) as u64;
     let mask2 = *FS_SUCCEEDS_KEEP_EFFECT | *FS_SUCCEEDS_KEEP_HIT | *FS_SUCCEEDS_KEEP_SOUND;
@@ -34,14 +33,13 @@ unsafe fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) -> L2CValue
     return 0.into();
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon40bind_address_call_status_ShieldBreakDownEPN3lib8L2CAgentE")]
-unsafe fn bac_status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_bind_address_call_status_ShieldBreakDown)]
+unsafe extern "C" fn bac_status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
     fighter.status_ShieldBreakDown();
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_SHIELD_BREAK_DOWN, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon22status_ShieldBreakDownEv")]
-unsafe fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
+#[skyline::hook(replace = L2CFighterCommon_status_ShieldBreakDown)]
+unsafe extern "C" fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
 
     //smash::app::sv_fighter_util::is
     WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DOWN_FLAG_UP);
@@ -59,8 +57,8 @@ unsafe fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
     fighter.sub_shift_status_main(L2CValue::Ptr(status_ShieldBreakDown_main as *const () as _));
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon27status_ShieldBreakDown_MainEv")]
-unsafe fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+#[skyline::hook(replace = L2CFighterCommon_status_ShieldBreakDown_Main)]
+unsafe extern "C" fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValue {
    
     if fighter.global_table[MOTION_FRAME].get_i32() >= 25 {
         HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_NORMAL), 0);
@@ -74,13 +72,17 @@ unsafe fn status_ShieldBreakDown_main(fighter: &mut L2CFighterCommon) -> L2CValu
     return 0.into();
 }
 
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            status_ShieldBreakDown_pre,
+            bac_status_ShieldBreakDown,
+            status_ShieldBreakDown,
+            status_ShieldBreakDown_main,
+        );
+    }
+}
+
 pub fn install() {
-    install_status_scripts!(
-        status_ShieldBreakDown,
-        status_ShieldBreakDown_pre,
-    );
-    install_hooks!(
-        bac_status_ShieldBreakDown,
-        status_ShieldBreakDown_main,
-    );
+    skyline::nro::add_hook(nro_hook);
 }

@@ -1,8 +1,9 @@
+use skyline_smash::app::utility;
 use super::*;
 
 pub unsafe extern "C" fn cancel_effect(fighter : &mut L2CFighterCommon) {    
-    if VarModule::is_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL) {
-        let frame = VarModule::get_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER);
+    if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::HIT_CANCEL) {
+        let frame = VarModule::get_int(fighter.module_accessor, commons::instance::int::HIT_CANCEL_FRAME_COUNTER);
         if frame < 24 {
             if frame % 4 == 0 {
                 macros::FLASH(fighter, 0.5, 0.0, 1.0, 1.0);
@@ -10,11 +11,11 @@ pub unsafe extern "C" fn cancel_effect(fighter : &mut L2CFighterCommon) {
             else if frame % 2 == 0 {
                 macros::COL_NORMAL(fighter);
             }
-            VarModule::add_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 1);
+            VarModule::add_int(fighter.module_accessor, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 1);
         }
         else {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
-            VarModule::set_int(fighter.battle_object, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 0);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::HIT_CANCEL);
+            VarModule::set_int(fighter.module_accessor, commons::instance::int::HIT_CANCEL_FRAME_COUNTER, 0);
             //macros::FLASH(fighter, 1.0, 1.0, 1.0, 1.0);
         }
     }
@@ -23,7 +24,7 @@ pub unsafe extern "C" fn cancel_effect(fighter : &mut L2CFighterCommon) {
 unsafe extern "C" fn fighter_reset(fighter : &mut L2CFighterCommon) {    
     if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_STATUS_KIND_DEAD ||
       KineticModule::get_kinetic_type(fighter.module_accessor) == *FIGHTER_KINETIC_TYPE_RESET_NORMAL {
-        CustomVarManager::reset_var_module(fighter.battle_object);
+        CustomVarManager::reset_var_module(fighter.module_accessor, false);
     }
 }
 
@@ -79,7 +80,7 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
                 if weapon_kind == *WEAPON_KIND_DUCKHUNT_GUNMAN {
                     //check if dh has their GA
                     if StatusModule::status_kind(fighter_base.module_accessor) == *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY {
-                        if VarModule::is_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                        if VarModule::is_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) {
                             StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
                             //gunman is to the left of dh
                             if PostureModule::pos_x(fighter_base.module_accessor) < PostureModule::pos_x(owner_boma) {
@@ -90,11 +91,11 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
                                 PostureModule::set_lr(fighter_base.module_accessor, -1.0);
                             }
                             PostureModule::update_rot_y_lr(fighter_base.module_accessor);
-                            VarModule::off_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                            VarModule::off_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
                         }
-                        if VarModule::is_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE) {
+                        if VarModule::is_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE) {
                             StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
-                            VarModule::off_flag(owner_object, duckhunt::instance::flag::GUNMAN_REACTIVATE);
+                            VarModule::off_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE);
                         }
                     }
                 }
@@ -102,9 +103,9 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
                 //rosalina
                 if weapon_kind == *WEAPON_KIND_ROSETTA_TICO {
                     //return if rosa cancels special n charge
-                    if VarModule::is_flag(owner_object, rosetta::instance::flag::TICO_RECALL) {
+                    if VarModule::is_flag(owner_boma, rosetta::instance::flag::TICO_RECALL) {
                         WorkModule::on_flag(owner_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_RETURN);
-                        VarModule::off_flag(owner_object, rosetta::instance::flag::TICO_RECALL);
+                        VarModule::off_flag(owner_boma, rosetta::instance::flag::TICO_RECALL);
                     }
                     //recover from helplessness
                     if status_kind == *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FALL {
@@ -120,14 +121,14 @@ fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
                 //zelda
                 if weapon_kind == *WEAPON_KIND_ZELDA_DEIN_S {
                     if AttackModule::is_infliction(fighter_base.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                        VarModule::on_flag(owner_object, commons::instance::flag::GALEFORCE_ATTACK_ON);
+                        VarModule::on_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
                     }
                 }
                 if weapon_kind == *WEAPON_KIND_ZELDA_PHANTOM {
                     //attempt at restoring 9.0.1 behavior. base offset was changed to detect ground when the phantom is higher up, and then it is set back down here
                     if situation_kind == *SITUATION_KIND_GROUND {
-                        VarModule::set_float(fighter_base.battle_object, commons::instance::float::ECB_OFFSET_Y, 7.0);
-                        GroundModule::set_rhombus_offset(fighter_base.module_accessor, &Vector2f{x : 0.0, y : VarModule::get_float(fighter_base.battle_object, commons::instance::float::ECB_OFFSET_Y)});
+                        VarModule::set_float(fighter_base.module_accessor, commons::instance::float::ECB_OFFSET_Y, 7.0);
+                        GroundModule::set_rhombus_offset(fighter_base.module_accessor, &Vector2f{x : 0.0, y : VarModule::get_float(fighter_base.module_accessor, commons::instance::float::ECB_OFFSET_Y)});
                     }
                     //ecb_shifts(fighter, status_kind, situation_kind, weapon_kind);
                     if !ReflectModule::is_reflect(fighter_base.module_accessor) {

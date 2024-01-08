@@ -76,8 +76,8 @@ unsafe extern "C" fn status_DashCommon(fighter: &mut L2CFighterCommon) {
             WorkModule::unable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_SQUAT);
         }
     }
-    VarModule::off_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
-    VarModule::off_flag(fighter.battle_object, commons::status::flag::DISABLE_BACKDASH);
+    VarModule::off_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
+    VarModule::off_flag(fighter.module_accessor, commons::status::flag::DISABLE_BACKDASH);
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_Dash_Main)]
@@ -105,12 +105,12 @@ unsafe extern "C" fn status_dash_main_common(fighter: &mut L2CFighterCommon, arg
     if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_TURN_DASH)
     && fighter.global_table[CMD_CAT1].get_i32() & *FIGHTER_PAD_CMD_CAT1_FLAG_TURN_DASH != 0 {
         if fighter.global_table[MOTION_FRAME].get_i32() <= 4 {
-            VarModule::on_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT);
+            VarModule::on_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT);
         }
         else {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT);
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT);
         }
-        VarModule::on_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+        VarModule::on_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
         StatusModule::change_status_request(fighter.module_accessor, *FIGHTER_STATUS_KIND_TURN, false);
     }
 
@@ -172,14 +172,14 @@ unsafe extern "C" fn status_turndash_main(fighter: &mut L2CFighterCommon) -> sma
 #[skyline::hook(replace = L2CFighterCommon_status_end_Dash)]
 unsafe extern "C" fn status_end_dash(fighter: &mut L2CFighterCommon) -> L2CValue {
     if StatusModule::status_kind_next(fighter.module_accessor) != *FIGHTER_STATUS_KIND_TURN {
-        VarModule::off_flag(fighter.battle_object, commons::instance::flag::ALLOW_PERFECT_PIVOT);
+        VarModule::off_flag(fighter.module_accessor, commons::instance::flag::ALLOW_PERFECT_PIVOT);
     }
     call_original!(fighter)
 }
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_Dash)]
 unsafe extern "C" fn status_pre_turndash(fighter: &mut L2CFighterCommon) -> L2CValue {
-    VarModule::on_flag(fighter.battle_object, commons::instance::flag::SMASH_TURN);
+    VarModule::on_flag(fighter.module_accessor, commons::instance::flag::SMASH_TURN);
     StatusModule::set_status_kind_interrupt(fighter.module_accessor, *FIGHTER_STATUS_KIND_TURN);
     return 1.into()
 }
@@ -202,20 +202,3 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 pub fn install() {
     skyline::nro::add_hook(nro_hook);
 }
-
-//pub fn install() {
-//    install_hooks!(
-//        status_DashCommon,
-//        status_Dash_sub,
-//        status_dash_main,
-//        status_dash_main_common,
-//        status_turndash_main,
-//        status_TurnDash_Sub
-//    );
-//    install_status_scripts!(
-//        status_dash,
-//        status_end_dash,
-//        status_pre_turndash,
-//        status_turndash,
-//    );
-//}

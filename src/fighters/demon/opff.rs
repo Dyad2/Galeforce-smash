@@ -40,8 +40,8 @@ unsafe extern "C" fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
     //Tsunami kick input - 632A
     if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_GROUND 
       && [*FIGHTER_STATUS_KIND_WAIT, *FIGHTER_STATUS_KIND_WALK, *FIGHTER_STATUS_KIND_WALK_BRAKE, *FIGHTER_STATUS_KIND_RUN, *FIGHTER_STATUS_KIND_RUN_BRAKE, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_DEMON_STATUS_KIND_DASH_BACK].contains(&status_kind) {
-        if get_stick_dir(&mut *fighter.module_accessor) == 6 && VarModule::is_flag(fighter.battle_object, commons::instance::flag::DO_ONCE) {
-            VarModule::off_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
+        if get_stick_dir(&mut *fighter.module_accessor) == 6 && VarModule::is_flag(fighter.module_accessor, commons::instance::flag::DO_ONCE) {
+            VarModule::off_flag(fighter.module_accessor, commons::instance::flag::DO_ONCE);
             STICK_DIR[entry_id as usize] = 6;
             COMMAND_FRAME[entry_id as usize] = 10;
         }
@@ -82,7 +82,7 @@ unsafe extern "C" fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
         if IS_COMMAND_FAILED[entry_id as usize] {
             STICK_DIR[entry_id as usize] = 0;
             INPUT_IS_COMMAND[entry_id as usize] = false;
-            VarModule::on_flag(fighter.battle_object, commons::instance::flag::DO_ONCE);
+            VarModule::on_flag(fighter.module_accessor, commons::instance::flag::DO_ONCE);
             IS_COMMAND_FAILED[entry_id as usize] = false;
         }
     }

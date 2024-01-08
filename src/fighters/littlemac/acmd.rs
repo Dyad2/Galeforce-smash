@@ -80,7 +80,7 @@ unsafe extern "C" fn attack13(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             if AttackModule::is_infliction_status(fighter.module_accessor, *COLLISION_KIND_MASK_HIT) {
-                VarModule::on_flag(fighter.battle_object, commons::instance::flag::HIT_CANCEL);
+                VarModule::on_flag(fighter.module_accessor, commons::instance::flag::HIT_CANCEL);
                 CancelModule::enable_cancel(fighter.module_accessor);
             }
         }
@@ -395,7 +395,7 @@ unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
     frame(lua_state, 39.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
 }
 
@@ -439,7 +439,7 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
         }
     frame(lua_state, 24.);
         if macros::is_excute(fighter)
@@ -457,7 +457,7 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_attacklw3", attacklw3,);
     agent.game_acmd("game_attackhi4", attackhi4,);
     agent.game_acmd("game_attacks4hi", attacks4hi,);
-    agent.game_acmd("game_attacks4", attacks4,);
+    agent.game_acmd("game_attacks4", attacks4s,);
     agent.game_acmd("game_attacks4lw", attacks4lw,);
     agent.game_acmd("game_attacklw4", attacklw4,);
     agent.game_acmd("game_attackairf", attackairf,);

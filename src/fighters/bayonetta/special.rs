@@ -6,10 +6,10 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     frame(lua_state, 0.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 20, 0, 15, 0, false);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_ARM, false, false, true, 20, 0, 15, 0, false);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_ARM, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 20);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 20);
         }
     frame(lua_state, 8.);
         if macros::is_excute(fighter)
@@ -42,10 +42,10 @@ unsafe extern "C" fn specialhi(fighter: &mut L2CAgentBase) {
     wait(lua_state, 2.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS_BOTH_SIDES);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_CHECK_END);
             AttackModule::clear_all(fighter.module_accessor);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
+            notify_event_msc_cmd!(fighter, 0x2bfb02b69a as u64, true);
         }
     frame(lua_state, 36.);
         if macros::is_excute(fighter)
@@ -62,8 +62,8 @@ unsafe extern "C" fn specialairsu(fighter: &mut L2CAgentBase) {
         {
             JostleModule::set_status(fighter.module_accessor, false);
             macros::FT_MOTION_RATE(fighter, 0.5);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 5, 0, 20, 0, false);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 5);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 5, 0, 20, 0, false);
+            notify_event_msc_cmd!(fighter, 0x2b7cb92b79 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_L_LEG, false, false, true, 5);
         }
     frame(lua_state, 12.);
         if macros::is_excute(fighter)
@@ -103,7 +103,7 @@ unsafe extern "C" fn specialairsu(fighter: &mut L2CAgentBase) {
         {
             AttackModule::clear_all(fighter.module_accessor);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_AIR_S_FLAG_WALL_CHECK);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
         }
     frame(lua_state, 30.);
         if macros::is_excute(fighter)
@@ -129,7 +129,7 @@ unsafe extern "C" fn specialairsd(fighter: &mut L2CAgentBase) {
     frame(lua_state, 25.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2127e37c07 as u64, *GROUND_CLIFF_CHECK_KIND_ALWAYS);
+            notify_event_msc_cmd!(fighter, Hash40::new_raw(0x2127e37c07), *GROUND_CLIFF_CHECK_KIND_ALWAYS);
             AttackModule::clear_all(fighter.module_accessor);
             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_AIR_S_FLAG_WALL_CHECK);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_S_FLAG_LANDING_FALL_SPECIAL);
@@ -150,7 +150,7 @@ unsafe extern "C" fn specialsholdend(fighter: &mut L2CAgentBase) {
         {
             AttackModule::clear_all(fighter.module_accessor);
             MotionModule::set_rate(fighter.module_accessor, 3.0);
-            smash_script::notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 2, 0, 0, 0, false);
+            notify_event_msc_cmd!(fighter, 0x2d51fcdb09 as u64, *FIGHTER_BAYONETTA_SHOOTING_SLOT_R_LEG, false, false, true, 2, 0, 0, 0, false);
             macros::ATTACK(fighter, 0, 0, Hash40::new("footr"), 4.0, 75, 8, 0, 60, 4.0, 0.0, 0.0, 0.0, Some(-8.0), Some(0.0), Some(0.0), 0.3, 1.3, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_NO_FLOOR, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_S, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_KICK);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_INSTANCE_WORK_ID_FLAG_SHOOTING_ACTION);
             AttackModule::set_add_reaction_frame_revised(fighter.module_accessor, 0, 5.0, false);
@@ -218,14 +218,14 @@ unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_LW_FLAG_WITCH_TIME);
             macros::SEARCH(fighter, 0, 0,Hash40::new("top"), 11.5, -2.0, 10.0, 0.0, None, None, None, *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_ALL, 1,*COLLISION_SITUATION_MASK_GA,*COLLISION_CATEGORY_MASK_FIEB,*COLLISION_PART_MASK_BODY_HEAD, false);
         }
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
         }
     frame(lua_state, 21.);
         if macros::is_excute(fighter)
@@ -251,14 +251,14 @@ unsafe extern "C" fn specialairlw(fighter: &mut L2CAgentBase) {
     frame(lua_state, 5.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, true);
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_BAYONETTA_STATUS_WORK_ID_SPECIAL_LW_FLAG_WITCH_TIME);
             macros::SEARCH(fighter, 0, 0,Hash40::new("top"), 11.5, -2.0, 10.0, 0.0, None, None, None, *COLLISION_KIND_MASK_ATTACK, *HIT_STATUS_MASK_ALL, 1,*COLLISION_SITUATION_MASK_GA,*COLLISION_CATEGORY_MASK_FIEB,*COLLISION_PART_MASK_BODY_HEAD, false);
         }
     frame(lua_state, 9.);
         if macros::is_excute(fighter)
         {
-            smash_script::notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
+            notify_event_msc_cmd!(fighter, 0x2ea0f68425 as u64, false);
         }
     frame(lua_state, 21.);
         if macros::is_excute(fighter)

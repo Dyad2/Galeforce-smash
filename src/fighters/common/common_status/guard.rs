@@ -1,9 +1,10 @@
 use super::*;
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon42FighterStatusGuard__landing_effect_controlEv")]
+//why do i have this. please comment what stuff does
+#[skyline::hook(replace = L2CFighterCommon_FighterStatusGuard__landing_effect_control)]
 pub unsafe fn landing_effect_control(fighter: &mut L2CFighterCommon) -> L2CValue {
     WorkModule::dec_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_LANDING_EFFECT_FRAME);
-    
+  
     if WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_GUARD_ON_WORK_INT_LANDING_EFFECT_FRAME) <= 0 {
         MotionAnimcmdModule::call_script_single(fighter.module_accessor, *FIGHTER_ANIMCMD_EFFECT, Hash40::new("effect_guardlandingeffect"), -1);
         WorkModule::set_int(fighter.module_accessor, 8, *FIGHTER_STATUS_GUARD_ON_WORK_INT_LANDING_EFFECT_FRAME);
@@ -11,7 +12,7 @@ pub unsafe fn landing_effect_control(fighter: &mut L2CFighterCommon) -> L2CValue
     L2CValue::I32(0)
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon17sub_guard_on_uniqEN3lib8L2CValueE")]
+#[skyline::hook(replace = L2CFighterCommon_sub_guard_on_uniq)]
 pub unsafe fn sub_guard_on_uniq(fighter: &mut L2CFighterCommon, arg: L2CValue) -> L2CValue {
     if !arg.get_bool() {
         landing_effect_control(fighter);
@@ -44,7 +45,7 @@ pub unsafe fn sub_guard_on_uniq(fighter: &mut L2CFighterCommon, arg: L2CValue) -
 
 //the following code is mine
 //this status used to check min shield hold time, it was removed. shield drop was added.
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon24status_guard_main_commonEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_guard_main_common)]
 unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     let somebool;
 
@@ -72,7 +73,7 @@ unsafe fn status_guard_main_common(fighter: &mut L2CFighterCommon) -> L2CValue {
     return somebool.into();
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon17status_Guard_MainEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_Guard_Main)]
 unsafe fn status_Guard_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     if !fighter.status_guard_main_common_air().get_bool() {
@@ -83,7 +84,7 @@ unsafe fn status_Guard_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
     return 0.into();
 }
 
-#[hook(module = "common", symbol = "_ZN7lua2cpp16L2CFighterCommon23sub_status_guard_commonEv")]
+#[skyline::hook(replace = L2CFighterCommon_sub_status_guard_common)]
 unsafe fn sub_status_guard_common(fighter: &mut L2CFighterCommon) {
     fighter.sub_guard_cont_pre();
     if !StopModule::is_stop(fighter.module_accessor) {
@@ -92,21 +93,25 @@ unsafe fn sub_status_guard_common(fighter: &mut L2CFighterCommon) {
     fighter.global_table[SUB_STATUS].assign(&L2CValue::Ptr(sub_guard_on_uniq as *const () as _));
 }
 
-#[common_status_script(status = FIGHTER_STATUS_KIND_GUARD, condition = LUA_SCRIPT_STATUS_FUNC_STATUS_MAIN,
-    symbol = "_ZN7lua2cpp16L2CFighterCommon12status_GuardEv")]
+#[skyline::hook(replace = L2CFighterCommon_status_Guard)]
 unsafe fn status_Guard(fighter: &mut L2CFighterCommon) -> L2CValue {
     fighter.sub_status_guard_common();
     fighter.sub_shift_status_main(L2CValue::Ptr(status_Guard_Main as *const () as _))
 }
 
+fn nro_hook(info: &skyline::nro::NroInfo) {
+    if info.name == "common" {
+        skyline::install_hooks!(
+            landing_effect_control,
+            sub_guard_on_uniq,
+            status_guard_main_common,
+            status_Guard_Main,
+            sub_status_guard_common,
+            status_Guard
+        );
+    }
+}
+
 pub fn install() {
-    install_hooks!(
-        status_guard_main_common,
-        status_Guard_Main,
-        sub_guard_on_uniq,
-        sub_status_guard_common
-    );
-    install_status_scripts!(
-        status_Guard
-    );
+    skyline::nro::add_hook(nro_hook);
 }

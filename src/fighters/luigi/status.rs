@@ -1,25 +1,25 @@
 use super::*;
 
-unsafe extern "C" fn luigi_specials_main(fighter: &mut L2CFighterCommon) {
+unsafe extern "C" fn luigi_specials_main(fighter: &mut L2CFighterCommon) -> L2CValue {
 
     handle_situation(fighter);
-    fighter.sub_shift_status_main(L2CValue::Ptr(luigi_specials_main_loop as *const () as _));
+    fighter.sub_shift_status_main(L2CValue::Ptr(luigi_specials_main_loop as *const () as _))
 }
 
 unsafe extern "C" fn luigi_specials_main_loop(fighter: &mut L2CFighterCommon) -> L2CValue {
-    let elec_charge = VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE);
+    let elec_charge = VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE);
 
     if ControlModule::check_button_off(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        VarModule::on_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_SPECIAL_BUTTON_RELEASED);
+        VarModule::on_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_SPECIAL_BUTTON_RELEASED);
     }
 
     if elec_charge != 0
-      && VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_SPECIAL_BUTTON_RELEASED)
-      && !VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED)
+      && VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_SPECIAL_BUTTON_RELEASED)
+      && !VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED)
       && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL)
       && fighter.global_table[MOTION_FRAME].get_i32() < 14 {
 
-        VarModule::on_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED);
+        VarModule::on_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED);
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_CHARGE_FLAG_BONUS);
     }
     if !MotionModule::is_end(fighter.module_accessor) {
@@ -52,7 +52,7 @@ unsafe extern "C" fn luigi_specials_main_loop(fighter: &mut L2CFighterCommon) ->
     return 0.into()
 }
 
-pub unsafe fn handle_situation(fighter: &mut L2CFighterCommon) {
+pub unsafe extern "C" fn handle_situation(fighter: &mut L2CFighterCommon) {
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         KineticModule::change_kinetic(fighter.module_accessor, *FIGHTER_KINETIC_TYPE_LUIGI_SPECIAL_S);
         GroundModule::correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
@@ -81,7 +81,7 @@ pub unsafe fn handle_situation(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn luigi_specialscharge_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    if VarModule::get_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE) >= 4 && VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
+    if VarModule::get_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE) >= 4 && VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
         WorkModule::on_flag(fighter.module_accessor, *FIGHTER_LUIGI_STATUS_SPECIAL_S_CHARGE_FLAG_DISCHARGE);
     }
     EffectModule::remove_common(fighter.module_accessor, Hash40::new("0xaec2db62e")); //charge effect probably
@@ -93,15 +93,15 @@ unsafe extern "C" fn luigi_specialscharge_end(fighter: &mut L2CFighterCommon) ->
 
 unsafe extern "C" fn luigi_specialsram_end(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    if VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
-        VarModule::set_int(fighter.battle_object, luigi::instance::int::ELEC_CHARGE, 0);
+    if VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
+        VarModule::set_int(fighter.module_accessor, luigi::instance::int::ELEC_CHARGE, 0);
     }
     return 0.into();
 }
 
 unsafe extern "C" fn luigi_specialsram_init(fighter: &mut L2CFighterCommon) -> L2CValue {
 
-    if VarModule::is_flag(fighter.battle_object, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
+    if VarModule::is_flag(fighter.module_accessor, luigi::status::flag::SPECIAL_S_CHARGE_USED) {
         galeforce_apply_effect(&mut *fighter.module_accessor, 0.75);
     }
     GroundModule::set_test_coll_stop_status(fighter.module_accessor, true);

@@ -2,7 +2,7 @@ use super::*;
 
 unsafe extern "C" fn status_specialhi2exec(fighter: &mut L2CFighterCommon) -> L2CValue {
     if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND && ControlModule::check_button_trigger(fighter.module_accessor, *CONTROL_PAD_BUTTON_SPECIAL) {
-        VarModule::on_flag(fighter.battle_object, zelda::instance::flag::SPECIAL_HI_CANCEL);
+        VarModule::on_flag(fighter.module_accessor, zelda::instance::flag::SPECIAL_HI_CANCEL);
         fighter.change_status(FIGHTER_ZELDA_STATUS_KIND_SPECIAL_HI_3.into(), false.into());
     }
     return 0.into()
@@ -16,7 +16,7 @@ pub fn install(agent: &mut smashline::Agent) {
 // unsafe fn status_specialsmain(fighter: &mut L2CFighterCommon) -> L2CValue {
 //     HitModule::set_whole(fighter.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
 //     VisibilityModule::set_whole(fighter.module_accessor, false);
-//     smash_script::notify_event_msc_cmd!(fighter, 0x1f20a9d549u64, false);
+//     notify_event_msc_cmd!(fighter, 0x1f20a9d549u64, false);
 //     WorkModule::set_flag(fighter.module_accessor, false, *FIGHTER_INSTANCE_WORK_ID_FLAG_NAME_CURSOR);
 //     GroundModule::set_passable_check(fighter.module_accessor, true);
 //     let cliff_check = WorkModule::get_int(fighter.module_accessor, *FIGHTER_ZELDA_STATUS_SPECIAL_HI_WORK_INT_CLIFF_CHECK);
