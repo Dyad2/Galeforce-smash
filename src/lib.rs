@@ -10,7 +10,7 @@
 
 use skyline::libc::c_char;
 
-mod fighters;
+mod fighter;
 mod func_hooks;
 mod custom_vars;
 
@@ -37,11 +37,13 @@ fn change_version_string_hook(arg: u64, string: *const c_char) {
 
 #[skyline::main(name = "galeforce")]
 pub fn main() {
-
+    
+    println!("[Galeforce_sl2::main] Loading");
     //code edits
-    fighters::install();
+    fighter::install();
     func_hooks::install();
     custom_vars::install();
     galeforce_utils::vars::install();
     skyline::install_hooks!(change_version_string_hook);
+    println!("[Galeforce_sl2::main] Loaded!");
 }

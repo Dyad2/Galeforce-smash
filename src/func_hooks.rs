@@ -738,9 +738,9 @@ pub fn install() {
     }
     skyline::install_hooks!(
         //change_status_replace,
-        change_status_request_replace,
-        change_status_force_replace,
-        set_status_interrupt_replace,
+        //change_status_request_replace,
+        //change_status_force_replace,
+        //set_status_interrupt_replace,
         init_settings_replace,
         is_enable_transition_term_replace, //many GAs, some special moves disabling
         is_flag_replace, //training mode overlay
