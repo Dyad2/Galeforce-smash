@@ -154,10 +154,11 @@ pub unsafe extern "C" fn common_fighter_frame(fighter: &mut L2CFighterCommon) {
         fighter_reset(fighter);
         Jostling(fighter);
         ecb_shifts::run(fighter);
+        edge_cancels::run(fighter);
         controls::run(fighter);
         galeforce::run(fighter); //crashes the game rn
     }
-    //else if utility::get_category(&mut *fighter.module_accessor) == *BATTLE_OBJECT_CATEGORY_WEAPON {
-    //    global_weapon_frame(fighter);
-    //}
+    else if utility::get_category(&mut *fighter.module_accessor) == *BATTLE_OBJECT_CATEGORY_WEAPON {
+        global_weapon_frame(fighter);
+    }
 }

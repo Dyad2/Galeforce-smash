@@ -1,7 +1,8 @@
 use super::*;
 
-pub unsafe fn run(fighter : &mut L2CFighterCommon, status_kind: i32, situation_kind: i32) {
-    //let status_prev = StatusModule::prev_status_kind(fighter.module_accessor, 0);
+pub unsafe fn run(fighter : &mut L2CFighterCommon) {
+    let status_kind = StatusModule::status_kind(fighter.module_accessor);
+    let situation_kind = StatusModule::situation_kind(fighter.module_accessor);
     let fighter_kind = get_kind(&mut *fighter.module_accessor);
 
     //required to snap to platforms
@@ -20,7 +21,7 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon, status_kind: i32, situation_k
     //shield push, land cancel when not in landing lag, other edge cancel stuff
     else if [*FIGHTER_STATUS_KIND_LANDING, *FIGHTER_STATUS_KIND_DAMAGE, *FIGHTER_STATUS_KIND_RUN, *FIGHTER_STATUS_KIND_DASH, *FIGHTER_STATUS_KIND_WALK].contains(&status_kind) 
       || (!WorkModule::is_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_DISABLE_LANDING_CANCEL) && status_kind == *FIGHTER_STATUS_KIND_LANDING_ATTACK_AIR)
-      || (status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE && KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_DAMAGE).abs() > 0.95) {
+      || (status_kind == *FIGHTER_STATUS_KIND_GUARD_DAMAGE && KineticModule::get_sum_speed_x(fighter.module_accessor, *KINETIC_ENERGY_RESERVE_ATTRIBUTE_DAMAGE).abs() > 1.0) {
         GroundModule::set_correct(fighter.module_accessor, smash::app::GroundCorrectKind(*GROUND_CORRECT_KIND_GROUND));
     }
 

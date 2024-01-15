@@ -11,7 +11,7 @@ use {
     smash::{
         hash40,
         app::{lua_bind::*, FighterManager, *},
-        lib::{lua_const::*},
+        lib::lua_const::*,
         phx::{Vector3f, Hash40},
     },
     galeforce_utils::{
@@ -28,7 +28,6 @@ use {
 // status: L2CValue,
 // flag: L2CValue) {
 //     println!("in change_status");
-
 //     if fighter.global_table[KIND].get_i32() == *FIGHTER_KIND_PEACH && !VarModule::is_flag(fighter.module_accessor, peach::instance::flag::ALLOW_FLOAT) {
 //         let status_i32 = status.get_i32();
 //         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status_i32) {
@@ -102,6 +101,7 @@ status: i32) {
     }
     call_original!(boma, status);
 }
+
 //author: 
 // var reset code: wuboy! custom_var stuff. resets status vars when status changes.
 // ecb teleport is adapted from hdr code
@@ -591,9 +591,7 @@ move_type_again: bool) -> u64 {
 //     let object_id = module_accessor.battle_object_id;
 //     let object = get_battle_object_from_id(object_id);
 //     let fighter_kind = smash::app::utility::get_kind(&mut *module_accessor);
-
 //     let ret = original!()(boma, param_type, param_hash);
-
 //     if is_fighter(module_accessor) {
 //         if fighter_kind == *FIGHTER_KIND_CAPTAIN && param_hash == hash40("critical_frame") {
 //             if !VarModule::is_flag(object, captain::status::flag::ALLOW_SPECIAL_N_CRITICAL) {
@@ -614,7 +612,6 @@ param_type: u64,
 param_hash : u64) -> f32 {
     let module_accessor = &mut *(*((boma as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
     let object_id = module_accessor.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
     let status_kind = StatusModule::status_kind(module_accessor);
     let kind = smash::app::utility::get_kind(&mut *module_accessor);
     let prev_status_kind = StatusModule::prev_status_kind(module_accessor, 0);
@@ -664,16 +661,6 @@ param_hash : u64) -> f32 {
             }
         }
 
-        //slows down dash speed for characters faster than steve, who has the worst dash speed. faster characters receive a bigger penalty
-        //now written in prcxml file
-        // if param_type == hash40("dash_speed") {
-        //     let dash_speed = ret;
-        //     let reduce = dash_speed - 1.45;
-        //     let slower_dash = 1.45 + (reduce * 0.67);
-
-        //     return slower_dash;
-        // }
-
         if kind == *FIGHTER_KIND_PURIN && param_hash == 0 && param_type == hash40("weight") {
             if [*FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_END, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HIT_END, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HOLD, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_HOLD_MAX,
                 *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_ROLL, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_ROLL_AIR, *FIGHTER_PURIN_STATUS_KIND_SPECIAL_N_TURN].contains(&status_kind) {
@@ -704,7 +691,7 @@ param_hash : u64) -> f32 {
     }
     else {
         let owner_id = WorkModule::get_int(module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-        let owner_object = get_battle_object_from_id(owner_id);
+        //let owner_object = get_battle_object_from_id(owner_id);
         let owner_boma = get_boma_from_id(owner_id);
 
         if kind == *WEAPON_KIND_DUCKHUNT_GUNMAN && (VarModule::is_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) || VarModule::is_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE)) {

@@ -14,8 +14,6 @@ use {
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("status_EscapeAir_pre");
-
     if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         GroundModule::attach_ground(fighter.module_accessor, true);
         fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
@@ -29,8 +27,6 @@ unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2C
 
 #[skyline::hook(replace = L2CFighterCommon_status_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("status_EscapeAir");
-
     //TODO: re-check vanilla script for identical behavior.
     ControlModule::reset_trigger(fighter.module_accessor);
     fighter.sub_escape_air_common();
@@ -55,8 +51,6 @@ unsafe extern "C" fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValu
 
 #[skyline::hook(replace = L2CFighterCommon_status_EscapeAir_Main)]
 unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("status_EscapeAir_Main");
-
     if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         return 1.into();
     }
@@ -68,8 +62,6 @@ unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2
 
 #[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_main)]
 unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("sub_escape_air_common_main");
-
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return true.into();
     }
@@ -94,7 +86,6 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
 
 #[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_strans_main)]
 unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("sub_escape_air_common_strans_main");
 
     let escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
     let escape_throw_item_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("escape_throw_item_frame"));
@@ -193,7 +184,6 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
 
 #[skyline::hook(replace = L2CFighterCommon_status_end_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
-	println!("status_EscapeAir_end");
     
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING {
         VarModule::off_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
