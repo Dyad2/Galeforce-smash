@@ -14,6 +14,7 @@ use {
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("status_EscapeAir_pre");
 
     if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         GroundModule::attach_ground(fighter.module_accessor, true);
@@ -28,6 +29,7 @@ unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2C
 
 #[skyline::hook(replace = L2CFighterCommon_status_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("status_EscapeAir");
 
     //TODO: re-check vanilla script for identical behavior.
     ControlModule::reset_trigger(fighter.module_accessor);
@@ -51,7 +53,10 @@ unsafe extern "C" fn status_EscapeAir(fighter: &mut L2CFighterCommon) -> L2CValu
     fighter.sub_shift_status_main(L2CValue::Ptr(status_EscapeAir_Main as *const () as _))
 }
 
+#[skyline::hook(replace = L2CFighterCommon_status_EscapeAir_Main)]
 unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("status_EscapeAir_Main");
+
     if VarModule::is_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH) {
         return 1.into();
     }
@@ -63,6 +68,7 @@ unsafe extern "C" fn status_EscapeAir_Main(fighter: &mut L2CFighterCommon) -> L2
 
 #[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_main)]
 unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("sub_escape_air_common_main");
 
     if fighter.sub_transition_group_check_air_cliff().get_bool() {
         return true.into();
@@ -88,6 +94,8 @@ unsafe extern "C" fn sub_escape_air_common_main(fighter: &mut L2CFighterCommon) 
 
 #[skyline::hook(replace = L2CFighterCommon_sub_escape_air_common_strans_main)]
 unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("sub_escape_air_common_strans_main");
+
     let escape_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_WORK_INT_FRAME);
     let escape_throw_item_frame = WorkModule::get_param_int(fighter.module_accessor, hash40("common"), hash40("escape_throw_item_frame"));
     
@@ -185,6 +193,7 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
 
 #[skyline::hook(replace = L2CFighterCommon_status_end_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2CValue {
+	println!("status_EscapeAir_end");
     
     if fighter.global_table[STATUS_KIND].get_i32() != *FIGHTER_STATUS_KIND_LANDING {
         VarModule::off_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
@@ -192,76 +201,12 @@ unsafe extern "C" fn status_EscapeAir_end(fighter: &mut L2CFighterCommon) -> L2C
     call_original!(fighter)
 }
 
-
-// #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_exec_escape_air_slide)]
-// unsafe fn exec_escape_air_slide(fighter: &mut L2CFighterCommon) {
-//     let mut step = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_STEP);
-//     let back_end_frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_BACK_END_FRAME);
-//     if step == 0 {
-//         //let frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_FRAME);
-//         //if frame >= back_end_frame {
-//             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_FRAME);
-//             WorkModule::set_int(fighter.module_accessor, 1, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_STEP);
-//         //}
-//     }
-//     if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_KINE_FALL) {
-//         return;
-//     }
-//     //step = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_STEP);
-//     if step != 0 {
-//         if step != 1 {
-//             return;
-//         }
-//         if !WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING) {
-//             WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_LANDING);
-//         }
-//         let frame = WorkModule::get_int(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_FRAME);
-//         if frame >= 1 {
-//             if !WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_KEEP_AIR_TURNED_OFF) && FighterUtil::is_touch_passive_ground(fighter.module_accessor, *GROUND_TOUCH_FLAG_DOWN as u32) {
-//                 //StatusModule::set_situation_kind(fighter.module_accessor, app::SituationKind(*SITUATION_KIND_AIR), false);
-//                 WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_KEEP_AIR_TURNED_OFF);
-//             }
-//             //let speed_mul = ParamModule::get_float(fighter.module_accessor, ParamType::Common, "escape_air_slide_speed_mul");
-//             let speed_mul = 0.9; //this is the hdr speed value, im testing stuff
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP, speed_mul, speed_mul);
-//             smash::app::sv_kinetic_energy::mul_speed(fighter.lua_state_agent);
-//         }
-//         let fall_frame = WorkModule::get_param_float(fighter.module_accessor, 0x15f2c6719b, 0); //idk what this hash is, must be fall something
-//         if frame as f32 >= fall_frame {
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
-//             let speed_x = smash::app::sv_kinetic_energy::get_speed_x(fighter.lua_state_agent);
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_STOP);
-//             let speed_y = smash::app::sv_kinetic_energy::get_speed_y(fighter.lua_state_agent);
-//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_FLAG_JUMP_NO_LIMIT_ONCE);
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, ENERGY_CONTROLLER_RESET_TYPE_FALL_ADJUST_NO_CAP, speed_x, 0.0, 0.0, 0.0, 0.0);
-//             smash::app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL);
-//             smash::app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, ENERGY_GRAVITY_RESET_TYPE_GRAVITY, 0.0, speed_y, 0.0, 0.0, 0.0);
-//             smash::app::sv_kinetic_energy::reset_energy(fighter.lua_state_agent);
-//             fighter.clear_lua_stack();
-//             lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-//             smash::app::sv_kinetic_energy::enable(fighter.lua_state_agent);
-//             KineticUtility::clear_unable_energy(*FIGHTER_KINETIC_ENERGY_ID_STOP, fighter.module_accessor);
-//             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_KINE_FALL);
-//             WorkModule::off_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE_ENABLE_GRAVITY);
-//             WorkModule::set_int(fighter.module_accessor, 0, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_FRAME);
-//             WorkModule::set_int(fighter.module_accessor, 2, *FIGHTER_STATUS_ESCAPE_AIR_SLIDE_WORK_INT_SLIDE_STEP);
-//         }
-//     }
-// }
-
 fn nro_hook(info: &skyline::nro::NroInfo) {
     if info.name == "common" {
         skyline::install_hooks!(
             status_EscapeAir_pre,
             status_EscapeAir,
+            status_EscapeAir_Main,
             sub_escape_air_common_main,
             sub_escape_air_common_strans_main,
             status_EscapeAir_end,

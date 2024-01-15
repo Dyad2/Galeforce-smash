@@ -16,6 +16,7 @@ mod acmd;
 mod opff;
 mod specials;
 mod sounds;
+mod weapon;
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("lucario");
@@ -23,5 +24,6 @@ pub fn install() {
     opff::install(agent);
     specials::install(agent);
     sounds::install(agent);
+    weapon::install();
     agent.install();
 }
