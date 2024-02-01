@@ -2,15 +2,7 @@
 
 #![allow(unused_must_use)]
 
-use {
-    super::*,
-    smash::{
-        lua2cpp::L2CFighterCommon,
-        app::lua_bind::*,
-        lib::{lua_const::*, L2CValue}
-    },
-    galeforce_utils::vars::*,
-};
+use super::*;
 
 #[skyline::hook(replace = L2CFighterCommon_status_pre_EscapeAir)]
 unsafe extern "C" fn status_EscapeAir_pre(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -140,9 +132,10 @@ unsafe extern "C" fn sub_escape_air_common_strans_main(fighter: &mut L2CFighterC
         //new
         if WorkModule::is_flag(fighter.module_accessor, *FIGHTER_STATUS_ESCAPE_AIR_FLAG_SLIDE) {
             VarModule::on_flag(fighter.module_accessor, commons::instance::flag::WAVEDASH);
+            //moved into condition, was before the return statement before. testing if it will fix nairdodge snaping to platforms
+            fighter.set_situation(SITUATION_KIND_GROUND.into());
+            fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
         }
-        fighter.set_situation(SITUATION_KIND_GROUND.into());
-        fighter.change_status(FIGHTER_STATUS_KIND_LANDING.into(), false.into());
         return 1.into();
         //
     }

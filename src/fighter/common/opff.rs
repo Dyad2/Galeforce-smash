@@ -57,7 +57,6 @@ unsafe extern "C" fn Jostling(fighter : &mut L2CFighterCommon) {
     }
 }
 
-//this probably doesnt make sense in smashline2 idk
 unsafe extern "C" fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
     if smash::app::utility::get_category(&mut *fighter_base.module_accessor) == *BATTLE_OBJECT_CATEGORY_WEAPON {
         let weapon_kind = get_kind(&mut *fighter_base.module_accessor);
@@ -71,10 +70,7 @@ unsafe extern "C" fn global_weapon_frame(fighter_base : &mut L2CFighterBase) {
         if !smash::app::sv_battle_object::is_null(owner_id) && smash::app::sv_battle_object::is_active(owner_id) {
             let owner_boma = &mut *sv_battle_object::module_accessor(owner_id);
             let owner_status = StatusModule::status_kind(owner_boma);
-        
-            let owner_object_id = owner_boma.battle_object_id;
-            let owner_object = get_battle_object_from_id(owner_object_id);
-        
+                
             //duck!
             if weapon_kind == *WEAPON_KIND_DUCKHUNT_GUNMAN {
                 //check if dh has their GA

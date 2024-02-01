@@ -9,7 +9,6 @@ use smash::lua2cpp::{
     L2CFighterCommon,
     L2CAgentBase
 };
-use smashline::*;
 use smash_script::*;
 
 use crate::fighter::common::galeforce::*;

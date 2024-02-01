@@ -3,7 +3,6 @@ use crate::fighter::common::opff::common_fighter_frame;
 
 unsafe extern "C" fn lucina_aether(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let status_kind = StatusModule::status_kind(fighter.module_accessor);
     
     //please make status for those holy
     if curr_motion_kind == hash40("special_hi") {

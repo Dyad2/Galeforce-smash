@@ -52,7 +52,7 @@ unsafe extern "C" fn phantommax(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let deins = &mut smashline::Agent::new("zelda_deins");
     let phantom = &mut smashline::Agent::new("zelda_phantom");
 

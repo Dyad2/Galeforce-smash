@@ -4,7 +4,6 @@ use smash::lib::lua_const::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::{phx::Vector3f, lua2cpp::L2CFighterCommon};
 use smash::app::{sv_animcmd::*, lua_bind::*, sv_module_access::*};
-use smashline::*;
 use smash_script::*;
 use std::mem;
 

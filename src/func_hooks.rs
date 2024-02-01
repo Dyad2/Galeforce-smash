@@ -47,8 +47,6 @@ status: i32,
 flag: i32) {
     println!("in change_status_request");
     let fighter_kind = smash::app::utility::get_kind(boma);
-    let object_id = boma.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
 
     if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
@@ -68,8 +66,6 @@ status: i32,
 flag: i32) {
     println!("in change_status_force");
     let fighter_kind = smash::app::utility::get_kind(boma);
-    let object_id = boma.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
 
     if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
@@ -88,8 +84,6 @@ boma: &mut smash::app::BattleObjectModuleAccessor,
 status: i32) {
     println!("in set_status_interrupt");
     let fighter_kind = smash::app::utility::get_kind(boma);
-    let object_id = boma.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
 
     if fighter_kind == *FIGHTER_KIND_PEACH && !VarModule::is_flag(boma, peach::instance::flag::ALLOW_FLOAT) {
         if [*FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT_START, *FIGHTER_PEACH_STATUS_KIND_UNIQ_FLOAT].contains(&status) {
@@ -129,8 +123,6 @@ pub unsafe fn init_settings_replace(
     if keep_float == *FIGHTER_STATUS_WORK_KEEP_FLAG_NONE_FLOAT {
         mask += VarModule::RESET_STATUS_FLOAT;
     }
-    let object_id = (*boma).battle_object_id;
-    let object = get_battle_object_from_id(object_id);
     VarModule::reset(boma, mask);
 
     // teleports fighters on landing
@@ -212,8 +204,6 @@ flag: i32) -> bool {
 pub unsafe fn get_float_replace(
 boma: &mut smash::app::BattleObjectModuleAccessor,
 float: i32) -> f32 {
-    let object_id = boma.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
 
     if smash::app::utility::get_kind(boma) == *FIGHTER_KIND_LUCARIO
       && VarModule::get_int(boma, lucario::instance::int::MAX_AURA_TIMER) > 0 
@@ -405,8 +395,6 @@ pub unsafe fn get_active_num_replace(
 pub unsafe fn get_attack_air_kind_replace(
     boma: &mut smash::app::BattleObjectModuleAccessor,
 ) -> i32 {
-    let object_id = boma.battle_object_id;
-    let object = get_battle_object_from_id(object_id);
 
     if ControlModule::check_button_trigger(boma, *CONTROL_PAD_BUTTON_CSTICK_ON) {
         VarModule::set_float(boma, commons::instance::float::SUBSTICK_X, ControlModule::get_stick_x(boma) * PostureModule::lr(boma));
@@ -467,11 +455,11 @@ move_type: f32,
 arg5: i32,
 move_type_again: bool) -> u64 {
     let attacker_boma = sv_battle_object::module_accessor(attacker_object_id);
-    let attacker_object = get_battle_object_from_id(attacker_object_id);
+    //let attacker_object = get_battle_object_from_id(attacker_object_id);
     let attacker_cat = utility::get_category(&mut *attacker_boma);
 
     let defender_boma = sv_battle_object::module_accessor(defender_object_id);
-    let defender_object = get_battle_object_from_id(defender_object_id);
+    //let defender_object = get_battle_object_from_id(defender_object_id);
     let defender_cat = utility::get_category(&mut *defender_boma);
 
     let attacker_kind = sv_battle_object::kind(attacker_object_id);
@@ -479,7 +467,7 @@ move_type_again: bool) -> u64 {
     if attacker_cat == *BATTLE_OBJECT_CATEGORY_WEAPON {
         if defender_cat == *BATTLE_OBJECT_CATEGORY_FIGHTER {
             let owner_id = WorkModule::get_int(attacker_boma, *WEAPON_INSTANCE_WORK_ID_INT_ACTIVATE_FOUNDER_ID) as u32;
-            let owner_object = get_battle_object_from_id(owner_id);
+            //let owner_object = get_battle_object_from_id(owner_id);
             let owner_boma = get_boma_from_id(owner_id);
 
             //terry (dolly)
@@ -611,7 +599,6 @@ boma: u64,
 param_type: u64, 
 param_hash : u64) -> f32 {
     let module_accessor = &mut *(*((boma as *mut u64).offset(1)) as *mut BattleObjectModuleAccessor);
-    let object_id = module_accessor.battle_object_id;
     let status_kind = StatusModule::status_kind(module_accessor);
     let kind = smash::app::utility::get_kind(&mut *module_accessor);
     let prev_status_kind = StatusModule::prev_status_kind(module_accessor, 0);

@@ -5,8 +5,7 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
-//use smash::app::FighterSpecializer_Kirby;
-use smashline::*;
+use smash::app::FighterSpecializer_Kirby;
 use smash_script::*;
 use std::mem;
 
@@ -20,6 +19,7 @@ mod effects;
 mod opff;
 mod specials;
 
+//unused?
 //weapon
 // #[acmd_script( agent = "kirby_finalcuttershot", script = "game_finalcutterregular", category = ACMD_GAME, low_priority)]
 // unsafe fn finalcuttershot(weapon: &mut L2CAgentBase) {
@@ -40,6 +40,9 @@ mod specials;
 //             macros::ATTACK(weapon, 0, 0, Hash40::new("top"), 6.0, 90, 30, 0, 60, 3.8, 0.0, 3.0, -6.1, Some(0.0), Some(9.0), Some(-9.6), 0.7, 1.0, *ATTACK_SETOFF_KIND_OFF, *ATTACK_LR_CHECK_F, false, 0, 0.0, 0, true, true, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false,Hash40::new("collision_attr_cutup"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_CUTUP, *ATTACK_REGION_NONE);
 //         }
 // }
+
+//kirby cannot use varmodule for this yet because it gets cleared as the game ends.
+static mut LAST_HAT : [i32; 9] = [1; 9];
 
 pub fn install() {
     let agent = &mut smashline::Agent::new("kirby");

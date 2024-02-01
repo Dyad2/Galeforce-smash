@@ -6,8 +6,6 @@ static mut COMMAND_FRAME : [i32; 9] = [0; 9];
 
 unsafe extern "C" fn lucario_tail3_intangibility(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
-    let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
-    let status_kind = StatusModule::status_kind(fighter.module_accessor);
     
     if [hash40("attackhi3"), hash40("attacklw3"), hash40("attacks4"), 
       hash40("attackairhi"), hash40("attackairb"), hash40("attackairn"), hash40("attackairf"), hash40("attackairlw"),

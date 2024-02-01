@@ -18,7 +18,6 @@ use {
         table_const::*, 
     },
     std::mem,
-    smashline::*,
     smash_script::*,
     custom_var::*,
 };
@@ -31,6 +30,6 @@ pub fn install() {
     let agent = &mut smashline::Agent::new("pickel");
     acmd::install(agent);
     opff::install(agent);
-    weapon::install(agent);
+    weapon::install();
     agent.install();
 }

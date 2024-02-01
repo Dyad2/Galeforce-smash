@@ -6,7 +6,6 @@ use crate::fighter::common::opff::common_fighter_frame;
 //  after using afterburner kick once, hitting with dabk allows an additional use of upwards abk
 unsafe extern "C" fn bayo_galeforce_attack(fighter: &mut L2CFighterCommon) {
     let status_kind = StatusModule::status_kind(fighter.module_accessor);
-    let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     let situation_kind = StatusModule::situation_kind(fighter.module_accessor);   
 
     if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_AIR_S_U 

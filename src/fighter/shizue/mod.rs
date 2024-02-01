@@ -19,6 +19,6 @@ pub fn install() {
     acmd::install(agent);
     opff::install(agent);
     specials::install(agent);
-    weapon::install(agent);
+    weapon::install();
     agent.install();
 }

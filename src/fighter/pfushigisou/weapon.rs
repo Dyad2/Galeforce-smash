@@ -17,7 +17,7 @@ unsafe extern "C" fn seedmovehard(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let seed = &mut smashline::Agent::new("pfushigisou_seed");
 
     seed.game_acmd("game_movehard", seedmovehard,);

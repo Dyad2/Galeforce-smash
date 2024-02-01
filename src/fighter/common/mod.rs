@@ -33,11 +33,8 @@ use {
         table_const::*,
         vars::*,
         utils::*,
-        utils::get_battle_object_from_id,
     }
 };
-
-pub static mut TOTAL_FIGHTER: i32 = 0;
 
 pub mod galeforce;
 pub mod controls;

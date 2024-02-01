@@ -4,8 +4,6 @@ use super::*;
 unsafe extern "C" fn normalw(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let owner_object_id = owner_boma.battle_object_id;
-    let owner_object = get_battle_object_from_id(owner_object_id);
 
         if macros::is_excute(weapon)
         {
@@ -29,8 +27,6 @@ unsafe extern "C" fn normalw(weapon: &mut L2CAgentBase) {
 unsafe extern "C" fn normal(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let owner_object_id = owner_boma.battle_object_id;
-    let owner_object = get_battle_object_from_id(owner_object_id);
 
         if macros::is_excute(weapon)
         {
@@ -54,8 +50,6 @@ unsafe extern "C" fn normal(weapon: &mut L2CAgentBase) {
 unsafe extern "C" fn normalairw(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let owner_object_id = owner_boma.battle_object_id;
-    let owner_object = get_battle_object_from_id(owner_object_id);
 
         if macros::is_excute(weapon)
         {
@@ -121,8 +115,6 @@ unsafe extern "C" fn normalairw(weapon: &mut L2CAgentBase) {
 unsafe extern "C" fn normalair(weapon: &mut L2CAgentBase) {
     let lua_state = weapon.lua_state_agent;
     let owner_boma = &mut *sv_battle_object::module_accessor((WorkModule::get_int(weapon.module_accessor, *WEAPON_INSTANCE_WORK_ID_INT_LINK_OWNER)) as u32);
-    let owner_object_id = owner_boma.battle_object_id;
-    let owner_object = get_battle_object_from_id(owner_object_id);
 
         if macros::is_excute(weapon)
         {
@@ -167,7 +159,7 @@ unsafe extern "C" fn normalair(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let wave = &mut smashline::Agent::new("dolly_wave");
 
     wave.game_acmd("game_normalw", normalw);

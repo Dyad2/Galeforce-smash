@@ -9,9 +9,6 @@ static mut COMMAND_FRAME : [i32; 9] = [0; 9];
 static mut INPUT_IS_COMMAND : [bool; 9] = [false; 9];
 static mut IS_COMMAND_FAILED : [bool; 9] = [false; 9];
 
-use galeforce_utils::{vars::*, table_const::*, utils::*};
-use custom_var::*;
-
 unsafe extern "C" fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
     let curr_motion_kind = MotionModule::motion_kind(fighter.module_accessor);
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
@@ -90,6 +87,7 @@ unsafe extern "C" fn EWGF_simulator_frame(fighter: &mut L2CFighterCommon) {
 
 unsafe extern "C" fn demon_frame(fighter: &mut L2CFighterCommon) {
     common_fighter_frame(fighter);
+    EWGF_simulator_frame(fighter);
 }
 
 pub fn install(agent: &mut smashline::Agent) {

@@ -1,8 +1,5 @@
 //The wavedash code is modified from HDR and mostly not mine
-
 use super::*;
-use galeforce_utils::{vars::*, table_const::*};
-use custom_var::*;
 
 #[skyline::hook(replace = L2CFighterCommon_status_JumpSquat)]
 unsafe extern "C" fn status_JumpSquat(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -277,5 +274,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

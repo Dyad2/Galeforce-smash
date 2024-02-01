@@ -61,7 +61,7 @@ unsafe extern "C" fn dragoncounter(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let waterDragon = &mut smashline::Agent::new("kamui_waterdragon");
     let ryusensya = &mut smashline::Agent::new("kamui_ryusensya");
 
@@ -70,6 +70,6 @@ pub fn install(agent: &mut smashline::Agent) {
     waterDragon.game_acmd("game_specialairlwhit", dragoncounter,);
     waterDragon.game_acmd("game_specialairlwhitturn", dragoncounter,);
 
-    waterDragon.game_acmd("game_regular", ryusensya_min,);
-    waterDragon.game_acmd("game_shotmax", ryusensya_max,);
+    ryusensya.game_acmd("game_regular", ryusensya_min,);
+    ryusensya.game_acmd("game_shotmax", ryusensya_max,);
 }

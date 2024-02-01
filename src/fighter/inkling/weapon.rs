@@ -24,7 +24,7 @@ unsafe extern "C" fn inkbulletfly(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let inkbullet = &mut smashline::Agent::new("inkling_inkbullet");
     inkbullet.game_acmd("game_fly", inkbulletfly,);
 }

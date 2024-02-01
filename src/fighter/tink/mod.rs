@@ -5,7 +5,6 @@ use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
 use smash::app::sv_animcmd::*;
-use smashline::*;
 use smash_script::*;
 
 use galeforce_utils::{table_const::*};
@@ -22,6 +21,6 @@ pub fn install() {
     effects::install(agent);
     opff::install(agent);
     specials::install(agent);
-    weapon::install(agent);
+    weapon::install();
     agent.install();
 }

@@ -4,7 +4,6 @@ use smash::lib::{lua_const::*, L2CValue};
 use smash::app::lua_bind::*;
 use smash::lua2cpp::{L2CAgentBase, L2CFighterCommon};
 use smash::app::sv_animcmd::*;
-use smashline::*;
 use smash_script::*;
 
 mod acmd;
@@ -31,6 +30,6 @@ pub fn install() {
     opff::install(agent);
     specials::install(agent);
     status::install(agent);
-    weapons::install(agent);
+    weapons::install();
     agent.install();
 }

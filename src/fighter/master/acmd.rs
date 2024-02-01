@@ -540,8 +540,8 @@ pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_attacks3", attacks3,);
     agent.game_acmd("game_attacklw3", attacklw3,);
     agent.game_acmd("game_attackhi4", attackhi4,);
-    agent.game_acmd("game_attacks4hi", attacks4,);
-    agent.game_acmd("game_attacks4", attacks3,);
+    agent.game_acmd("game_attacks4hi", attacks4hi,);
+    agent.game_acmd("game_attacks4", attacks4,);
     agent.game_acmd("game_attacks4lw", attacks4lw,);
     agent.game_acmd("game_attackairhi", attackairhi,);
     agent.game_acmd("game_attackairn", attackairn,);

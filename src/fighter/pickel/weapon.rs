@@ -22,7 +22,7 @@ unsafe extern "C" fn lonecart(fighter: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let trolleyproblem = &mut smashline::Agent::new("pickel_trolley");
 
     trolleyproblem.game_acmd(0x1ea8ace017, lonecart,);

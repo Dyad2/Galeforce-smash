@@ -20,7 +20,7 @@ unsafe extern "C" fn boom_turn(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let boomerang = &mut smashline::Agent::new("toonlink_boomerang");
 
     boomerang.game_acmd("game_fly", boom_fly,);

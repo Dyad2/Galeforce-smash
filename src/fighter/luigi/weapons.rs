@@ -18,7 +18,7 @@ unsafe extern "C" fn fireballregular(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let plunger = &mut smashline::Agent::new("luigi_plunger");
     let fireball = &mut smashline::Agent::new("luigi_fireball");
 

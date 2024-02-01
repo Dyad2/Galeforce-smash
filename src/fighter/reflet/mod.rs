@@ -1,14 +1,13 @@
 use smash::hash40;
 use smash::phx::{Hash40, Vector2f};
-use smash::lib::{lua_const::*, L2CValue};
+use smash::lib::lua_const::*;
 use smash::lua2cpp::{L2CAgentBase, L2CFighterCommon};
 use smash::app::{BattleObjectModuleAccessor, FighterSpecializer_Reflet, lua_bind::*, sv_animcmd::*, sv_system};
-use smashline::*;
 use smash_script::*;
 use std::mem;
 
 use crate::fighter::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*, table_const::*};
+use galeforce_utils::{vars::*, utils::*};
 use custom_var::*;
 
 static mut THUNDER_FX_HANDLE : [u32; 9] = [1; 9];

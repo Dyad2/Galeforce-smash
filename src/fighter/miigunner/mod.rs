@@ -14,7 +14,7 @@ pub fn install() {
     let agent = &mut smashline::Agent::new("miigunner");
     acmd::install(agent);
     opff::install(agent);
-    weapons::install(agent);
     specials::install(agent);
+    weapons::install();
     agent.install();
 }

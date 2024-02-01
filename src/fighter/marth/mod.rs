@@ -3,7 +3,6 @@ use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::lua2cpp::{L2CAgentBase, L2CFighterCommon};
 use smash::app::{lua_bind::*, sv_animcmd::*};
-use smashline::*;
 use smash_script::*;
 
 use galeforce_utils::{vars::*, table_const::*, utils::*};

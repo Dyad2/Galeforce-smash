@@ -1,8 +1,7 @@
 use smash::{
     hash40,
     phx::{
-        Hash40, 
-        Vector2f,
+        Hash40,
         Vector3f
     },
     app::{
@@ -19,7 +18,6 @@ use smash::{
 };
 
 use smash_script::*;
-use smashline::*;
 
 use crate::fighter::common::galeforce::*;
 use galeforce_utils::{vars::*, table_const::*, utils::*};

@@ -159,9 +159,18 @@ unsafe extern "C" fn specialairhi2(fighter: &mut L2CAgentBase) {
         }
 }
 
+unsafe extern "C" fn specialsstart(agent: &mut L2CAgentBase) {
+    if macros::is_excute(agent) {
+        MotionModule::set_rate(agent.module_accessor, 1.5);
+        ArticleModule::generate_article(agent.module_accessor, *FIGHTER_KIRBY_GENERATE_ARTICLE_HAMMER, false, -1);
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
     agent.game_acmd("game_specialhi", specialhi,);
     agent.game_acmd("game_specialairhi", specialairhi,);
     agent.game_acmd("game_specialhi2", specialhi2,);
     agent.game_acmd("game_specialairhi2", specialairhi2,);
+    agent.game_acmd("game_specialsstart", specialsstart,);
+    agent.game_acmd("game_specialairsstart", specialsstart,);
 }

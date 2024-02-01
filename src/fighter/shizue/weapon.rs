@@ -61,7 +61,7 @@ unsafe extern "C" fn clayrocketfly(weapon: &mut L2CAgentBase) {
         }
 }
 
-pub fn install(agent: &mut smashline::Agent) {
+pub fn install() {
     let rocket = &mut smashline::Agent::new("shizue_clayrocket");
     let bullet = &mut smashline::Agent::new("shizue_bullet");
     let pot = &mut smashline::Agent::new("shizue_pot");

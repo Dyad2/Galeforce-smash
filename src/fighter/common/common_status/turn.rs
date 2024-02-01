@@ -1,5 +1,4 @@
 use super::*;
-use galeforce_utils::table_const::*;
 
 #[skyline::hook(replace = L2CFighterCommon_status_Turn)]
 unsafe extern "C" fn status_turn(fighter: &mut L2CFighterCommon) -> L2CValue {
@@ -169,5 +168,5 @@ fn nro_hook(info: &skyline::nro::NroInfo) {
 }
 
 pub fn install() {
-    skyline::nro::add_hook(nro_hook);
+    let _ = skyline::nro::add_hook(nro_hook);
 }

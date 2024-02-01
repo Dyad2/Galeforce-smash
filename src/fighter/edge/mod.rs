@@ -3,7 +3,6 @@ use smash::{
     lib::lua_const::*,
     app::{
         lua_bind::*,
-        utility::get_kind,
         sv_animcmd::*,
     },
     lua2cpp::{
@@ -11,12 +10,7 @@ use smash::{
         L2CAgentBase
     }
 };
-use smashline::*;
 use smash_script::*;
-
-use crate::fighter::common::galeforce::*;
-use galeforce_utils::{vars::*, utils::*, utils::get_battle_object_from_id};
-use custom_var::*;
 
 mod acmd;
 mod opff;

@@ -21,6 +21,6 @@ pub fn install() {
     let agent = &mut smashline::Agent::new("inkling");
     acmd::install(agent);
     opff::install(agent);
-    weapon::install(agent);
+    weapon::install();
     agent.install();
 }
