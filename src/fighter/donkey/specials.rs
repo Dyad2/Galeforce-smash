@@ -1,3 +1,5 @@
+use smash::app::ItemKind;
+
 use super::*;
 
 //Specials
@@ -99,24 +101,33 @@ unsafe extern "C" fn specialairs(agent: &mut L2CAgentBase) {
     }
 }
 
-unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {
-    
-    frame(fighter.lua_state_agent, 1.0);
-        if macros::is_excute(fighter)
-        {
-            VarModule::on_flag(fighter.module_accessor, donkey::instance::flag::GET_BARREL);
+unsafe extern "C" fn specials(agent: &mut L2CAgentBase) {
+    frame(agent.lua_state_agent, 5.0);
+    if macros::is_excute(agent) {
+        ItemModule::have_item(agent.module_accessor, ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
+        if ItemModule::get_have_item_kind(agent.module_accessor, 0) == *ITEM_KIND_BARREL {
+            StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
         }
-    //frame(fighter.lua_state_agent, 33.0);
-    //    if macros::is_excute(fighter)
-    //    {
-    //        ItemModule::throw_item(fighter.module_accessor, 22.5, 4.0, 1.0, 0, true, 0.0);
-    //    } 
-    // frame(fighter.lua_state_agent, 35.0);
-    //     if macros::is_excute(fighter)
-    //     {
-    //         IS_DK_START_ITEM_CHUCK[ENTRY_ID] = false;
-    //     }
+    }
 }
+
+//unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {    
+//    frame(fighter.lua_state_agent, 1.0);
+//        if macros::is_excute(fighter)
+//        {
+//            VarModule::on_flag(fighter.module_accessor, donkey::instance::flag::GET_BARREL);
+//        }
+//    //frame(fighter.lua_state_agent, 33.0);
+//    //    if macros::is_excute(fighter)
+//    //    {
+//    //        ItemModule::throw_item(fighter.module_accessor, 22.5, 4.0, 1.0, 0, true, 0.0);
+//    //    } 
+//    // frame(fighter.lua_state_agent, 35.0);
+//    //     if macros::is_excute(fighter)
+//    //     {
+//    //         IS_DK_START_ITEM_CHUCK[ENTRY_ID] = false;
+//    //     }
+//}
 
 unsafe extern "C" fn fx_specials(_fighter: &mut L2CAgentBase) {
 
