@@ -30,6 +30,12 @@ unsafe extern "C" fn status_ShieldBreakDown_pre(fighter: &mut L2CFighterCommon) 
         0
     );
     //fighter.sub_shift_status_main(L2CValue::Ptr(L2CFighterCommon_bind_address_call_status_ShieldBreakDown as *const () as _));
+
+    //stops shieldstun from applying speed after break
+    fighter.clear_lua_stack();
+    smash_script::lua_args!(fighter, FIGHTER_KINETIC_ENERGY_ID_DAMAGE, 0.0, 0.0);
+    smash::app::sv_kinetic_energy::set_speed(fighter.lua_state_agent);
+
     return 0.into();
 }
 
@@ -42,9 +48,14 @@ unsafe extern "C" fn bac_status_ShieldBreakDown(fighter: &mut L2CFighterCommon) 
 unsafe extern "C" fn status_ShieldBreakDown(fighter: &mut L2CFighterCommon) {
 
     //smash::app::sv_fighter_util::is
-    WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DOWN_FLAG_UP);
-    MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_hi_3"), 0.0, 1.0, false, 0.0, false, false); //motion becomes damage_hi_3, we want to change it here so the main script works
-    MotionModule::set_rate(fighter.module_accessor, 0.66);
+    //WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_DOWN_FLAG_UP);
+        if fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_hi_3"), 0.0, 1.0, false, 0.0, false, false);
+            MotionModule::set_rate(fighter.module_accessor, 0.5);
+        }
+        else {
+            MotionModule::change_motion(fighter.module_accessor, Hash40::new("damage_fly_roll"), 0.0, 1.0, false, 0.0, false, false);
+        }
     
     let shield_reset_hp = WorkModule::get_param_float(fighter.module_accessor, hash40("common"), hash40("shield_reset")); //
     WorkModule::set_float(fighter.module_accessor, shield_reset_hp, *FIGHTER_INSTANCE_WORK_ID_FLOAT_GUARD_SHIELD);

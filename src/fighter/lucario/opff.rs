@@ -47,6 +47,11 @@ unsafe extern "C" fn lucario_aura_charge(fighter: &mut L2CFighterCommon) {
     }
 }
 
+unsafe extern "C" fn lucario_air_uptaunt(fighter: &mut L2CFighterCommon) {
+    if WorkModule::is_enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_ATTACK_AIR) {
+        WorkModule::enable_transition_term(fighter.module_accessor, *FIGHTER_STATUS_TRANSITION_TERM_ID_CONT_APPEAL_U);
+    }
+}
 //charge input dair, hold down for 10 frames and it becomes a spike
 unsafe extern "C" fn lucario_dair_charge(fighter: &mut L2CFighterCommon) {
     let entry_id = WorkModule::get_int(fighter.module_accessor, *FIGHTER_INSTANCE_WORK_ID_INT_ENTRY_ID);
@@ -113,6 +118,7 @@ unsafe extern "C" fn lucario_galeforce_attack(fighter: &mut L2CFighterCommon) {
 unsafe extern "C" fn lucario_frame(fighter: &mut L2CFighterCommon) {
     common_fighter_frame(fighter);
     lucario_tail3_intangibility(fighter);
+    lucario_air_uptaunt(fighter);
     lucario_dair_charge(fighter);
     lucario_aura_charge(fighter);
     lucario_galeforce_attack(fighter);

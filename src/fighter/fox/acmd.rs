@@ -165,7 +165,7 @@ unsafe extern "C" fn attacks3lw(fighter: &mut L2CAgentBase) {
 unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
     let lua_state = fighter.lua_state_agent;
     
-    frame(lua_state, 45.);
+    frame(lua_state, 4.);
         if macros::is_excute(fighter)
         {
             WorkModule::on_flag(fighter.module_accessor, *FIGHTER_STATUS_ATTACK_AIR_FLAG_ENABLE_LANDING);
