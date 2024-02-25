@@ -82,33 +82,41 @@ unsafe extern "C" fn specialairn(fighter: &mut L2CAgentBase) {
 unsafe extern "C" fn specialairs(agent: &mut L2CAgentBase) {
 
     frame(agent.lua_state_agent, 5.0);
-    if macros::is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
-    }
+        if macros::is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_ALWAYS, 0);
+        }
     frame(agent.lua_state_agent, 15.0);
-    if macros::is_excute(agent) {
-        damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
-    }
+        if macros::is_excute(agent) {
+            damage!(agent, *MA_MSC_DAMAGE_DAMAGE_NO_REACTION, *DAMAGE_NO_REACTION_MODE_NORMAL, 0);
+        }
     frame(agent.lua_state_agent, 20.0);
-    if macros::is_excute(agent) {
-        WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_S_FLAG_FALL_START);
-        macros::ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 270, 40, 0, 30, 6.5, 0.0, 5.0, 9.5, Some(0.0), Some(5.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_bury"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
-        macros::ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 70, 40, 0, 15, 10.0, 0.0, 11.0, 14.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
-    }
+        if macros::is_excute(agent) {
+            WorkModule::on_flag(agent.module_accessor, *FIGHTER_DONKEY_STATUS_SPECIAL_S_FLAG_FALL_START);
+            macros::ATTACK(agent, 0, 0, Hash40::new("top"), 10.0, 270, 40, 0, 30, 6.5, 0.0, 5.0, 9.5, Some(0.0), Some(5.0), Some(3.0), 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_GA, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_bury"), *ATTACK_SOUND_LEVEL_L, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+            macros::ATTACK(agent, 2, 0, Hash40::new("top"), 8.0, 70, 40, 0, 15, 10.0, 0.0, 11.0, 14.0, None, None, None, 1.0, 1.0, *ATTACK_SETOFF_KIND_ON, *ATTACK_LR_CHECK_POS, false, 25, 0.0, 0, false, false, false, false, true, *COLLISION_SITUATION_MASK_A, *COLLISION_CATEGORY_MASK_ALL, *COLLISION_PART_MASK_ALL, false, Hash40::new("collision_attr_normal"), *ATTACK_SOUND_LEVEL_M, *COLLISION_SOUND_ATTR_KICK, *ATTACK_REGION_HEAD);
+        }
     wait(agent.lua_state_agent, 2.0);
-    if macros::is_excute(agent) {
-        AttackModule::clear_all(agent.module_accessor);
-    }
+        if macros::is_excute(agent) {
+            AttackModule::clear_all(agent.module_accessor);
+        }
 }
 
 unsafe extern "C" fn specials(agent: &mut L2CAgentBase) {
-    frame(agent.lua_state_agent, 5.0);
-    if macros::is_excute(agent) {
-        ItemModule::have_item(agent.module_accessor, ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
-        if ItemModule::get_have_item_kind(agent.module_accessor, 0) == *ITEM_KIND_BARREL {
-            StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
+    frame(agent.lua_state_agent, 1.0);
+        if macros::is_excute(agent) {
+            MotionModule::set_rate(agent.module_accessor, 0.4);
         }
-    }
+    frame(agent.lua_state_agent, 5.0);
+        if macros::is_excute(agent) {
+            ItemModule::have_item(agent.module_accessor, ItemKind(*ITEM_KIND_BARREL), 0, 0, false, false);
+            if ItemModule::get_have_item_kind(agent.module_accessor, 0) == *ITEM_KIND_BARREL {
+                StatusModule::change_status_request_from_script(agent.module_accessor, *FIGHTER_STATUS_KIND_ITEM_HEAVY_PICKUP, true);
+            }
+        }
+    frame(agent.lua_state_agent, 6.0);
+        if macros::is_excute(agent) {
+            MotionModule::set_rate(agent.module_accessor, 0.75);
+        }
 }
 
 //unsafe extern "C" fn specials(fighter: &mut L2CAgentBase) {    

@@ -201,7 +201,7 @@ pub unsafe fn get_stick_dir(module_accessor: &mut smash::app::BattleObjectModule
     }
 }
 
-#[skyline::from_offset(0x3ac540)]
+#[skyline::from_offset(0x3ac560)]
 pub fn get_battle_object_from_id(id: u32) -> *mut BattleObject;
 
 // 0x184c223f47,
