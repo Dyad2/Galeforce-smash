@@ -42,7 +42,7 @@ unsafe extern "C" fn dr_neutral_air(fighter: &mut L2CFighterCommon) {
         }
     }
 }
-        
+
 //GA - The good Medecine
 // hit an opponent with a pill at close range to gain a speed buff. the buff is lost after a short duration or after being grabbed.
 //  the rest of the GA code is in common opff, it's opponent-side

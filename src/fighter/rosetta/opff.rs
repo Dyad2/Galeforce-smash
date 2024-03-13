@@ -32,6 +32,7 @@ unsafe extern "C" fn rosetta_stuff(fighter: &mut L2CFighterCommon) {
             }
         }
     }
+    //recall out of shield?
 }
 
 unsafe extern "C" fn rosetta_frame(fighter: &mut L2CFighterCommon) {
@@ -39,6 +40,41 @@ unsafe extern "C" fn rosetta_frame(fighter: &mut L2CFighterCommon) {
     rosetta_stuff(fighter);
 }
 
+unsafe extern "C" fn tico_callback(fighter_base : &mut L2CFighterBase) {
+    if get_kind(&mut *fighter_base.module_accessor) != WEAPON_KIND_ROSETTA_TICO {
+        return
+    }
+    let status_kind = StatusModule::status_kind(fighter_base.module_accessor);
+    
+    let weapon =  mem::transmute::<&mut BattleObject, &mut smash::app::Weapon>(smash::app::sv_system::battle_object(fighter_base.lua_state_agent));
+    let owner_id = smash::app::lua_bind::Weapon::get_founder_id(weapon) as u32;
+    
+    //weapons using owner_fighter.module_accessor stuff
+    if !smash::app::sv_battle_object::is_null(owner_id) && smash::app::sv_battle_object::is_active(owner_id) {
+        let owner_boma = &mut *sv_battle_object::module_accessor(owner_id);
+        let owner_status = StatusModule::status_kind(owner_boma);            
+    
+        //return if rosa cancels special n charge
+        if VarModule::is_flag(owner_boma, rosetta::instance::flag::TICO_RECALL) {
+            WorkModule::on_flag(owner_boma, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_RETURN);
+            VarModule::off_flag(owner_boma, rosetta::instance::flag::TICO_RECALL);
+        }
+        //recover from helplessness
+        if status_kind == *WEAPON_ROSETTA_TICO_STATUS_KIND_DAMAGE_FALL {
+            if [*FIGHTER_STATUS_KIND_ATTACK, *FIGHTER_STATUS_KIND_ATTACK_AIR, *FIGHTER_STATUS_KIND_SPECIAL_LW, *FIGHTER_STATUS_KIND_SPECIAL_S, *FIGHTER_STATUS_KIND_SPECIAL_N].contains(&owner_status) {
+                WorkModule::on_flag(fighter_base.module_accessor, *WEAPON_ROSETTA_TICO_INSTANCE_WORK_ID_FLAG_RETURN);
+            }
+        }
+        if [*FIGHTER_STATUS_KIND_GUARD, *FIGHTER_STATUS_KIND_GUARD_ON].contains(&owner_status) || WorkModule::is_flag(owner_boma, *FIGHTER_STATUS_GUARD_ON_WORK_FLAG_JUST_SHIELD) {
+            HitModule::set_whole(fighter_base.module_accessor, smash::app::HitStatus(*HIT_STATUS_XLU), 0);
+        }
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
     agent.on_line(smashline::Main, rosetta_frame);
+
+    smashline::Agent::new("rosetta_tico")
+        .on_line(smashline::Main, tico_callback)
+        .install();
 }

@@ -1,15 +1,12 @@
 use {
-    smashline::*,
     smash_script::*,
     std::mem,
     smash::{
         hash40,
         app::{
             utility::get_kind,
-            BattleObject,
             BattleObjectModuleAccessor,
             FighterSpecializer_Reflet,
-            sv_battle_object,
             FighterUtil::*,
             FighterUtil,
             lua_bind::*,

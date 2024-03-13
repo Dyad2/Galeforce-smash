@@ -3,7 +3,7 @@ use super::*;
 unsafe extern "C" fn donkey_special_s_main(fighter: &mut L2CFighterCommon) -> L2CValue {
     PostureModule::set_stick_lr(fighter.module_accessor, 0.0);
     PostureModule::update_rot_y_lr(fighter.module_accessor);
-    if !barrel_check(fighter.module_accessor) {
+    if !barrel_check(fighter.module_accessor) && fighter.global_table[SITUATION_KIND].get_i32() == *SITUATION_KIND_GROUND {
         if PostureModule::lr(fighter.module_accessor) == 1.0 {
             MotionModule::change_motion(fighter.module_accessor, Hash40::new("appeal_lw_r"), 1.0, 1.0, false, 0.0, false, false);
         }

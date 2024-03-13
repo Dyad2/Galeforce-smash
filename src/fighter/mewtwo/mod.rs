@@ -1,4 +1,5 @@
 use smash::phx::Hash40;
+use smash::hash40;
 use smash::lib::lua_const::*;
 use smash::app::lua_bind::*;
 use smash::lua2cpp::L2CAgentBase;
@@ -6,7 +7,10 @@ use smash::app::sv_animcmd::*;
 use smashline::*;
 use smash_script::*;
 
+use crate::fighter::common::galeforce::*;
+use galeforce_utils::utils::*;
 use galeforce_utils::vars::*;
+use galeforce_utils::table_const::*;
 use custom_var::*;
 
 mod acmd;

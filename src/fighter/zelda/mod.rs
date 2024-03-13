@@ -2,11 +2,15 @@ use smash::{
     hash40,
     phx::{
         Hash40, 
+        Vector2f, 
         Vector3f, 
     },
     app::{
+        utility::get_kind,
         lua_bind::*,
         sv_animcmd::*,
+        BattleObject,
+        sv_battle_object,
     },
     lib::{
         lua_const::*,
@@ -14,10 +18,12 @@ use smash::{
     },
     lua2cpp::{
         L2CFighterCommon, 
+        L2CFighterBase, 
         L2CAgentBase
     }
 };
 
+use std::mem;
 use smash_script::*;
 
 use galeforce_utils::{vars::*, table_const::*, utils::*};

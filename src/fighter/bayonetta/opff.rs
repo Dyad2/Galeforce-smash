@@ -34,16 +34,23 @@ unsafe extern "C" fn bayo_galeforce_attack(fighter: &mut L2CFighterCommon) {
     }
 }
 
+//Allows to control bat within
+//now uses the same code as HDR, since mine wasnt really allowing control
 unsafe extern "C" fn bayo_bats_gravity(fighter: &mut L2CFighterCommon) {
-        //remove gravity on bats startup. TODO: status? is there one?
-        if StatusModule::status_kind(fighter.module_accessor) == *FIGHTER_BAYONETTA_STATUS_KIND_BATWITHIN {
-            if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR && MotionModule::frame(fighter.module_accessor) <= 10. {
-                KineticModule::suspend_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            }
-            else {
-                KineticModule::resume_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_GRAVITY);
-            }
+    let status_kind = StatusModule::status_kind(fighter.module_accessor);
+    let stick_y = fighter.global_table[STICK_Y].get_f32();
+
+    if StatusModule::situation_kind(fighter.module_accessor) == *SITUATION_KIND_AIR {
+        if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_SPECIAL_LW_BATWITHIN {
+            KineticModule::enable_energy(fighter.module_accessor, *FIGHTER_KINETIC_ENERGY_ID_CONTROL);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.4, 0.0);
+            sv_kinetic_energy!(set_stable_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, 1.0);
         }
+        else if status_kind == *FIGHTER_BAYONETTA_STATUS_KIND_BATWITHIN {
+            sv_kinetic_energy!(set_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_GRAVITY, stick_y * 0.4);
+            sv_kinetic_energy!(set_limit_speed, fighter, FIGHTER_KINETIC_ENERGY_ID_CONTROL, 0.4, 0.0);
+        }
+    }
 }
 
 unsafe extern "C" fn bayo_dodge_offset(fighter: &mut L2CFighterCommon) {

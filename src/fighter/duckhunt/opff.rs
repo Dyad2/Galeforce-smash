@@ -22,6 +22,44 @@ unsafe extern "C" fn duckhunt_frame(fighter: &mut L2CFighterCommon) {
     duckhunt_galeforce_attack(fighter);
 }
 
+pub unsafe extern "C" fn gunman_callback(fighter_base : &mut L2CFighterBase) {    
+    if get_kind(&mut *fighter_base.module_accessor) != WEAPON_KIND_DUCKHUNT_GUNMAN {
+        return
+    }
+    let weapon =  mem::transmute::<&mut BattleObject, &mut smash::app::Weapon>(smash::app::sv_system::battle_object(fighter_base.lua_state_agent));
+    let owner_id = smash::app::lua_bind::Weapon::get_founder_id(weapon) as u32;
+    
+    //weapons using owner_fighter.module_accessor stuff
+    if !smash::app::sv_battle_object::is_null(owner_id) && smash::app::sv_battle_object::is_active(owner_id) {
+        let owner_boma = &mut *sv_battle_object::module_accessor(owner_id);
+            
+        //check if dh has their GA
+        if StatusModule::status_kind(fighter_base.module_accessor) == *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY {
+            if VarModule::is_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON) {
+                StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
+                //gunman is to the left of dh
+                if PostureModule::pos_x(fighter_base.module_accessor) < PostureModule::pos_x(owner_boma) {
+                    PostureModule::set_lr(fighter_base.module_accessor, 1.0);
+                }
+                //gunman is to the right of dh
+                else {
+                    PostureModule::set_lr(fighter_base.module_accessor, -1.0);
+                }
+                PostureModule::update_rot_y_lr(fighter_base.module_accessor);
+                VarModule::off_flag(owner_boma, commons::instance::flag::GALEFORCE_ATTACK_ON);
+            }
+            if VarModule::is_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE) {
+                StatusModule::change_status_request(fighter_base.module_accessor, *WEAPON_DUCKHUNT_GUNMAN_STATUS_KIND_READY, false);
+                VarModule::off_flag(owner_boma, duckhunt::instance::flag::GUNMAN_REACTIVATE);
+            }
+        }
+    }
+}
+
 pub fn install(agent: &mut smashline::Agent) {
     agent.on_line(smashline::Main, duckhunt_frame);
+
+    smashline::Agent::new("duckhunt_gunman")
+        .on_line(smashline::Main, gunman_callback)
+        .install();
 }
