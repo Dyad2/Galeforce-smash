@@ -216,13 +216,13 @@ pub mod gekkouga { //greninja
         }
     }
 }
-// pub mod jack { //joker
-//     pub mod instance {
-//         pub mod flag {
-//             pub const ALLOW_SUMMON : i32 = 0x0000;
-//         }
-//     }
-// }
+pub mod kamui { //corrin
+    pub mod instance {
+        pub mod int {
+            pub const GA_DURATION : i32 = 0x0100;
+        }
+    }
+}
 pub mod kirby {
     pub mod instance {
         pub mod int {
