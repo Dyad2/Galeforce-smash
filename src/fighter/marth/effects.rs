@@ -42,6 +42,6 @@ unsafe extern "C" fn effectattack12(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attack11", effectattack11,);
-    agent.effect_acmd("effect_attack12", effectattack12,);
+    agent.effect_acmd("effect_attack11", effectattack11, Priority::Low);
+    agent.effect_acmd("effect_attack12", effectattack12, Priority::Low);
 }

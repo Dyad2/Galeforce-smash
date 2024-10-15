@@ -12,6 +12,6 @@ unsafe extern "C" fn appealhisound(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.sound_acmd("sound_appealhir", appealhisound,);
-    agent.sound_acmd("sound_appealhil", appealhisound,);
+    agent.sound_acmd("sound_appealhir", appealhisound, Priority::Low);
+    agent.sound_acmd("sound_appealhil", appealhisound, Priority::Low);
 }

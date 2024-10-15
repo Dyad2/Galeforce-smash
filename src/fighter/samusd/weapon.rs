@@ -14,5 +14,5 @@ unsafe extern "C" fn cshotshoot(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let cshot = &mut smashline::Agent::new("samus_cshot");
 
-    cshot.game_acmd("game_shoot", cshotshoot,);
+    cshot.game_acmd("game_shoot", cshotshoot, Priority::Low);
 }

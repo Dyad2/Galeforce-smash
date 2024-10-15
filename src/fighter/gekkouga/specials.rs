@@ -227,13 +227,13 @@ unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhi", specialhiall,);
-    agent.game_acmd("game_specialhi2", specialhiall,);
-    agent.game_acmd("game_specialairhi", specialhiall,);
-    agent.game_acmd("game_specialsattackf", specialsattackf,);
-    agent.game_acmd("game_specialsattackb", specialsattackb,);
-    agent.game_acmd("game_specialairsattackb", specialairsattackb,);
-    agent.game_acmd("game_specialairsattackf", specialairsattackf,);
-    agent.game_acmd("game_speciallw", speciallw,);
-    agent.game_acmd("game_specialairlw", speciallw,);
+    agent.game_acmd("game_specialhi", specialhiall, Priority::Low);
+    agent.game_acmd("game_specialhi2", specialhiall, Priority::Low);
+    agent.game_acmd("game_specialairhi", specialhiall, Priority::Low);
+    agent.game_acmd("game_specialsattackf", specialsattackf, Priority::Low);
+    agent.game_acmd("game_specialsattackb", specialsattackb, Priority::Low);
+    agent.game_acmd("game_specialairsattackb", specialairsattackb, Priority::Low);
+    agent.game_acmd("game_specialairsattackf", specialairsattackf, Priority::Low);
+    agent.game_acmd("game_speciallw", speciallw, Priority::Low);
+    agent.game_acmd("game_specialairlw", speciallw, Priority::Low);
 }

@@ -40,7 +40,7 @@ unsafe extern "C" fn bayo_throwf(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.sound_acmd("sound_attackairb", bayo_attackairb,)
-    .sound_acmd("sound_throwf", bayo_throwf)
+    agent.sound_acmd("sound_attackairb", bayo_attackairb, Priority::Low)
+    .sound_acmd("sound_throwf", bayo_throwf, Priority::Low)
     .install();
 }

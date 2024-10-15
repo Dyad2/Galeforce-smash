@@ -188,33 +188,33 @@ unsafe extern "C" fn shootingarmr_off_escapef(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_shootingarml_atkon_attack11", shootingarml_atkon_attack11)
-    .game_acmd("game_shootingarml_atkoff_attack11", shootingarml_atkoff_attack11)
+    agent.game_acmd("game_shootingarml_atkon_attack11", shootingarml_atkon_attack11, Priority::Low)
+    .game_acmd("game_shootingarml_atkoff_attack11", shootingarml_atkoff_attack11, Priority::Low)
     
-    .game_acmd("game_shootinglegr_atkon_attackairb", shootinglegr_atkon_attackairb)
-    .game_acmd("game_shootinglegr_atkoff_attackairb", shootinglegr_atkoff_attackairb)
+    .game_acmd("game_shootinglegr_atkon_attackairb", shootinglegr_atkon_attackairb, Priority::Low)
+    .game_acmd("game_shootinglegr_atkoff_attackairb", shootinglegr_atkoff_attackairb, Priority::Low)
 
-    .game_acmd("game_shootingarmr_atkon_attackairb", shootingarmr_atkon_attackairb)
-    .game_acmd("game_shootingarmr_atkoff_attackairb", shootingarmr_atkoff_attackairb)
+    .game_acmd("game_shootingarmr_atkon_attackairb", shootingarmr_atkon_attackairb, Priority::Low)
+    .game_acmd("game_shootingarmr_atkoff_attackairb", shootingarmr_atkoff_attackairb, Priority::Low)
 
-    .game_acmd("game_shootingarml_atkon_attackairb", shootingarml_atkon_attackairb)
-    .game_acmd("game_shootingarml_atkoff_attackairb", shootingarml_atkoff_attackairb)
+    .game_acmd("game_shootingarml_atkon_attackairb", shootingarml_atkon_attackairb, Priority::Low)
+    .game_acmd("game_shootingarml_atkoff_attackairb", shootingarml_atkoff_attackairb, Priority::Low)
 
-    .game_acmd("game_shootingarml_atkon_specialhi", shooting_on_specialhi)
-    .game_acmd("game_shootingarml_atkon_specialairhi", shooting_on_specialhi)
-    .game_acmd("game_shootingarml_atkoff_specialhi", shooting_off_specialhi)
-    .game_acmd("game_shootingarml_atkoff_specialairhi", shooting_off_specialhi)
+    .game_acmd("game_shootingarml_atkon_specialhi", shooting_on_specialhi, Priority::Low)
+    .game_acmd("game_shootingarml_atkon_specialairhi", shooting_on_specialhi, Priority::Low)
+    .game_acmd("game_shootingarml_atkoff_specialhi", shooting_off_specialhi, Priority::Low)
+    .game_acmd("game_shootingarml_atkoff_specialairhi", shooting_off_specialhi, Priority::Low)
 
-    .game_acmd("game_shootinglegl_atkon_escapeb", shootinglegl_on_escapeb)
-    .game_acmd("game_shootinglegl_atkoff_escapeb", shootinglegl_off_escapeb)
+    .game_acmd("game_shootinglegl_atkon_escapeb", shootinglegl_on_escapeb, Priority::Low)
+    .game_acmd("game_shootinglegl_atkoff_escapeb", shootinglegl_off_escapeb, Priority::Low)
 
-    .game_acmd("game_shootinglegr_atkon_escapeb", shootinglegr_on_escapeb)
-    .game_acmd("game_shootinglegr_atkoff_escapeb", shootinglegr_off_escapeb)
+    .game_acmd("game_shootinglegr_atkon_escapeb", shootinglegr_on_escapeb, Priority::Low)
+    .game_acmd("game_shootinglegr_atkoff_escapeb", shootinglegr_off_escapeb, Priority::Low)
 
-    .game_acmd("game_shootingarml_atkon_escapef", shootingarml_on_escapef)
-    .game_acmd("game_shootingarml_atkoff_escapef", shootingarml_off_escapef)
+    .game_acmd("game_shootingarml_atkon_escapef", shootingarml_on_escapef, Priority::Low)
+    .game_acmd("game_shootingarml_atkoff_escapef", shootingarml_off_escapef, Priority::Low)
 
-    .game_acmd("game_shootingarmr_atkon_escapef", shootingarmr_on_escapef)
-    .game_acmd("game_shootingarmr_atkoff_escapef", shootingarmr_off_escapef)
+    .game_acmd("game_shootingarmr_atkon_escapef", shootingarmr_on_escapef, Priority::Low)
+    .game_acmd("game_shootingarmr_atkoff_escapef", shootingarmr_off_escapef, Priority::Low)
     .install();
 }

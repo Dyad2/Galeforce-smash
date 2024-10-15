@@ -85,7 +85,7 @@ unsafe extern "C" fn speciallwflyr(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhijump", specialhijump,);
-    agent.game_acmd("game_speciallwflyr", speciallwflyr,);
-    agent.game_acmd("game_specialairlwflyr", speciallwflyr,);
+    agent.game_acmd("game_specialhijump", specialhijump, Priority::Low);
+    agent.game_acmd("game_speciallwflyr", speciallwflyr, Priority::Low);
+    agent.game_acmd("game_specialairlwflyr", speciallwflyr, Priority::Low);
 }

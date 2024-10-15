@@ -93,7 +93,7 @@ unsafe extern "C" fn fx_appeallw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attackdash", effect_attackdash,);
-    agent.effect_acmd("effect_appeallwr", fx_appeallw,);
-    agent.effect_acmd("effect_appeallwl", fx_appeallw,);
+    agent.effect_acmd("effect_attackdash", effect_attackdash, Priority::Low);
+    agent.effect_acmd("effect_appeallwr", fx_appeallw, Priority::Low);
+    agent.effect_acmd("effect_appeallwl", fx_appeallw, Priority::Low);
 }

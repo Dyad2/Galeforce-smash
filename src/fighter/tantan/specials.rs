@@ -103,7 +103,7 @@ unsafe extern "C" fn specialhilong(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhistart", specialhistart,);
-    agent.game_acmd("game_specialhishort", specialhishort,);
-    agent.game_acmd("game_specialhilong", specialhilong,);
+    agent.game_acmd("game_specialhistart", specialhistart, Priority::Low);
+    agent.game_acmd("game_specialhishort", specialhishort, Priority::Low);
+    agent.game_acmd("game_specialhilong", specialhilong, Priority::Low);
 }

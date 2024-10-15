@@ -19,6 +19,7 @@ use {
     },
     std::mem,
     smash_script::*,
+    smashline::*,
     custom_var::*,
 };
 

@@ -326,12 +326,12 @@ pub fn install() {
     let wickedweavearm = &mut smashline::Agent::new("bayonetta_wickedweavearm");
     let wickedweaveleg = &mut smashline::Agent::new("bayonetta_wickedweaveleg");
 
-    wickedweavearm.game_acmd("game_attackhi4", bayo_attackhi4wwa)
-    .game_acmd("game_attacks4hi", bayo_attacks4wwa)
-    .game_acmd("game_attacks4", bayo_attacks4hiwwa)
-    .game_acmd("game_attacks4lw", bayo_attacks4lwwwa)
+    wickedweavearm.game_acmd("game_attackhi4", bayo_attackhi4wwa, Priority::Low)
+    .game_acmd("game_attacks4hi", bayo_attacks4wwa, Priority::Low)
+    .game_acmd("game_attacks4", bayo_attacks4hiwwa, Priority::Low)
+    .game_acmd("game_attacks4lw", bayo_attacks4lwwwa, Priority::Low)
     .install();
 
-    wickedweaveleg.game_acmd("game_attacklw4", bayo_attacklw4wwl).install();
+    wickedweaveleg.game_acmd("game_attacklw4", bayo_attacklw4wwl, Priority::Low).install();
 
 }

@@ -66,8 +66,8 @@ pub fn install() {
     let bullet = &mut smashline::Agent::new("shizue_bullet");
     let pot = &mut smashline::Agent::new("shizue_pot");
 
-    rocket.game_acmd("game_fly", clayrocketfly,);
-    bullet.game_acmd("game_shootb", bulletshootb,);
-    bullet.game_acmd("game_shootf", bulletshootf,);
-    pot.game_acmd("game_throwed", potthrowed,);
+    rocket.game_acmd("game_fly", clayrocketfly, Priority::Low);
+    bullet.game_acmd("game_shootb", bulletshootb, Priority::Low);
+    bullet.game_acmd("game_shootf", bulletshootf, Priority::Low);
+    pot.game_acmd("game_throwed", potthrowed, Priority::Low);
 }

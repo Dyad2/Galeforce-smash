@@ -220,9 +220,9 @@ unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("specialhi", specialhi,);
-    agent.game_acmd("game_specialairhi", specialairhi,);
-    agent.game_acmd("game_specialswallattackb", specialswallattackb,);
-    agent.game_acmd("game_speciallw", speciallw,);
-    agent.game_acmd("game_specialairlw", speciallw,);
+    agent.game_acmd("specialhi", specialhi, Priority::Low);
+    agent.game_acmd("game_specialairhi", specialairhi, Priority::Low);
+    agent.game_acmd("game_specialswallattackb", specialswallattackb, Priority::Low);
+    agent.game_acmd("game_speciallw", speciallw, Priority::Low);
+    agent.game_acmd("game_specialairlw", speciallw, Priority::Low);
 }

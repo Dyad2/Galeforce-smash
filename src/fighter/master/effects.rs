@@ -29,5 +29,5 @@ unsafe extern "C" fn fx_attacks3(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("effect_attacks3", fx_attacks3,);
+    agent.effect_acmd("effect_attacks3", fx_attacks3, Priority::Low);
 }

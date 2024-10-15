@@ -13,5 +13,5 @@ unsafe extern "C" fn waterregular(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let bottlewater = &mut smashline::Agent::new("pzenigame_water");
 
-    bottlewater.game_acmd("game_regular", waterregular,);
+    bottlewater.game_acmd("game_regular", waterregular, Priority::Low);
 }

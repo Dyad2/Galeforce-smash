@@ -11,6 +11,7 @@ use smash::{
     }
 };
 use smash_script::*;
+use smashline::*;
 
 mod acmd;
 mod opff;

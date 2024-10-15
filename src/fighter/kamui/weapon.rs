@@ -65,11 +65,11 @@ pub fn install() {
     let waterDragon = &mut smashline::Agent::new("kamui_waterdragon");
     let ryusensya = &mut smashline::Agent::new("kamui_ryusensya");
 
-    waterDragon.game_acmd("game_speciallwhit", dragoncounter,);
-    waterDragon.game_acmd("game_speciallwhitturn", dragoncounter,);
-    waterDragon.game_acmd("game_specialairlwhit", dragoncounter,);
-    waterDragon.game_acmd("game_specialairlwhitturn", dragoncounter,);
+    waterDragon.game_acmd("game_speciallwhit", dragoncounter, Priority::Low);
+    waterDragon.game_acmd("game_speciallwhitturn", dragoncounter, Priority::Low);
+    waterDragon.game_acmd("game_specialairlwhit", dragoncounter, Priority::Low);
+    waterDragon.game_acmd("game_specialairlwhitturn", dragoncounter, Priority::Low);
 
-    ryusensya.game_acmd("game_regular", ryusensya_min,);
-    ryusensya.game_acmd("game_shotmax", ryusensya_max,);
+    ryusensya.game_acmd("game_regular", ryusensya_min, Priority::Low);
+    ryusensya.game_acmd("game_shotmax", ryusensya_max, Priority::Low);
 }

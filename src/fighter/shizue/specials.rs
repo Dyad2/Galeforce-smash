@@ -12,5 +12,5 @@ unsafe extern "C" fn speciallwset(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_speciallwset", speciallwset,);
+    agent.game_acmd("game_speciallwset", speciallwset, Priority::Low);
 }

@@ -19,5 +19,5 @@ unsafe extern "C" fn shoot(agent: &mut L2CAgentBase) {
 pub fn install() {
     let blast = &mut smashline::Agent::new("lucario_qigong");
 
-    blast.game_acmd("game_shoot", shoot,);
+    blast.game_acmd("game_shoot", shoot, Priority::Low);
 }

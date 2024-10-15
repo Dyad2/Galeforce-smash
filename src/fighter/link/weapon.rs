@@ -11,5 +11,5 @@ unsafe extern "C" fn fly(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let swordbeam = &mut smashline::Agent::new("link_swordbeam");
 
-    swordbeam.game_acmd("game_fly", fly,);
+    swordbeam.game_acmd("game_fly", fly, Priority::Low);
 }

@@ -298,7 +298,7 @@ unsafe extern "C" fn speciallwcounter(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialairnshoot", specialairnshoot,);
-    agent.game_acmd("game_speciallw", speciallw,);
-    agent.game_acmd("game_speciallwcounter", speciallwcounter,);
+    agent.game_acmd("game_specialairnshoot", specialairnshoot, Priority::Low);
+    agent.game_acmd("game_speciallw", speciallw, Priority::Low);
+    agent.game_acmd("game_speciallwcounter", speciallwcounter, Priority::Low);
 }

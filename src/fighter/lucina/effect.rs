@@ -135,11 +135,11 @@ unsafe extern "C" fn expressionspecialhi4(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attacks3", effectattacks3,);
-    agent.effect_acmd("effect_attackhi3", effecthi3,);
-    agent.effect_acmd("effect_specialhi", effectspecialhi,);
-    agent.effect_acmd("effect_specialhi2", effectspecialhi2,);
-    agent.effect_acmd("effect_specialhi3", effectspecialhi3,);
-    agent.effect_acmd("effect_landingfallaether", effectspecialhi4,);
-    agent.expression_acmd("expression_landingfallaether", expressionspecialhi4,);
+    agent.effect_acmd("effect_attacks3", effectattacks3, Priority::Low);
+    agent.effect_acmd("effect_attackhi3", effecthi3, Priority::Low);
+    agent.effect_acmd("effect_specialhi", effectspecialhi, Priority::Low);
+    agent.effect_acmd("effect_specialhi2", effectspecialhi2, Priority::Low);
+    agent.effect_acmd("effect_specialhi3", effectspecialhi3, Priority::Low);
+    agent.effect_acmd("effect_landingfallaether", effectspecialhi4, Priority::Low);
+    agent.expression_acmd("expression_landingfallaether", expressionspecialhi4, Priority::Low);
 }

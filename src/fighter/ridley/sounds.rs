@@ -6,5 +6,5 @@ unsafe extern "C" fn soundwait3(_fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.sound_acmd("sound_wait3", soundwait3,);
+    agent.sound_acmd("sound_wait3", soundwait3, Priority::Low);
 }

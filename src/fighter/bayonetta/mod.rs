@@ -18,6 +18,7 @@ use smash::{
 };
 
 use smash_script::*;
+use smashline::*;
 
 use crate::fighter::common::galeforce::*;
 use galeforce_utils::{vars::*, table_const::*, utils::*};

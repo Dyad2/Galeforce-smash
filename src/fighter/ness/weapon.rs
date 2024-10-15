@@ -31,5 +31,5 @@ unsafe extern "C" fn pillar(weapon: &mut L2CAgentBase) {
 pub fn install(agent: &mut smashline::Agent) {
     let pk_fire = &mut smashline::Agent::new("ness_pk_fire");
 
-    pk_fire.game_acmd("game_pillar", pillar,);
+    pk_fire.game_acmd("game_pillar", pillar, Priority::Low);
 }

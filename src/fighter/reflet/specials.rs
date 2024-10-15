@@ -17,6 +17,6 @@ unsafe extern "C" fn speciallwcapture(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_speciallwcapture", speciallwcapture,);
-    agent.game_acmd("game_specialairlwcapture", speciallwcapture,);
+    agent.game_acmd("game_speciallwcapture", speciallwcapture, Priority::Low);
+    agent.game_acmd("game_specialairlwcapture", speciallwcapture, Priority::Low);
 }

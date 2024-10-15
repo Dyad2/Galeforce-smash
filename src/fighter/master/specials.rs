@@ -138,6 +138,6 @@ unsafe extern "C" fn specialairsf(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialsf", specialsf,);
-    agent.game_acmd("game_specialairsf", specialairsf,);
+    agent.game_acmd("game_specialsf", specialsf, Priority::Low);
+    agent.game_acmd("game_specialairsf", specialairsf, Priority::Low);
 }

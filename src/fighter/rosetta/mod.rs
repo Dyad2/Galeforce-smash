@@ -9,8 +9,10 @@ use smash::{phx::Vector3f, lua2cpp::L2CFighterCommon};
 use smash::lua2cpp::L2CFighterBase;
 use smash::app::utility::get_kind;
 use smash::app::sv_animcmd::*;
-use smash_script::*;
 use std::mem;
+
+use smash_script::*;
+use smashline::*;
 
 use galeforce_utils::vars::*;
 use custom_var::*;

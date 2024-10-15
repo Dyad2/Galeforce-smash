@@ -36,7 +36,7 @@ unsafe extern "C" fn soundescapen(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_run", fx_run,);
-    agent.effect_acmd("effect_escapen", effectescapen,);
-    agent.sound_acmd("sound_escapen", soundescapen,);
+    agent.effect_acmd("effect_run", fx_run, Priority::Low);
+    agent.effect_acmd("effect_escapen", effectescapen, Priority::Low);
+    agent.sound_acmd("sound_escapen", soundescapen, Priority::Low);
 }

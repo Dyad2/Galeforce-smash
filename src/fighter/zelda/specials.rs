@@ -151,10 +151,10 @@ unsafe extern "C" fn specialairhi(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialn", specialn,);
-    agent.game_acmd("game_specialairn", specialn,);
-    agent.game_acmd("game_specialairhistart", specialairhistart,);
-    agent.game_acmd("game_specialhistart", specialhistart,);
-    agent.game_acmd("game_specialhi", specialhi,);
-    agent.game_acmd("game_specialairhi", specialairhi,);
+    agent.game_acmd("game_specialn", specialn, Priority::Low);
+    agent.game_acmd("game_specialairn", specialn, Priority::Low);
+    agent.game_acmd("game_specialairhistart", specialairhistart, Priority::Low);
+    agent.game_acmd("game_specialhistart", specialhistart, Priority::Low);
+    agent.game_acmd("game_specialhi", specialhi, Priority::Low);
+    agent.game_acmd("game_specialairhi", specialairhi, Priority::Low);
 }

@@ -18,5 +18,5 @@ unsafe extern "C" fn laserfly(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let blasterbullet = &mut smashline::Agent::new("fox_blasterbullet");
 
-    blasterbullet.game_acmd("game_fly", laserfly,);
+    blasterbullet.game_acmd("game_fly", laserfly, Priority::Low);
 }

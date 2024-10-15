@@ -275,15 +275,15 @@ unsafe extern "C" fn speciallw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhi", specialhi,);
-    agent.game_acmd("game_specialairhi", specialairhi,);
-    agent.game_acmd("game_specialsstart", specialsstart,);
-    agent.game_acmd("game_specialsairstart", specialsstart,);
-    agent.game_acmd("game_specialsdischarge", specialsdischarge,);
-    agent.game_acmd("game_specialswall", specialswall,);
-    agent.game_acmd("game_specialswallend", specialswallend,);
-    agent.game_acmd("game_specialn", specialn,);
-    agent.game_acmd("game_specialairn", specialn,);
-    agent.game_acmd("game_speciallw", speciallw,);
-    agent.game_acmd("game_specialairlw", speciallw,);
+    agent.game_acmd("game_specialhi", specialhi, Priority::Low);
+    agent.game_acmd("game_specialairhi", specialairhi, Priority::Low);
+    agent.game_acmd("game_specialsstart", specialsstart, Priority::Low);
+    agent.game_acmd("game_specialsairstart", specialsstart, Priority::Low);
+    agent.game_acmd("game_specialsdischarge", specialsdischarge, Priority::Low);
+    agent.game_acmd("game_specialswall", specialswall, Priority::Low);
+    agent.game_acmd("game_specialswallend", specialswallend, Priority::Low);
+    agent.game_acmd("game_specialn", specialn, Priority::Low);
+    agent.game_acmd("game_specialairn", specialn, Priority::Low);
+    agent.game_acmd("game_speciallw", speciallw, Priority::Low);
+    agent.game_acmd("game_specialairlw", speciallw, Priority::Low);
 }

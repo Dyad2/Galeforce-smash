@@ -56,6 +56,6 @@ pub fn install() {
     let deins = &mut smashline::Agent::new("zelda_dein_s");
     let phantom = &mut smashline::Agent::new("zelda_phantom");
 
-    deins.game_acmd("game_move", deinmove,);
-    phantom.game_acmd("game_attackmax", phantommax,);
+    deins.game_acmd("game_move", deinmove, Priority::Low);
+    phantom.game_acmd("game_attackmax", phantommax, Priority::Low);
 }

@@ -4,8 +4,10 @@ use smash::lib::lua_const::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::{phx::Vector3f, lua2cpp::L2CFighterCommon};
 use smash::app::{sv_animcmd::*, lua_bind::*, sv_module_access::*};
-use smash_script::*;
 use std::mem;
+
+use smash_script::*;
+use smashline::*;
 
 use crate::fighter::common::galeforce::*;
 use galeforce_utils::{vars::*, utils::*, table_const::*};

@@ -22,6 +22,6 @@ pub fn install() {
     let plunger = &mut smashline::Agent::new("luigi_plunger");
     let fireball = &mut smashline::Agent::new("luigi_fireball");
 
-    plunger.game_acmd("game_aircatch", plunger_aircatch,);
-    fireball.game_acmd("game_regular", fireballregular,);
+    plunger.game_acmd("game_aircatch", plunger_aircatch, Priority::Low);
+    fireball.game_acmd("game_regular", fireballregular, Priority::Low);
 }

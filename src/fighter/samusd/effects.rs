@@ -165,13 +165,13 @@ unsafe extern "C" fn expressionattackhi3(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("effect_attackhi3", effectattackhi3,);
-    agent.game_acmd("effect_attacks3hi", effectattackhi3,);
-    agent.game_acmd("effect_attackdash", effect_attackdash,);
-    agent.effect_acmd("effect_attackairn", effectattackairn,);
-    agent.sound_acmd("sound_attackhi3", soundattackhi3,);
-    agent.sound_acmd("sound_attacks3hi", soundattackhi3,);
-    agent.sound_acmd("sound_attackairn", soundattackairn,);
-    agent.expression_acmd("expression_attackhi3", expressionattackhi3,);
-    agent.expression_acmd("expression_attacks3hi", expressionattackhi3,);
+    agent.effect_acmd("effect_attackhi3", effectattackhi3, Priority::Low);
+    agent.effect_acmd("effect_attacks3hi", effectattackhi3, Priority::Low);
+    agent.effect_acmd("effect_attackdash", effect_attackdash, Priority::Low);
+    agent.effect_acmd("effect_attackairn", effectattackairn, Priority::Low);
+    agent.sound_acmd("sound_attackhi3", soundattackhi3, Priority::Low);
+    agent.sound_acmd("sound_attacks3hi", soundattackhi3, Priority::Low);
+    agent.sound_acmd("sound_attackairn", soundattackairn, Priority::Low);
+    agent.expression_acmd("expression_attackhi3", expressionattackhi3, Priority::Low);
+    agent.expression_acmd("expression_attacks3hi", expressionattackhi3, Priority::Low);
 }

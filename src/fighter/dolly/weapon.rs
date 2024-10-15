@@ -162,8 +162,8 @@ unsafe extern "C" fn normalair(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let wave = &mut smashline::Agent::new("dolly_wave");
 
-    wave.game_acmd("game_normalw", normalw);
-    wave.game_acmd("game_normal", normal);
-    wave.game_acmd("game_normalair", normalair);
-    wave.game_acmd("game_normalairw", normalairw);
+    wave.game_acmd("game_normalw", normalw, Priority::Low);
+    wave.game_acmd("game_normal", normal, Priority::Low);
+    wave.game_acmd("game_normalair", normalair, Priority::Low);
+    wave.game_acmd("game_normalairw", normalairw, Priority::Low);
 }

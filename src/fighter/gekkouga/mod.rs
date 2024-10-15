@@ -3,8 +3,10 @@ use smash::phx::Hash40;
 use smash::lib::lua_const::*;
 use smash::lua2cpp::{L2CFighterCommon, L2CAgentBase};
 use smash::app::{BattleObject, sv_animcmd::*, sv_battle_object, lua_bind::*};
-use smash_script::*;
 use std::mem;
+
+use smash_script::*;
+use smashline::*;
 
 use crate::fighter::common::galeforce::*;
 use galeforce_utils::vars::*;

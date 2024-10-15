@@ -67,7 +67,7 @@ unsafe extern "C" fn sfx_specialairhi(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("effect_attack100", fxattack100,);
-    agent.effect_acmd("effect_attackairhi", fx_attackairhi,);
-    agent.sound_acmd("sound_specialairhi", sfx_specialairhi,);
+    agent.effect_acmd("effect_attack100", fxattack100, Priority::Low);
+    agent.effect_acmd("effect_attackairhi", fx_attackairhi, Priority::Low);
+    agent.sound_acmd("sound_specialairhi", sfx_specialairhi, Priority::Low);
 }

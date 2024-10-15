@@ -19,5 +19,5 @@ unsafe extern "C" fn needlemove(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let needle = &mut smashline::Agent::new("sheik_needle");
 
-    needle.game_acmd("game_move", needlemove,);
+    needle.game_acmd("game_move", needlemove, Priority::Low);
 }

@@ -129,7 +129,7 @@ unsafe extern "C" fn attackdash(fighter: &mut L2CAgentBase) {
                         VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                         let bo = smash::app::sv_system::battle_object(lua_state);
                         let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                        let throwvec : Vector2f = Vector2f{x: -4.5, y: 9.0};
+                        let throwvec: *const Vector2f = &Vector2f{x: -4.5, y: 9.0};
                         FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                     }
                 }
@@ -196,7 +196,7 @@ unsafe extern "C" fn attackairhi(fighter: &mut L2CAgentBase) {
                         VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                         let bo = smash::app::sv_system::battle_object(lua_state);
                         let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                        let throwvec : Vector2f = Vector2f{x: -4.5, y: 9.0};
+                        let throwvec: *const Vector2f = &Vector2f{x: -4.5, y: 9.0};
                         FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                     }
                 }
@@ -275,7 +275,7 @@ unsafe extern "C" fn attackairf(fighter: &mut L2CAgentBase) {
                             VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                             let bo = smash::app::sv_system::battle_object(lua_state);
                             let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                            let throwvec : Vector2f = Vector2f{x: -6.0, y: 15.0};
+                            let throwvec: *const Vector2f = &Vector2f{x: -6.0, y: 15.0};
                             FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                         }
                     }
@@ -372,7 +372,7 @@ unsafe extern "C" fn attackairn(fighter: &mut L2CAgentBase) {
                         VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                         let bo = smash::app::sv_system::battle_object(lua_state);
                         let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                        let throwvec : Vector2f = Vector2f{x: -3.0, y: 17.0};
+                        let throwvec: *const Vector2f = &Vector2f{x: -3.0, y: 17.0};
                         FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                     }
                 }
@@ -462,7 +462,7 @@ unsafe extern "C" fn attackairb(fighter: &mut L2CAgentBase) {
                     VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                     let bo = smash::app::sv_system::battle_object(lua_state);
                     let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                    let throwvec : Vector2f = Vector2f{x: -8.0, y: 14.0};
+                    let throwvec: *const Vector2f = &Vector2f{x: -8.0, y: 14.0};
                     FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                 }
             frame(lua_state, 34.);
@@ -535,7 +535,7 @@ unsafe extern "C" fn attackairlw(fighter: &mut L2CAgentBase) {
                     VisibilityModule::set_int64(fighter.module_accessor, hash40("sword") as i64, hash40("sword_normal") as i64);
                     let bo = smash::app::sv_system::battle_object(lua_state);
                     let instance_bo = mem::transmute::<&mut smash::app::BattleObject, &mut smash::app::Fighter>(bo);
-                    let throwvec : Vector2f = Vector2f{x: -1.0, y: 0.0};
+                    let throwvec: *const Vector2f = &Vector2f{x: -1.0, y: 0.0};
                     FighterSpecializer_Reflet::throwaway_sword(instance_bo, throwvec, true);
                 }
         }
@@ -581,16 +581,16 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", dash,);
-    agent.game_acmd("game_turndash", turndash,);
-    agent.game_acmd("game_attackhi3", attackhi3,);
-    agent.game_acmd("game_attacks3", attacks3,);
-    agent.game_acmd("game_attacklw3", attacklw3,);
-    agent.game_acmd("game_attackdash", attackdash,);
-    agent.game_acmd("game_attackairhi", attackairhi,);
-    agent.game_acmd("game_attackairf", attackairf,);
-    agent.game_acmd("game_attackairn", attackairn,);
-    agent.game_acmd("game_attackairb", attackairb,);
-    agent.game_acmd("game_attackairlw", attackairlw,);
-    agent.game_acmd("game_escapeairslide", escapeairslide,);
+    agent.game_acmd("game_dash", dash, Priority::Low);
+    agent.game_acmd("game_turndash", turndash, Priority::Low);
+    agent.game_acmd("game_attackhi3", attackhi3, Priority::Low);
+    agent.game_acmd("game_attacks3", attacks3, Priority::Low);
+    agent.game_acmd("game_attacklw3", attacklw3, Priority::Low);
+    agent.game_acmd("game_attackdash", attackdash, Priority::Low);
+    agent.game_acmd("game_attackairhi", attackairhi, Priority::Low);
+    agent.game_acmd("game_attackairf", attackairf, Priority::Low);
+    agent.game_acmd("game_attackairn", attackairn, Priority::Low);
+    agent.game_acmd("game_attackairb", attackairb, Priority::Low);
+    agent.game_acmd("game_attackairlw", attackairlw, Priority::Low);
+    agent.game_acmd("game_escapeairslide", escapeairslide, Priority::Low);
 }

@@ -55,7 +55,7 @@ unsafe extern "C" fn ex_landingheavy(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attack11", fx_attack11,);
-    agent.effect_acmd("effect_attackairf", fx_attackairf,);
-    agent.expression_acmd("expression_landingheavy", ex_landingheavy,);
+    agent.effect_acmd("effect_attack11", fx_attack11, Priority::Low);
+    agent.effect_acmd("effect_attackairf", fx_attackairf, Priority::Low);
+    agent.expression_acmd("expression_landingheavy", ex_landingheavy, Priority::Low);
 }

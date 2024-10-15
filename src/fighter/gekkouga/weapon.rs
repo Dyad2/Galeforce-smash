@@ -30,6 +30,6 @@ unsafe extern "C" fn water_specialhi(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let water = &mut smashline::Agent::new("gekkouga_water");
 
-    water.game_acmd("game_specialhil", water_specialhi,);
-    water.game_acmd("game_specialhir", water_specialhi,);
+    water.game_acmd("game_specialhil", water_specialhi, Priority::Low);
+    water.game_acmd("game_specialhir", water_specialhi, Priority::Low);
 }

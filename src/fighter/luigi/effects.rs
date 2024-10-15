@@ -45,6 +45,6 @@ unsafe extern "C" fn fx_specialairn(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_specialn", fx_specialn,);
-    agent.effect_acmd("effect_specialairn", fx_specialairn,);
+    agent.effect_acmd("effect_specialn", fx_specialn, Priority::Low);
+    agent.effect_acmd("effect_specialairn", fx_specialairn, Priority::Low);
 }

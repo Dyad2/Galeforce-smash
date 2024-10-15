@@ -176,12 +176,12 @@ unsafe extern "C" fn effectescapeb(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attackdash", effectattackdash,);
-    agent.effect_acmd("effect_attackairlw", effectattackairlw,);
-    agent.effect_acmd("effect_escapeair", effectescapeair,);
-    agent.effect_acmd("effect_escapeairslide", effectescapeairslide,);
-    agent.effect_acmd("effect_cliffcatch", effectcliffcatch,);
-    agent.effect_acmd("effect_landingheavy", effectlandingheavy,);
-    agent.effect_acmd("effect_escapef", effectescapef,);
-    agent.effect_acmd("effect_escapeb", effectescapeb,);
+    agent.effect_acmd("effect_attackdash", effectattackdash, Priority::Low);
+    agent.effect_acmd("effect_attackairlw", effectattackairlw, Priority::Low);
+    agent.effect_acmd("effect_escapeair", effectescapeair, Priority::Low);
+    agent.effect_acmd("effect_escapeairslide", effectescapeairslide, Priority::Low);
+    agent.effect_acmd("effect_cliffcatch", effectcliffcatch, Priority::Low);
+    agent.effect_acmd("effect_landingheavy", effectlandingheavy, Priority::Low);
+    agent.effect_acmd("effect_escapef", effectescapef, Priority::Low);
+    agent.effect_acmd("effect_escapeb", effectescapeb, Priority::Low);
 }

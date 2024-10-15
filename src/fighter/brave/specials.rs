@@ -110,10 +110,10 @@ unsafe extern "C" fn brave_specialairlw5(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_speciallw3", brave_speciallw3); //sizzle
-    agent.game_acmd("game_specialairlw3", brave_specialairlw3);
-    agent.game_acmd("game_speciallw4", brave_speciallw4); //boom
-    agent.game_acmd("game_specialairlw4", brave_specialairlw4);
-    agent.game_acmd("game_speciallw5", brave_speciallw5); //kaboom
-    agent.game_acmd("game_specialairlw5", brave_specialairlw5);
+    agent.game_acmd("game_speciallw3", brave_speciallw3, Priority::Low); //sizzle
+    agent.game_acmd("game_specialairlw3", brave_specialairlw3, Priority::Low);
+    agent.game_acmd("game_speciallw4", brave_speciallw4, Priority::Low); //boom
+    agent.game_acmd("game_specialairlw4", brave_specialairlw4, Priority::Low);
+    agent.game_acmd("game_speciallw5", brave_speciallw5, Priority::Low); //kaboom
+    agent.game_acmd("game_specialairlw5", brave_specialairlw5, Priority::Low);
 }

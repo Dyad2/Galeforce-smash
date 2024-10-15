@@ -167,10 +167,10 @@ unsafe extern "C" fn specialsstart(agent: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhi", specialhi,);
-    agent.game_acmd("game_specialairhi", specialairhi,);
-    agent.game_acmd("game_specialhi2", specialhi2,);
-    agent.game_acmd("game_specialairhi2", specialairhi2,);
-    agent.game_acmd("game_specialsstart", specialsstart,);
-    agent.game_acmd("game_specialairsstart", specialsstart,);
+    agent.game_acmd("game_specialhi", specialhi, Priority::Low);
+    agent.game_acmd("game_specialairhi", specialairhi, Priority::Low);
+    agent.game_acmd("game_specialhi2", specialhi2, Priority::Low);
+    agent.game_acmd("game_specialairhi2", specialairhi2, Priority::Low);
+    agent.game_acmd("game_specialsstart", specialsstart, Priority::Low);
+    agent.game_acmd("game_specialairsstart", specialsstart, Priority::Low);
 }

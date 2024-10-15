@@ -28,5 +28,5 @@ unsafe extern "C" fn stealthbombmove(weapon: &mut L2CAgentBase) {
 pub fn install() {
     let sBomb = &mut smashline::Agent::new("miigunner_stealthbomb_s");
 
-    sBomb.game_acmd("game_move", stealthbombmove,);
+    sBomb.game_acmd("game_move", stealthbombmove, Priority::Low);
 }

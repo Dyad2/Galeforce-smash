@@ -217,14 +217,14 @@ unsafe extern "C" fn captain_escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", captain_dash,);
-    agent.game_acmd("game_turndash", captain_turndash,);
-    agent.game_acmd("game_attack11", captain_attack11,);
-    agent.game_acmd("game_attack12", captain_attack12,);
-    agent.game_acmd("game_attacks4hi", captain_attacks4,);
-    agent.game_acmd("game_attacks4", captain_attacks4);
-    agent.game_acmd("game_attacks4lw", captain_attacks4,);
-    agent.game_acmd("game_attackhi4", captain_attackhi4,);
-    agent.game_acmd("game_attackairf", captain_attackairf);
-    agent.game_acmd("game_escapeairslide", captain_escapeairslide);
+    agent.game_acmd("game_dash", captain_dash, Priority::Low);
+    agent.game_acmd("game_turndash", captain_turndash, Priority::Low);
+    agent.game_acmd("game_attack11", captain_attack11, Priority::Low);
+    agent.game_acmd("game_attack12", captain_attack12, Priority::Low);
+    agent.game_acmd("game_attacks4hi", captain_attacks4, Priority::Low);
+    agent.game_acmd("game_attacks4", captain_attacks4, Priority::Low);
+    agent.game_acmd("game_attacks4lw", captain_attacks4, Priority::Low);
+    agent.game_acmd("game_attackhi4", captain_attackhi4, Priority::Low);
+    agent.game_acmd("game_attackairf", captain_attackairf, Priority::Low);
+    agent.game_acmd("game_escapeairslide", captain_escapeairslide, Priority::Low);
 }

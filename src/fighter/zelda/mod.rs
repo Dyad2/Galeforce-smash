@@ -25,6 +25,7 @@ use smash::{
 
 use std::mem;
 use smash_script::*;
+use smashline::*;
 
 use galeforce_utils::{vars::*, table_const::*, utils::*};
 use custom_var::*;

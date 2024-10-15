@@ -66,10 +66,10 @@ unsafe extern "C" fn exlandingairlw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("effect_attackairlw", effectattackairlw,);
-    agent.effect_acmd("effect_landingairlw", effectlandingairlw,);
+    agent.effect_acmd("effect_attackairlw", effectattackairlw, Priority::Low);
+    agent.effect_acmd("effect_landingairlw", effectlandingairlw, Priority::Low);
 
-    agent.sound_acmd("sound_landingairlw", soundlandingairlw,);
+    agent.sound_acmd("sound_landingairlw", soundlandingairlw, Priority::Low);
 
-    agent.expression_acmd("expression_landingairlw", exlandingairlw,);
+    agent.expression_acmd("expression_landingairlw", exlandingairlw, Priority::Low);
 }

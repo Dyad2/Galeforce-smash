@@ -424,19 +424,19 @@ unsafe extern "C" fn sheik_escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", sheik_dash);
-    agent.game_acmd("game_turndash", sheik_turndash);
-    agent.game_acmd("game_attack11", sheik_attack11);
-    agent.game_acmd("game_attack12", sheik_attack12);
-    agent.game_acmd("game_attack100end", sheik_attack100end);
-    agent.game_acmd("game_attackhi3", sheik_attackhi3);
-    agent.game_acmd("game_attacks4", sheik_attackhi4);
-    agent.game_acmd("game_attacks4", sheik_attacks4);
-    agent.game_acmd("game_attackdash", sheik_attackdash);
-    agent.game_acmd("game_attackairf", sheik_attackairf);
-    agent.game_acmd("game_attackairn", sheik_attackairn);
-    agent.game_acmd("game_attackairb", sheik_attackairb);
-    agent.game_acmd("game_attackairlw", sheik_attackairlw);
-    agent.game_acmd("game_landingairlw", sheik_landingairlw);
-    agent.game_acmd("game_escapeairslide", sheik_escapeairslide);
+    agent.game_acmd("game_dash", sheik_dash, Priority::Low);
+    agent.game_acmd("game_turndash", sheik_turndash, Priority::Low);
+    agent.game_acmd("game_attack11", sheik_attack11, Priority::Low);
+    agent.game_acmd("game_attack12", sheik_attack12, Priority::Low);
+    agent.game_acmd("game_attack100end", sheik_attack100end, Priority::Low);
+    agent.game_acmd("game_attackhi3", sheik_attackhi3, Priority::Low);
+    agent.game_acmd("game_attacks4", sheik_attackhi4, Priority::Low);
+    agent.game_acmd("game_attacks4", sheik_attacks4, Priority::Low);
+    agent.game_acmd("game_attackdash", sheik_attackdash, Priority::Low);
+    agent.game_acmd("game_attackairf", sheik_attackairf, Priority::Low);
+    agent.game_acmd("game_attackairn", sheik_attackairn, Priority::Low);
+    agent.game_acmd("game_attackairb", sheik_attackairb, Priority::Low);
+    agent.game_acmd("game_attackairlw", sheik_attackairlw, Priority::Low);
+    agent.game_acmd("game_landingairlw", sheik_landingairlw, Priority::Low);
+    agent.game_acmd("game_escapeairslide", sheik_escapeairslide, Priority::Low);
 }

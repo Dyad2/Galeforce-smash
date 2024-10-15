@@ -6,7 +6,9 @@ use smash::app::sv_animcmd::*;
 use smash::lib::lua_const::*;
 use smash::lua2cpp::L2CAgentBase;
 use smash::lua2cpp::L2CFighterCommon;
+
 use smash_script::*;
+use smashline::*;
 
 use crate::fighter::common::galeforce::*;
 use galeforce_utils::vars::*; 

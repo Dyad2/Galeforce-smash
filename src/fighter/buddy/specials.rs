@@ -37,7 +37,7 @@ unsafe extern "C" fn buddy_specialsend(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialsstart", buddy_specialsstart,);
-    agent.game_acmd("game_specialairsend", buddy_specialairsend,);
-    agent.game_acmd("game_specialsend", buddy_specialsend);
+    agent.game_acmd("game_specialsstart", buddy_specialsstart, Priority::Low);
+    agent.game_acmd("game_specialairsend", buddy_specialairsend, Priority::Low);
+    agent.game_acmd("game_specialsend", buddy_specialsend, Priority::Low);
 }

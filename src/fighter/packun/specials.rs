@@ -10,6 +10,6 @@ unsafe extern "C" fn speciallwstart(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_speciallwstart", speciallwstart,);
-    agent.game_acmd("game_specialairlwstart", speciallwstart,);
+    agent.game_acmd("game_speciallwstart", speciallwstart, Priority::Low);
+    agent.game_acmd("game_specialairlwstart", speciallwstart, Priority::Low);
 }

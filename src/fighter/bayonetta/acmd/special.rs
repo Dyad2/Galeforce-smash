@@ -282,13 +282,13 @@ unsafe extern "C" fn bayo_specialairlw(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_specialhi", bayo_specialhi,)
-    .game_acmd("game_specialairhi", bayo_specialhi)
-    .game_acmd("game_specialairsu", bayo_specialairsu)
-    .game_acmd("game_specialairsd", bayo_specialairsd)
-    .game_acmd("game_specialsholdend", bayo_specialsholdend)
-    .game_acmd("game_specialsdlanding", bayo_specialairsdlanding)
-    .game_acmd("game_speciallw", bayo_speciallw)
-    .game_acmd("game_specialairlw", bayo_specialairlw)
+    agent.game_acmd("game_specialhi", bayo_specialhi, Priority::Low)
+    .game_acmd("game_specialairhi", bayo_specialhi, Priority::Low)
+    .game_acmd("game_specialairsu", bayo_specialairsu, Priority::Low)
+    .game_acmd("game_specialairsd", bayo_specialairsd, Priority::Low)
+    .game_acmd("game_specialsholdend", bayo_specialsholdend, Priority::Low)
+    .game_acmd("game_specialsdlanding", bayo_specialairsdlanding, Priority::Low)
+    .game_acmd("game_speciallw", bayo_speciallw, Priority::Low)
+    .game_acmd("game_specialairlw", bayo_specialairlw, Priority::Low)
     .install();
 }

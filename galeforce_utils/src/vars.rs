@@ -218,6 +218,9 @@ pub mod gekkouga { //greninja
 }
 pub mod kamui { //corrin
     pub mod instance {
+        pub mod flag {
+            pub const KAMUI_TRANSFORMED : i32 = 0x100;
+        }
         pub mod int {
             pub const GA_DURATION : i32 = 0x0100;
         }

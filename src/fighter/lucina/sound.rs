@@ -61,8 +61,8 @@ unsafe extern "C" fn soundspecialhi4(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.sound_acmd("sound_attacks3", soundattacks3,);
-    agent.sound_acmd("sound_specialhi", soundspecialhi,);
-    agent.sound_acmd("sound_specialhi2", soundspecialhi2,);
-    agent.sound_acmd("sound_landingfallaether", soundspecialhi4,);
+    agent.sound_acmd("sound_attacks3", soundattacks3, Priority::Low);
+    agent.sound_acmd("sound_specialhi", soundspecialhi, Priority::Low);
+    agent.sound_acmd("sound_specialhi2", soundspecialhi2, Priority::Low);
+    agent.sound_acmd("sound_landingfallaether", soundspecialhi4, Priority::Low);
 }

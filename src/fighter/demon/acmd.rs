@@ -670,25 +670,25 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", dash,);
-    agent.game_acmd("game_dashb", dashb,);
-    agent.game_acmd("game_turndash", turndash,);
-    agent.game_acmd("game_attack11", attack11,);
-    agent.game_acmd("game_attack12", attack12,);
-    agent.game_acmd("game_attack13", attack13,);
-    agent.game_acmd("game_attack14", attack14,);
-    agent.game_acmd("game_attack15", attack15,);
-    agent.game_acmd("game_attackstand31", tsunamikick,);
-    agent.game_acmd("game_attackstand32", tsunamikick2,);
-    agent.game_acmd("game_attackstand5", flashtornado,);
+    agent.game_acmd("game_dash", dash, Priority::Low);
+    agent.game_acmd("game_dashb", dashb, Priority::Low);
+    agent.game_acmd("game_turndash", turndash, Priority::Low);
+    agent.game_acmd("game_attack11", attack11, Priority::Low);
+    agent.game_acmd("game_attack12", attack12, Priority::Low);
+    agent.game_acmd("game_attack13", attack13, Priority::Low);
+    agent.game_acmd("game_attack14", attack14, Priority::Low);
+    agent.game_acmd("game_attack15", attack15, Priority::Low);
+    agent.game_acmd("game_attackstand31", tsunamikick, Priority::Low);
+    agent.game_acmd("game_attackstand32", tsunamikick2, Priority::Low);
+    agent.game_acmd("game_attackstand5", flashtornado, Priority::Low);
     
-    agent.game_acmd("game_abolishingfist", abolishingfist,);
-    agent.game_acmd("effect_abolishingfist", effectabolishingfist,);
-    agent.game_acmd("expression_abolishingfist", expressionabolishingfist,);
-    agent.game_acmd("sound_abolishingfist", soundabolishingfist,);
+    agent.game_acmd("game_abolishingfist", abolishingfist, Priority::Low);
+    agent.game_acmd("effect_abolishingfist", effectabolishingfist, Priority::Low);
+    agent.game_acmd("expression_abolishingfist", expressionabolishingfist, Priority::Low);
+    agent.game_acmd("sound_abolishingfist", soundabolishingfist, Priority::Low);
 
-    agent.game_acmd("game_attackstep2", attackstep2,);
-    agent.game_acmd("game_attackstep2f", attackstep2f,);
-    agent.game_acmd("game_attackairb", attackairb,);
-    agent.game_acmd("game_escapeairslide", escapeairslide,);
+    agent.game_acmd("game_attackstep2", attackstep2, Priority::Low);
+    agent.game_acmd("game_attackstep2f", attackstep2f, Priority::Low);
+    agent.game_acmd("game_attackairb", attackairb, Priority::Low);
+    agent.game_acmd("game_escapeairslide", escapeairslide, Priority::Low);
 }

@@ -24,6 +24,6 @@ pub fn install() {
     let cshot = &mut smashline::Agent::new("samus_cshot");
     let missile = &mut smashline::Agent::new("samus_missile");
 
-    cshot.game_acmd("game_shoot", cshotshoot,);
-    missile.game_acmd("game_homing", missilehoming,);
+    cshot.game_acmd("game_shoot", cshotshoot, Priority::Low);
+    missile.game_acmd("game_homing", missilehoming, Priority::Low);
 }

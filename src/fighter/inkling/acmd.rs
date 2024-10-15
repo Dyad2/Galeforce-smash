@@ -334,12 +334,12 @@ unsafe extern "C" fn escapeairslide(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_dash", dash,);
-    agent.game_acmd("game_turndash", turndash,);
-    agent.game_acmd("game_attack11", attack11,);
-    agent.game_acmd("game_attackairn", attackairn,);
-    agent.game_acmd("game_throwhi", throwhi,);
-    agent.game_acmd("game_throwf", throwf,);
-    agent.game_acmd("game_throwlw", throwlw,);
-    agent.game_acmd("game_escapeairslide", escapeairslide,);
+    agent.game_acmd("game_dash", dash, Priority::Low);
+    agent.game_acmd("game_turndash", turndash, Priority::Low);
+    agent.game_acmd("game_attack11", attack11, Priority::Low);
+    agent.game_acmd("game_attackairn", attackairn, Priority::Low);
+    agent.game_acmd("game_throwhi", throwhi, Priority::Low);
+    agent.game_acmd("game_throwf", throwf, Priority::Low);
+    agent.game_acmd("game_throwlw", throwlw, Priority::Low);
+    agent.game_acmd("game_escapeairslide", escapeairslide, Priority::Low);
 }

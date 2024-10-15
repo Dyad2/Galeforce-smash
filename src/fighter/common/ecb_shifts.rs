@@ -84,12 +84,12 @@ pub unsafe fn run(fighter : &mut L2CFighterCommon) {
                     let group7: &[i32] = &[*FIGHTER_KIND_PICKEL];
 
                     max_offset = match object_kind {
-                        y if group1.contains(&y) => 2.,
-                        y if group2.contains(&y) => 3.5,
-                        y if group3.contains(&y) => 4.,
-                        y if group4.contains(&y) => 4.5,
-                        y if group5.contains(&y) => 5.,
-                        y if group6.contains(&y) => 5.5,
+                        y if group1.contains(&y) => 1.8,
+                        y if group2.contains(&y) => 3.3,
+                        y if group3.contains(&y) => 3.8,
+                        y if group4.contains(&y) => 4.3,
+                        y if group5.contains(&y) => 4.8,
+                        y if group6.contains(&y) => 5.3,
                         y if group7.contains(&y) => 0.0,
                         _ => max_offset,
                     };

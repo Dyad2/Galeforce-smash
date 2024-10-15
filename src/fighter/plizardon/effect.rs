@@ -13,5 +13,5 @@ unsafe extern "C" fn effectairhi(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.effect_acmd("effect_attackairhi", effectairhi,);
+    agent.effect_acmd("effect_attackairhi", effectairhi, Priority::Low);
 }

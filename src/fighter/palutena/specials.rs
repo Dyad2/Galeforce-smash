@@ -88,10 +88,10 @@ unsafe extern "C" fn speciallwreflect(fighter: &mut L2CAgentBase) {
 }
 
 pub fn install(agent: &mut smashline::Agent) {
-    agent.game_acmd("game_speciallw", speciallw,);
-    agent.game_acmd("game_specialairlw", speciallw,);
-    agent.game_acmd("game_speciallwattack", speciallwattack,);
-    agent.game_acmd("game_specialairlwattack", speciallwattack,);
-    agent.game_acmd("game_speciallwreflect", speciallwreflect,);
-    agent.game_acmd("game_specialairlwreflect", speciallwreflect,);
+    agent.game_acmd("game_speciallw", speciallw, Priority::Low);
+    agent.game_acmd("game_specialairlw", speciallw, Priority::Low);
+    agent.game_acmd("game_speciallwattack", speciallwattack, Priority::Low);
+    agent.game_acmd("game_specialairlwattack", speciallwattack, Priority::Low);
+    agent.game_acmd("game_speciallwreflect", speciallwreflect, Priority::Low);
+    agent.game_acmd("game_specialairlwreflect", speciallwreflect, Priority::Low);
 }
